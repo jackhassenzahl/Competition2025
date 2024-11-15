@@ -50,8 +50,6 @@ void AprilTags::Periodic()
 
 }
 
-
-
 /// @brief 
 static void VisionThread()
   {
@@ -102,17 +100,8 @@ static void VisionThread()
     /// @brief color of the cross in the center of the april tags
     cv::Scalar crossColor = cv::Scalar(0, 0, 255);
 
-    /// @brief Counts how many times the while loop has repeated.
-    int counter = 0;
-
     while (true)
     {
-      // Putting the counter on the dashboard
-      frc::SmartDashboard::PutNumber("Counter: ", counter);
-
-      // Incrimenting the counter by one.
-      counter++;
-
       // Tell the CvSink to grab a frame from the camera and put it in the source mat.  
       // If there is an error notify the output. 
       if (cvSink.GrabFrame(mat) == 0) // If GrabFrame returns 0 then it couldn't get a frame from the camera.

@@ -15,3 +15,7 @@
 #define NumOfBitsCorrected        1
 #define LengthOfTagsInches        6.5
 
+#define LED_PWM_PORT              5
+
+#define BRIGHTNESS              0.5
+#define RAINBOW_RATE              3
