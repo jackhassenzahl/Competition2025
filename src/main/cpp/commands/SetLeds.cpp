@@ -5,7 +5,7 @@
 /// @brief Command to set the LED mode.
 /// @param Mode The LED mode.
 /// @param m_leds The LED subsystem.
-SetLeds::SetLeds(int Mode, Leds *m_leds) : m_Mode(Mode), m_leds(m_leds)
+SetLeds::SetLeds(int Mode, Leds *m_leds) : m_mode(Mode), m_leds(m_leds)
 {
     // Set the command name
     SetName("SetLeds");
@@ -14,14 +14,14 @@ SetLeds::SetLeds(int Mode, Leds *m_leds) : m_Mode(Mode), m_leds(m_leds)
     AddRequirements({m_leds});
 
     // Remember the LED mode
-    m_Mode = Mode;
+    m_mode = Mode;
 }
 
 /// @brief Called just before this Command runs the first time.
 void SetLeds::Initialize()
 {
     // Set the LED mode
-    m_leds->SetMode((LedMode) m_Mode);
+    m_leds->SetMode((LedMode) m_mode);
 }
 
 /// @brief Called repeatedly when this Command is scheduled to run.

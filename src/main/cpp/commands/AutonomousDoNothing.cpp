@@ -1,41 +1,41 @@
-#include "commands/AutonomousCommand.h"
+#include "commands/AutonomousDoNothing.h"
 
 /// @brief Autonomous command to do nothing.
-AutonomousCommand::AutonomousCommand()
+AutonomousDoNothing::AutonomousDoNothing()
 {
     // Set the command name
-    SetName("AutonomousCommand");
+    SetName("AutonomousDoNothing");
 }
 
 /// @brief Called just before this Command runs the first time.
-void AutonomousCommand::Initialize()
+void AutonomousDoNothing::Initialize()
 {
-    
+
 }
 
 /// @brief Called repeatedly when this Command is scheduled to run.
-void AutonomousCommand::Execute()
+void AutonomousDoNothing::Execute()
 {
 
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
 /// @return True is the command has completed.
-bool AutonomousCommand::IsFinished()
+bool AutonomousDoNothing::IsFinished()
 {
     return false;
 }
 
 /// @brief Called once after isFinished returns true.
 /// @param interrupted Indicated that the command was interrupted.
-void AutonomousCommand::End(bool interrupted)
+void AutonomousDoNothing::End(bool interrupted)
 {
 
 }
 
 /// @brief Indicates if the command runs when the robot is disabled.
 /// @return True is the command should run when the robot is disabled.
-bool AutonomousCommand::RunsWhenDisabled() const
+bool AutonomousDoNothing::RunsWhenDisabled() const
 {
     return false;
 }

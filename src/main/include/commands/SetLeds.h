@@ -19,7 +19,7 @@ class SetLeds : public frc2::CommandHelper<frc2::Command, SetLeds>
 
     private:
 
-        int   m_Mode;
+        int   m_mode;  // The LED mode for the command
 
-        Leds *m_leds;
+        Leds *m_leds;  // Pointer to the LED subsystem class
 };

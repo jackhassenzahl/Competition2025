@@ -36,7 +36,7 @@ bool ChassisDrive::IsFinished()
 /// @param interrupted Indicated that the command was interrupted.
 void ChassisDrive::End(bool interrupted)
 {
-    
+
 }
 
 /// @brief Indicates if the command runs when the robot is disabled.

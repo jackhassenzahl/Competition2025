@@ -3,11 +3,11 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-class AutonomousCommand : public frc2::CommandHelper<frc2::Command, AutonomousCommand>
+class AutonomousDoNothing : public frc2::CommandHelper<frc2::Command, AutonomousDoNothing>
 {
     public:
 
-        explicit AutonomousCommand();
+        explicit AutonomousDoNothing();
 
         void     Initialize()          override;
         void     Execute()             override;

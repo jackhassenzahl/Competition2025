@@ -4,13 +4,13 @@
 
 #include <array>
 
-#include <frc2/command/SubsystemBase.h>
 #include <frc/AddressableLED.h>
+#include <frc2/command/SubsystemBase.h>
 
-/// @brief modes for the LEDs
+/// @brief modes for the LED string.
 enum LedMode
 {
-    LedOff,
+    Off,
     SolidGreen,
     SolidRed,
     HvaColors,
@@ -22,7 +22,8 @@ enum LedMode
 class Leds : public frc2::SubsystemBase
 {
     public:
-    
+
+        // Class constructor
         Leds();
 
         // Will be called periodically whenever the CommandScheduler runs.
@@ -32,23 +33,20 @@ class Leds : public frc2::SubsystemBase
 
     private:
 
-        int m_counter = 0;
+        static constexpr int kLength = 410;  // The length of the LED string
 
-        LedMode m_ledMode;
+        LedMode m_ledMode;                   // The LED mode
 
-        static constexpr int kLength = 410;
+        int firstPixelHue = 0;               // Store the hue of the first pixel for rainbow mode
+        int cycleCounter  = 0;               // Counter for dynamic LED modes
 
-        // Must be a PWM header, not MXP or DIO
         frc::AddressableLED m_led{LED_PWM_PORT};
-        std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer; // Reuse the buffer
+        
+        std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer;  // Instatntiate the LED data buffer
 
-        // Store what the last hue of the first pixel is
-        int firstPixelHue = 0;
-        int cycleCounter = 0;
-
-        void Rainbow();
-        void LedOff();
+        void Off();
         void SolidColor(int red, int green, int blue);
+        void Rainbow();
         void HvaColors();
         void Strobe();
         void ShootingAnimation();

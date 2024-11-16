@@ -28,7 +28,7 @@ class Drivetrain : public frc2::SubsystemBase
 
     private:
 
-        // Global method prototypes
+        // Private method prototypes
         void FieldCentricAngleConversion(double *forward, double *strafe, double angle);
         void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, MathSwerveModule *swerveModule);
         void OptimizeWheelAngle(MathSwerveModule pastSwerveModule, MathSwerveModule desiredSwerveModule, MathSwerveModule *newSwerveModule);

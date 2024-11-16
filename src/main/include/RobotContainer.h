@@ -1,46 +1,56 @@
 #pragma once
 
+// Subsystems
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Leds.h"
 #include "subsystems/AprilTags.h"
 
-#include "commands/AutonomousCommand.h"
+// Commands
+#include "commands/AutonomousDoNothing.h"
 #include "commands/ChassisDrive.h"
 #include "commands/DriveDistance.h"
 #include "commands/SetLeds.h"
 
+#include <frc/Joystick.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/Command.h>
 
-#include <frc/Joystick.h>
-#include <frc2/command/button/JoystickButton.h>
-
+/// @brief Class to instantiate the robot subsystems and commands along with the operator controls
 class RobotContainer
 {
     public:
 
-        frc2::Command         *GetAutonomousCommand();
+        // Method that returns a pointer to the singleton instance of the RobotContainer class
         static RobotContainer *GetInstance();
 
-        // The robot's subsystems
+        // Method to get a pointer to the selected autonomous command
+        frc2::Command *GetAutonomousCommand();
+
+        // Methods to get a reference to the robot joysticks
+        frc::Joystick *getJoystickDriver();
+        frc::Joystick *getJoystickOperator();
+
+        // Instantiate the robot subsystems
         AprilTags  m_aprilTags;
         Drivetrain m_drivetrain;
         Leds       m_leds;
 
-        frc::Joystick *getJoystickDriver();
-        frc::Joystick *getJoystickOperator();
-
     private:
 
+        // Private class constructor to configure the robot and SmartDashboard configuration
         RobotContainer();
 
-        // Joysticks
-        frc::Joystick m_joystickDriver{0};
-        frc::Joystick m_joystickOperator{1};
+        // Method to bind the joystick controls to the robot commands
+        void ConfigureButtonBindings();
 
-        frc::SendableChooser<frc2::Command *> m_chooser;
-
+        // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer *m_robotContainer;
 
-       void ConfigureButtonBindings();
+        // Joysticks
+        frc::Joystick m_joystickDriver{JoyStickDriverUsbPort};
+        frc::Joystick m_joystickOperator{JoyStickControllerUsbPort};
+
+        // Autonomous command chooser
+        frc::SendableChooser<frc2::Command *> m_autonomousChooser;
 };

@@ -1,4 +1,4 @@
-#include "../include/subsystems/Leds.h"
+#include "subsystems/Leds.h"
 
 #include <iostream>
 
@@ -6,14 +6,14 @@
 
 using namespace std;
 
-/// @brief 
+/// @brief Class to support an addressable LED string.
 Leds::Leds()
 {
     // Length is expensive to set, so only set it once, then just update data
     m_led.SetLength(kLength);
 
     // Set the default mode
-    SetMode(LedMode::LedOff);
+    SetMode(LedMode::Off);
 
     // Intialize the LED data
     m_led.SetData(m_ledBuffer);
@@ -27,7 +27,7 @@ void Leds::Periodic()
 {
     switch (m_ledMode)
     {
-    case LedMode::LedOff:
+    case LedMode::Off:
     case LedMode::SolidGreen:
     case LedMode::SolidRed:
     case LedMode::HvaColors:
@@ -57,11 +57,10 @@ void Leds::SetMode(LedMode ledMode)
     // Remember the LED mode
     m_ledMode = ledMode;
 
-
     // Set the LEDs based on the LED mode
     switch (m_ledMode)
     {
-    case LedMode::LedOff:
+    case LedMode::Off:
         SolidColor(0, 0, 0);
         break;
 
@@ -99,6 +98,58 @@ void Leds::SetMode(LedMode ledMode)
     // Set the LEDs
     m_led.SetData(m_ledBuffer);
 }
+
+/// @brief Method to support setting the LED string to the specified solid color.
+/// @param red The red component of the LED color.
+/// @param green The green component of the LED color.
+/// @param blue The blue component of the LED color.
+void Leds::SolidColor(int red, int green, int blue)
+{
+    // Set the value for every pixel
+    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
+        m_ledBuffer[ledIndex].SetRGB(red * BRIGHTNESS, green * BRIGHTNESS, blue * BRIGHTNESS);
+}
+
+/// @brief Method to support setting the LED string to HVA alternating color.
+void Leds::HvaColors()
+{
+    // For every pixel
+    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
+    {
+        if (ledIndex % 2 == 0)
+        {
+            // Set the value
+            m_ledBuffer[ledIndex].SetRGB(0, 0, 255 * BRIGHTNESS);
+        }
+        else
+        {
+            // Set the value
+            m_ledBuffer[ledIndex].SetRGB(0, 0, 100 * BRIGHTNESS);
+        }
+    }
+
+    // Update the cycle counter
+    cycleCounter++;
+}
+
+/// @brief Method to strobe the LED string.
+void Leds::Strobe()
+{
+    if (cycleCounter % 20 == 0)
+        SolidColor(255, 255, 255);
+    else
+        SolidColor(0, 0, 0);
+
+    // Update the cycle counter
+    cycleCounter++;
+}
+
+/// @brief Methdo to set the LED stdring to shooting animation.
+void Leds::ShootingAnimation()
+{
+
+}
+
 /// @brief 
 void Leds::Rainbow()
 {
@@ -118,56 +169,4 @@ void Leds::Rainbow()
 
     // Check bounds
     firstPixelHue %= 180;
-}
-
-/// @brief 
-/// @param red 
-/// @param green 
-/// @param blue 
-void Leds::SolidColor(int red, int green, int blue)
-{
-    // For every pixel
-    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
-    {
-        // Set the value
-        m_ledBuffer[ledIndex].SetRGB(red * BRIGHTNESS, green * BRIGHTNESS, blue * BRIGHTNESS);
-    }
-}
-
-/// @brief 
-void Leds::HvaColors()
-{
-    // For every pixel
-    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
-    {
-        if (ledIndex % 2 == 0)
-        {
-            // Set the value
-            m_ledBuffer[ledIndex].SetRGB(0, 0, 255 * BRIGHTNESS);
-        }
-        else
-        {
-            // Set the value
-            m_ledBuffer[ledIndex].SetRGB(0, 0, 100 * BRIGHTNESS);
-        }
-    }
-
-    cycleCounter++;
-}
-
-/// @brief Method to strobe the LED string.
-void Leds::Strobe()
-{
-    if (cycleCounter % 20 == 0)
-        SolidColor(255, 255, 255);
-    else
-        SolidColor(0, 0, 0);
-
-    cycleCounter++;
-}
-
-/// @brief Methdo to set the LED stdring to shooting animation.
-void Leds::ShootingAnimation()
-{
-
 }
