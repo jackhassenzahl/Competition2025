@@ -1,3 +1,6 @@
+#include "Constants.h"
+
+#include "subsystems/AprilTags.h"
 
 #include <cstdio>
 #include <span>
@@ -18,10 +21,6 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <units/angle.h>
 #include <units/length.h>
-
-#include "Constants.h"
-
-#include "subsystems/AprilTags.h"
 
 #if defined(__linux__) || defined(_WIN32)
 
@@ -52,7 +51,7 @@ void AprilTags::Periodic()
 
 /// @brief 
 static void VisionThread()
-  {
+{
     // Declaring AprilTagDetector:
     frc::AprilTagDetector detector;
 
@@ -68,7 +67,7 @@ static void VisionThread()
         .fy = CameraHightInPixels,     // The Hight of the camera in pixels
         .cx = CameraCenterXInPixels,   // The center focus point of the camera x pos
         .cy = CameraCenterYInPixels    // The center focus point of the camera y pos
-      };  
+    };  
 
     // Making estimator to estimate the tag's possition wich somehow makes it more accurate.
     frc::AprilTagPoseEstimator estimator = frc::AprilTagPoseEstimator(poseEstConfig);
@@ -102,111 +101,112 @@ static void VisionThread()
 
     while (true)
     {
-      // Tell the CvSink to grab a frame from the camera and put it in the source mat.  
-      // If there is an error notify the output. 
-      if (cvSink.GrabFrame(mat) == 0) // If GrabFrame returns 0 then it couldn't get a frame from the camera.
-      {
-        // Send the output the error.
-        outputStream.NotifyError(cvSink.GetError());
-        std::cout << "ERROR: Not able to send stream" << std::endl;
-
-        // If we don't have a frame from the camera, continueing the while loop would be pointless
-        continue;
-      }
-      // If GrabFrame(mat) didn't return 0, then mat now stores the current frame.
-
-      // Make grayMat the same as mat(The current Frame), but in grayscale.
-      cv::cvtColor(mat, grayMat, cv::COLOR_BGR2GRAY);
-
-      /// @brief Stores a bunch of information on the grayMat's size, but we just use it for width and height.
-      cv::Size grayMatSize = grayMat.size();
-      frc::AprilTagDetector::Results detections = detector.Detect(grayMatSize.width, grayMatSize.height, grayMat.data);
-          
-      // Have not seen any tags yet, so detectedTags should not have anything in it.
-      detectedTags.clear();
-
-      // Putting the number of April Tags detected on SmartDashboard:
-      frc::SmartDashboard::PutNumber("Detections: ", detections.size());
-
-      // If there are no detections then there is no point in looping through all the items in it.
-      if (detections.size() > 0)
-      {
-        // Looping through all the detections. detection is the current detecion that the loop is on.
-        for (const frc::AprilTagDetection *detection : detections)
+        // Tell the CvSink to grab a frame from the camera and put it in the source mat.  
+        // If there is an error notify the output. 
+        if (cvSink.GrabFrame(mat) == 0) // If GrabFrame returns 0 then it couldn't get a frame from the camera.
         {
-          // We see a tag, and we need to remember that we have seen this tag, so we put all the tags we detect in this nice vector.
-          detectedTags.push_back(detection->GetId());
+            // Send the output the error.
+            outputStream.NotifyError(cvSink.GetError());
+            std::cout << "ERROR: Not able to send stream" << std::endl;
 
-          // draw lines around the tag
-          for (int cornerIndex = 0; cornerIndex <= (NumberOfAprilTagCorners - 1); cornerIndex++)
-          {
-            int nextCornerIndex = (cornerIndex + 1) % NumberOfAprilTagCorners;
-
-            // Getting the first point that we will draw a line from
-            const frc::AprilTagDetection::Point corner = detection->GetCorner(cornerIndex);
-
-            // Gettig the second line that we will draw a line to
-            const frc::AprilTagDetection::Point nextCorner = detection->GetCorner(nextCornerIndex);
-
-            // Drawing the line between the two points(corners) that we just got:
-            line(mat, cv::Point(corner.x, corner.y), cv::Point(nextCorner.x, nextCorner.y), outlineColor, AprilTagLineWidth);
-          }
-
-          // mark the center of the tag
-          const frc::AprilTagDetection::Point c = detection->GetCenter();
-          int crossSize = 10;
-
-          // Drawing the cross in the center of the tag
-          line(mat, cv::Point(c.x - crossSize, c.y), cv::Point(c.x + crossSize, c.y), crossColor, 2);
-          line(mat, cv::Point(c.x, c.y - crossSize), cv::Point(c.x, c.y + crossSize), crossColor, 2);
-
-
-          // identify the tag, and putting the tag name next to the cross in the center of the April tag
-          putText(mat, std::to_string(detection->GetId()), cv::Point(c.x + crossSize, c.y), cv::FONT_HERSHEY_SIMPLEX, 1, crossColor, 3);
-
-          // determine pose
-          frc::Transform3d pose = estimator.Estimate(*detection);
-          
-          // Putting the april tag possition on SmartDashboard:
-          frc::SmartDashboard::PutNumber("April Tag X: ", (double) pose.X());
-          frc::SmartDashboard::PutNumber("April Tag Y: ", (double) pose.Y());
-          frc::SmartDashboard::PutNumber("April Tag Z: ", (double) pose.Z());
-
-          // putting the April Tag's position a string so that we can put the string onto SmartDashboard:
-          std::stringstream dashboardString;
-          dashboardString << "Translation: " << units::length::to_string(pose.X())
-                          << ", " << units::length::to_string(pose.Y()) << ", "
-                          << units::length::to_string(pose.Z());
-
-          // Putting the April Tag's rotation into the string so that we can put the string onto SmartDashboard
-          frc::Rotation3d rotation = pose.Rotation();
-          dashboardString << "; Rotation: "
-                          << units::angle::to_string(rotation.X()) << ", "
-                          << units::angle::to_string(rotation.Y()) << ", "
-                          << units::angle::to_string(rotation.Z());
-
-          // Putting the april tag's rotation and position onto SmartDashboard:
-          frc::SmartDashboard::PutString("pose_" + std::to_string(detection->GetId()), dashboardString.str());
+            // If we don't have a frame from the camera, continueing the while loop would be pointless
+           continue;
         }
-      }
 
-      // string we will put detectedTags into so that we can put it onto SmartDashboard
-      std::stringstream detectedTagsString;
-      if (detectedTags.size() > 0)
-      {
-        if (detectedTags.size() > 1)
+        // If GrabFrame(mat) didn't return 0, then mat now stores the current frame.
+
+        // Make grayMat the same as mat(The current Frame), but in grayscale.
+        cv::cvtColor(mat, grayMat, cv::COLOR_BGR2GRAY);
+
+        /// @brief Stores a bunch of information on the grayMat's size, but we just use it for width and height.
+        cv::Size grayMatSize = grayMat.size();
+        frc::AprilTagDetector::Results detections = detector.Detect(grayMatSize.width, grayMatSize.height, grayMat.data);
+
+        // Have not seen any tags yet, so detectedTags should not have anything in it.
+        detectedTags.clear();
+
+        // Putting the number of April Tags detected on SmartDashboard:
+        frc::SmartDashboard::PutNumber("Detections: ", detections.size());
+
+        // If there are no detections then there is no point in looping through all the items in it.
+        if (detections.size() > 0)
         {
-          // Copying detectedTags into detectedTagsString. We will put detectedTagsString onto SmartDashboard later.
-          std::copy(detectedTags.begin(), detectedTags.end() - 1, std::ostream_iterator<int>(detectedTagsString, ","));
+            // Looping through all the detections. detection is the current detecion that the loop is on.
+            for (const frc::AprilTagDetection *detection : detections)
+            {
+                // We see a tag, and we need to remember that we have seen this tag, so we put all the tags we detect in this nice vector.
+                detectedTags.push_back(detection->GetId());
+
+                // draw lines around the tag
+                for (int cornerIndex = 0; cornerIndex <= (NumberOfAprilTagCorners - 1); cornerIndex++)
+                {
+                    int nextCornerIndex = (cornerIndex + 1) % NumberOfAprilTagCorners;
+
+                    // Getting the first point that we will draw a line from
+                    const frc::AprilTagDetection::Point corner = detection->GetCorner(cornerIndex);
+
+                    // Gettig the second line that we will draw a line to
+                    const frc::AprilTagDetection::Point nextCorner = detection->GetCorner(nextCornerIndex);
+
+                    // Drawing the line between the two points(corners) that we just got:
+                    line(mat, cv::Point(corner.x, corner.y), cv::Point(nextCorner.x, nextCorner.y), outlineColor, AprilTagLineWidth);
+                }
+
+                // mark the center of the tag
+                const frc::AprilTagDetection::Point c = detection->GetCenter();
+                int crossSize = 10;
+
+                // Drawing the cross in the center of the tag
+                line(mat, cv::Point(c.x - crossSize, c.y), cv::Point(c.x + crossSize, c.y), crossColor, 2);
+                line(mat, cv::Point(c.x, c.y - crossSize), cv::Point(c.x, c.y + crossSize), crossColor, 2);
+
+                // identify the tag, and putting the tag name next to the cross in the center of the April tag
+                putText(mat, std::to_string(detection->GetId()), cv::Point(c.x + crossSize, c.y), cv::FONT_HERSHEY_SIMPLEX, 1, crossColor, 3);
+
+                // determine pose
+                frc::Transform3d pose = estimator.Estimate(*detection);
+
+                // Putting the april tag possition on SmartDashboard:
+                frc::SmartDashboard::PutNumber("April Tag X: ", (double) pose.X());
+                frc::SmartDashboard::PutNumber("April Tag Y: ", (double) pose.Y());
+                frc::SmartDashboard::PutNumber("April Tag Z: ", (double) pose.Z());
+
+                // putting the April Tag's position a string so that we can put the string onto SmartDashboard:
+                std::stringstream dashboardString;
+                dashboardString << "Translation: " << units::length::to_string(pose.X())
+                                << ", " << units::length::to_string(pose.Y()) << ", "
+                                << units::length::to_string(pose.Z());
+
+                // Putting the April Tag's rotation into the string so that we can put the string onto SmartDashboard
+                frc::Rotation3d rotation = pose.Rotation();
+                dashboardString << "; Rotation: "
+                                << units::angle::to_string(rotation.X()) << ", "
+                                << units::angle::to_string(rotation.Y()) << ", "
+                                << units::angle::to_string(rotation.Z());
+
+                // Putting the april tag's rotation and position onto SmartDashboard:
+                frc::SmartDashboard::PutString("pose_" + std::to_string(detection->GetId()), dashboardString.str());
+            }
         }
-        detectedTagsString << detectedTags.back();
-      }
 
-      // Putting all of the detected tags onto smartDashboard:
-      frc::SmartDashboard::PutString("tags", detectedTagsString.str());
+        // string we will put detectedTags into so that we can put it onto SmartDashboard
+        std::stringstream detectedTagsString;
+        if (detectedTags.size() > 0)
+        {
+            if (detectedTags.size() > 1)
+            {
+                // Copying detectedTags into detectedTagsString. We will put detectedTagsString onto SmartDashboard later.
+                std::copy(detectedTags.begin(), detectedTags.end() - 1, std::ostream_iterator<int>(detectedTagsString, ","));
+            }
 
-      // Give the output stream a new image to display
-      outputStream.PutFrame(mat);
+            detectedTagsString << detectedTags.back();
+        }
+
+    // Putting all of the detected tags onto smartDashboard:
+    frc::SmartDashboard::PutString("tags", detectedTagsString.str());
+
+    // Give the output stream a new image to display
+    outputStream.PutFrame(mat);
     }
-  }
+}
 #endif

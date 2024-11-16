@@ -1,4 +1,5 @@
 #include "commands/SetLeds.h"
+
 #include <frc/smartdashboard/SmartDashboard.h>
 
 /// @brief Command to set the LED mode.
@@ -6,11 +7,13 @@
 /// @param m_leds The LED subsystem.
 SetLeds::SetLeds(int Mode, Leds *m_leds) : m_Mode(Mode), m_leds(m_leds)
 {
-    // Use AddRequirements() here to declare subsystem dependencies
-    // eg. AddRequirements(m_Subsystem);
+    // Set the command name
     SetName("SetLeds");
+
+    // Declare subsystem dependencies
     AddRequirements({m_leds});
 
+    // Remember the LED mode
     m_Mode = Mode;
 }
 

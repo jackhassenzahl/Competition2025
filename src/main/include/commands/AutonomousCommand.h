@@ -1,20 +1,20 @@
 #pragma once
 
-#include <frc2/command/CommandHelper.h>
 #include <frc2/command/Command.h>
+#include <frc2/command/CommandHelper.h>
 
 class AutonomousCommand : public frc2::CommandHelper<frc2::Command, AutonomousCommand>
 {
-public:
+    public:
 
-    explicit AutonomousCommand();
+        explicit AutonomousCommand();
 
-    void     Initialize()          override;
-    void     Execute()             override;
-    bool     IsFinished()          override;
-    void     End(bool interrupted) override;
+        void     Initialize()          override;
+        void     Execute()             override;
+        bool     IsFinished()          override;
+        void     End(bool interrupted) override;
     
-    bool     RunsWhenDisabled()    const override;
+        bool     RunsWhenDisabled()    const override;
 
-private:
+    private:
 };

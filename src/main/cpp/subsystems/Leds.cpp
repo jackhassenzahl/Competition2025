@@ -1,9 +1,12 @@
-#include <iostream>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include "../include/subsystems/Leds.h"
+
+#include <iostream>
+
+#include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace std;
 
+/// @brief 
 Leds::Leds()
 {
     // Length is expensive to set, so only set it once, then just update data
@@ -29,14 +32,18 @@ void Leds::Periodic()
     case LedMode::SolidRed:
     case LedMode::HvaColors:
         return;
+
     case LedMode::Strobe:
         Strobe();
         break;
+
     case LedMode::ShootingAnimation:
         ShootingAnimation();
         break;
+
     case LedMode::Rainbow:
         Rainbow();
+        break;
     }
 
     // Set the LEDs
@@ -47,9 +54,11 @@ void Leds::Periodic()
 /// @param ledMode mode to set the Leds.
 void Leds::SetMode(LedMode ledMode)
 {
-    cout << "inside SetMode(): " << ledMode << endl;
+    // Remember the LED mode
     m_ledMode = ledMode;
 
+
+    // Set the LEDs based on the LED mode
     switch (m_ledMode)
     {
     case LedMode::LedOff:
@@ -90,7 +99,7 @@ void Leds::SetMode(LedMode ledMode)
     // Set the LEDs
     m_led.SetData(m_ledBuffer);
 }
-
+/// @brief 
 void Leds::Rainbow()
 {
     // For every pixel
@@ -111,6 +120,10 @@ void Leds::Rainbow()
     firstPixelHue %= 180;
 }
 
+/// @brief 
+/// @param red 
+/// @param green 
+/// @param blue 
 void Leds::SolidColor(int red, int green, int blue)
 {
     // For every pixel
@@ -121,6 +134,7 @@ void Leds::SolidColor(int red, int green, int blue)
     }
 }
 
+/// @brief 
 void Leds::HvaColors()
 {
     // For every pixel

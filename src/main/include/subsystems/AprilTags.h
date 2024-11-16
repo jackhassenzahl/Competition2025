@@ -4,12 +4,12 @@
 
 class AprilTags : public frc2::SubsystemBase
 {
-public:
+    public:
 
-  AprilTags();
+        AprilTags();
 
-  void Periodic() override;
+        void Periodic() override;
 
-private:
+    private:
 
 };

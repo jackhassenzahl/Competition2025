@@ -1,23 +1,43 @@
 #pragma once
 
+#include "Constants.h"
+#include "SwerveModule.h"
+
 #include <frc2/command/SubsystemBase.h>
-#include <frc/drive/MecanumDrive.h>
-#include <frc/motorcontrol/PWMVictorSPX.h>
+#include <frc2/command/CommandPtr.h>
+
+#include <cmath>
+
+struct MathSwerveModule
+{
+    double Drive[4];
+    double Angle[4];
+};
 
 class Drivetrain : public frc2::SubsystemBase
 {
-public:
+    public:
+    
+        Drivetrain();
+        
+        // Robot centric, therefore no need for gyro
+        void Drive(double forward, double strafe, double angle);
 
-    Drivetrain();
+        // Field centric, so use gyro
+        void Drive(double forward, double strafe, double angle, double gyro);
 
-    void Periodic()            override;
-    void SimulationPeriodic() override;
+    private:
 
-private:
+        // Global method prototypes
+        void FieldCentricAngleConversion(double *forward, double *strafe, double angle);
+        void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, MathSwerveModule *swerveModule);
+        void OptimizeWheelAngle(MathSwerveModule pastSwerveModule, MathSwerveModule desiredSwerveModule, MathSwerveModule *newSwerveModule);
+        void NormalizeSpeed(MathSwerveModule *swerveModule);
 
-    frc::MecanumDrive m_mecanumDrive{m_motorController1, m_motorController2, m_motorController3, m_motorController4};
-    frc::PWMVictorSPX m_motorController4{3};
-    frc::PWMVictorSPX m_motorController3{2};
-    frc::PWMVictorSPX m_motorController2{1};
-    frc::PWMVictorSPX m_motorController1{0};
+        double PI = acos(-1.0);
+        double R  = sqrt((ChassisLength * ChassisLength) + (ChassisWidth * ChassisWidth));
+
+        std::unique_ptr<SwerveModule> swerveModule[4];
+
+        MathSwerveModule m_mathSwerveModule;
 };

@@ -1,14 +1,14 @@
 #include "Robot.h"
 
 #include <hal/FRCUsageReporting.h>
-
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
 
+/// @brief 
 void Robot::RobotInit()
 {
-  EnableLiveWindowInTest(true);
-  HAL_Report(HALUsageReporting::kResourceType_Framework, HALUsageReporting::kFramework_RobotBuilder);
+    EnableLiveWindowInTest(true);
+    HAL_Report(HALUsageReporting::kResourceType_Framework, HALUsageReporting::kFramework_RobotBuilder);
 }
 
 /**
@@ -20,7 +20,7 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-  frc2::CommandScheduler::GetInstance().Run();
+    frc2::CommandScheduler::GetInstance().Run();
 }
 
 /**
@@ -32,11 +32,13 @@ void Robot::DisabledInit()
 
 }
 
+/// @brief 
 void Robot::DisabledPeriodic()
 {
 
 }
 
+/// @brief 
 void Robot::TestInit()
 {
 
@@ -47,26 +49,31 @@ void Robot::TestInit()
  */
 void Robot::AutonomousInit()
 {
-  m_autonomousCommand = m_container->GetAutonomousCommand();
+    m_autonomousCommand = m_container->GetAutonomousCommand();
 
-  if (m_autonomousCommand != nullptr)
-  {
-    m_autonomousCommand->Schedule();
-  }
+    if (m_autonomousCommand != nullptr)
+    {
+        m_autonomousCommand->Schedule();
+    }
 }
 
-void Robot::AutonomousPeriodic() {}
+/// @brief 
+void Robot::AutonomousPeriodic()
+{
 
+}
+
+/// @brief 
 void Robot::TeleopInit()
 {
-  // This makes sure that the autonomous stops running when teleop starts running.
-  // If you want the autonomous to continue until interrupted by another command, remove
-  // this line or comment it out.
-  if (m_autonomousCommand != nullptr)
-  {
-    m_autonomousCommand->Cancel();
-    m_autonomousCommand = nullptr;
-  }
+    // This makes sure that the autonomous stops running when teleop starts running.
+    // If you want the autonomous to continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (m_autonomousCommand != nullptr)
+    {
+        m_autonomousCommand->Cancel();
+        m_autonomousCommand = nullptr;
+    }
 }
 
 /**
@@ -98,6 +105,6 @@ void Robot::SimulationPeriodic()
 #ifndef RUNNING_FRC_TESTS
 int main()
 {
-  return frc::StartRobot<Robot>();
+    return frc::StartRobot<Robot>();
 }
 #endif

@@ -19,3 +19,8 @@
 
 #define BRIGHTNESS              0.5
 #define RAINBOW_RATE              3
+
+#define NumberOfSwerveModules     4
+
+#define ChassisLength           100
+#define ChassisWidth            100
