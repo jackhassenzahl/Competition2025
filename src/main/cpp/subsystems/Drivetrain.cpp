@@ -1,23 +1,69 @@
+#include "Constants.h"
 #include "subsystems/Drivetrain.h"
 
 #include <iostream>
 
-/// @brief 
+/// @brief Class constructor for the DriveTrain subassembly.
+/// Swerve Module Indexes:
+///
+///          Front
+///       +---------+ ---
+///       |[1]   [0]|  ^       0   Front Right
+///       |         |  |       1   Front Left
+///       |         | Length   2   Rear Left
+///       |         |  |       3   Rear Right
+///       |[2]   [3]|  v
+///       +---------+ ---
+///       |         |
+///       |< Width >|
 Drivetrain::Drivetrain()
 {
-
+    // Create the robot swerve modules
+    m_swerveModule[0] = new SwerveModule(SWERVE_FRONT_RIGHT_DRIVE_MOTOR_CAN_ID, SWERVE_FRONT_RIGHT_ANGLE_MOTOR_CAN_ID, SWERVE_FRONT_RIGHT_ANGLE_ENCODER_CAN_ID);
+    m_swerveModule[1] = new SwerveModule(SWERVE_FRONT_LEFT_DRIVE_MOTOR_CAN_ID,  SWERVE_FRONT_LEFT_ANGLE_MOTOR_CAN_ID,  SWERVE_FRONT_LEFT_ANGLE_ENCODER_CAN_ID);
+    m_swerveModule[2] = new SwerveModule(SWERVE_REAR_LEFT_DRIVE_MOTOR_CAN_ID,   SWERVE_REAR_LEFT_ANGLE_MOTOR_CAN_ID,   SWERVE_REAR_LEFT_ANGLE_ENCODER_CAN_ID);
+    m_swerveModule[3] = new SwerveModule(SWERVE_REAR_RIGHT_DRIVE_MOTOR_CAN_ID,  SWERVE_REAR_RIGHT_ANGLE_MOTOR_CAN_ID,  SWERVE_REAR_RIGHT_ANGLE_ENCODER_CAN_ID);
 }
 
-// Robot centric, therefore no need for gyro
+/// @brief Robot centric, therefore no need for gyro.
+/// @param forward The forward operater input.
+/// @param strafe The strafe operater input.
+/// @param angle The angle operater input.
 void Drivetrain::Drive(double forward, double strafe, double angle)
 {
-    CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, &m_mathSwerveModule);
+    WheelVector wheelVector[NUMBER_OF_SWERVE_MODULES];     // Used for wheel vector calculations
+
+    // Calcualte the drive paramters
+    CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
+
+    // Update the swerve module
+    for (int swerveModuleIndex = 0; swerveModuleIndex < NUMBER_OF_SWERVE_MODULES; swerveModuleIndex++)
+        m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
 }
 
-// Field centric, so use gyro
+/// @brief Field centric, so use gyro.
+/// @param forward The forward operater input.
+/// @param strafe The strafe operater input.
+/// @param angle The angle operater input.
+/// @param gyro The robot direction in relation to the field.
 void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
 {
+    // Convert to field centric
+    FieldCentricAngleConversion(&forward, &strafe, angle);
 
+    // Calcualte the drive paramters
+    Drive(forward, strafe, angle);
+}
+
+/// <summary>
+/// Method to get the specified swerve module wheel vector.
+/// </summary>
+/// <param name="swerveModuleIndex">The swerve module index.</param>
+/// <param name="wheelVector">Variable to return the specified swerve module wheel vector.</param>
+void Drivetrain::GetSwerveModuleWheelVector(int swerveModuleIndex, WheelVector* wheelVector)
+{
+    // Get the specified swerve module wheel vector
+    m_swerveModule[swerveModuleIndex]->GetWheelVector(wheelVector);
 }
 
 /// <summary>
@@ -25,10 +71,9 @@ void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
 ///
 /// Note: The drive motor range is 0.0 to 1.0 and the angle is in the range -180 to 180 degrees.
 /// </summary>
-/// <param name="forward"></param>
-/// <param name="strafe"></param>
-/// <param name="angle"></param>
-/// <param name="swerveModule"></param>
+/// <param name="forward">The forward power.</param>
+/// <param name="strafe">The strafe (side) power.</param>
+/// <param name="angle">The present robot angle relative to the field direction.</param>
 void Drivetrain::FieldCentricAngleConversion(double *forward, double *strafe, double angle)
 {
     // Copy the forward and strafe method parameters
@@ -39,8 +84,8 @@ void Drivetrain::FieldCentricAngleConversion(double *forward, double *strafe, do
     angle = angle * PI / 180;
 
     // Modify the input parameters for field centric control
-    *forward = forwardParameter * cos(angle) + strafeParamewter * sin(angle);
-    *strafe = -forwardParameter * sin(angle) + strafeParamewter * cos(angle);
+    *forward =  forwardParameter * cos(angle) + strafeParamewter * sin(angle);
+    *strafe  = -forwardParameter * sin(angle) + strafeParamewter * cos(angle);
 }
 
 /// <summary>
@@ -67,99 +112,44 @@ void Drivetrain::FieldCentricAngleConversion(double *forward, double *strafe, do
 /// <param name="forward">positive value = forward movement,   negative value = backward movement</param>
 /// <param name="strafe">positive value  = right direction,    negative value = left direction</param>
 /// <param name="rotate">positive value  = clockwise rotation, negative value = counterclockwise rotation</param>
-/// <param name="swerveModule">Structure for returning the swerve module calculations for drive and angle motors.</param>
-void Drivetrain::CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, MathSwerveModule *swerveModule)
+void Drivetrain::CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, WheelVector wheelVector[])
 {
     // Create intermediate values for the speed and angle calculations
-    double A = strafe  - rotate * (ChassisLength / R);
-    double B = strafe  + rotate * (ChassisLength / R);
-    double C = forward - rotate * (ChassisWidth  / R);
-    double D = forward + rotate * (ChassisWidth  / R);
+    double A = strafe  - rotate * (CHASSIS_LENGTH / R);
+    double B = strafe  + rotate * (CHASSIS_LENGTH / R);
+    double C = forward - rotate * (CHASSIS_WIDTH  / R);
+    double D = forward + rotate * (CHASSIS_WIDTH  / R);
 
     // Calculate the wheel angle and convert radians to degrees
-    swerveModule->Angle[0] = atan2(B, C) * 180 / PI;
-    swerveModule->Angle[1] = atan2(B, D) * 180 / PI;
-    swerveModule->Angle[2] = atan2(A, D) * 180 / PI;
-    swerveModule->Angle[3] = atan2(A, C) * 180 / PI;
+    wheelVector[0].Angle = atan2(B, C) * 180 / PI;
+    wheelVector[1].Angle = atan2(B, D) * 180 / PI;
+    wheelVector[2].Angle = atan2(A, D) * 180 / PI;
+    wheelVector[3].Angle = atan2(A, C) * 180 / PI;
 
     // Calculate the speed
-    swerveModule->Drive[0] = sqrt(B * B + C * C);
-    swerveModule->Drive[1] = sqrt(B * B + D * D);
-    swerveModule->Drive[2] = sqrt(A * A + D * D);
-    swerveModule->Drive[3] = sqrt(A * A + C * C);
+    wheelVector[0].Drive = sqrt(B * B + C * C);
+    wheelVector[1].Drive = sqrt(B * B + D * D);
+    wheelVector[2].Drive = sqrt(A * A + D * D);
+    wheelVector[3].Drive = sqrt(A * A + C * C);
 
     // Normalize the speed values
-    NormalizeSpeed(swerveModule);
-}
-
-/// <summary>
-/// Method to determine the optimal swerve module angle given the present angle and the desired drive vector.
-///
-/// Note: The past angle is not restricted to -180 to 180 degrees, but is the actual module angle.
-/// </summary>
-/// <param name="pastSwerveModule">The past swerve module drive power and angle.</param>
-/// <param name="desiredSwerveModule">The desired swerve module drive power and angle.</param>
-/// <param name="newSwerveModule">The optimized swerve module drive power and angle.</param>
-void Drivetrain::OptimizeWheelAngle(MathSwerveModule pastSwerveModule, MathSwerveModule desiredSwerveModule, MathSwerveModule *newSwerveModule)
-{
-    // Initialize the new swerve module to the desired in case no changes are needed
-    for (int swerveModule = 0; swerveModule < NumberOfSwerveModules; swerveModule++)
-    {
-        newSwerveModule->Drive[swerveModule] = desiredSwerveModule.Drive[swerveModule];
-        newSwerveModule->Angle[swerveModule] = desiredSwerveModule.Angle[swerveModule];
-    }
-
-    // Loop through all swerve modules
-    for (int swerveModule = 0; swerveModule < NumberOfSwerveModules; swerveModule++)
-    {
-        double direction = 1.0; // Assume the past swerve power is positive
-
-        // Determine if the past swerve module power is negative
-        if (pastSwerveModule.Drive[swerveModule] < 0.0)
-            direction = -1.0;
-
-        // Determine the minimum angle between the past and desired swerve angle
-        double angleDifference = desiredSwerveModule.Angle[swerveModule] - pastSwerveModule.Angle[swerveModule];
-
-        // printf("SwerveModule: %8.2f  %8.2f  %8.2f  ", pastSwerveModule[swerveModule][1], desiredSwerveModule[swerveModule][1], angleDifference);
-
-        // Determine if the angle is greater than 180 degrees
-        if (angleDifference >= 180.0)
-        {
-            // Invert the drive power and angle
-            newSwerveModule->Drive[swerveModule] = desiredSwerveModule.Drive[swerveModule] * -1.0 * direction;
-            angleDifference -= 180.0;
-        }
-
-        // Determine if the angle is less than 180 degrees
-        if (angleDifference <= -180.0)
-        {
-            // Invert the drive power and angle
-            newSwerveModule->Drive[swerveModule] = desiredSwerveModule.Drive[swerveModule] * -1.0 * direction;
-            angleDifference += 180.0;
-        }
-
-        // Calculate the new swerve module angle
-        newSwerveModule->Angle[swerveModule] = pastSwerveModule.Angle[swerveModule] + angleDifference;
-
-        // printf("%8.2f  %8.2f  %8.2f\n", angleDifference, newSwerveModule[swerveModule][1], newSwerveModule[swerveModule][0]);
-    }
+    NormalizeSpeed(wheelVector);
 }
 
 /// <summary>
 /// Method to normalize the Drive values for a Swerve Module
 /// </summary>
 /// <param name="swerveModule">Structure for returning the swerve module normalization for the drive motors.</param>
-void Drivetrain::NormalizeSpeed(MathSwerveModule *swerveModule)
+void Drivetrain::NormalizeSpeed(WheelVector wheelVector[])
 {
     // Determine the maximum speed
-    double maxSpeed = swerveModule->Drive[0];
-    for (int swerveModuleIndex = 1; swerveModuleIndex < NumberOfSwerveModules; swerveModuleIndex++)
-        if (swerveModule->Drive[swerveModuleIndex] > maxSpeed)
-            maxSpeed = swerveModule->Drive[swerveModuleIndex];
+    double maxSpeed = wheelVector[0].Drive;
+    for (int wheelVectorIndex = 1; wheelVectorIndex < NUMBER_OF_SWERVE_MODULES; wheelVectorIndex++)
+        if (wheelVector[wheelVectorIndex].Drive > maxSpeed)
+            maxSpeed = wheelVector[wheelVectorIndex].Drive;
 
     // Normalizes speeds so they're within the ranges of -1 to 1
     if (maxSpeed > 1)
-        for (int swerveModuleIndex = 0; swerveModuleIndex < NumberOfSwerveModules; swerveModuleIndex++)
-            swerveModule->Drive[swerveModuleIndex] /= maxSpeed;
+        for (int wheelVectorIndex = 0; wheelVectorIndex < NUMBER_OF_SWERVE_MODULES; wheelVectorIndex++)
+            wheelVector[wheelVectorIndex].Drive /= maxSpeed;
 }

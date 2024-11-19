@@ -56,17 +56,17 @@ static void VisionThread()
     frc::AprilTagDetector detector;
 
     // look for tag36h11
-    detector.AddFamily("tag36h11", NumOfBitsCorrected);
+    detector.AddFamily("tag36h11", NUMBER_OF_BITS_CORRECTED);
 
     // Set up Pose Estimator - parameters are for a Microsoft Lifecam HD-3000
     // Source of magic numbers: (https://www.chiefdelphi.com/t/wpilib-apriltagdetector-sample-code/421411/21)
     frc::AprilTagPoseEstimator::Config poseEstConfig = 
     {
-        .tagSize = units::length::inch_t(LengthOfTagsInches),
-        .fx = CameraWidthInPixels,     // The width of the camera in pixels
-        .fy = CameraHightInPixels,     // The Hight of the camera in pixels
-        .cx = CameraCenterXInPixels,   // The center focus point of the camera x pos
-        .cy = CameraCenterYInPixels    // The center focus point of the camera y pos
+        .tagSize = units::length::inch_t(LENGTH_OF_TAGS_INCHES),
+        .fx = CAMERA_WIDTH_IN_PIXELS,     // The width of the camera in pixels
+        .fy = CAMERA_HEIGHT_IN_PIXELS,     // The Hight of the camera in pixels
+        .cx = CAMERA_CENTER_X_IN_PIXELS,   // The center focus point of the camera x pos
+        .cy = CAMERA_CENTER_Y_IN_PIXELS    // The center focus point of the camera y pos
     };  
 
     // Making estimator to estimate the tag's possition wich somehow makes it more accurate.
@@ -76,13 +76,13 @@ static void VisionThread()
     cs::UsbCamera camera = frc::CameraServer::StartAutomaticCapture();
 
     // Set the resolution
-    camera.SetResolution(CameraResolutionWidth, CameraResolutionHeight);
+    camera.SetResolution(CAMERA_RESOLUTION_WIDTH, CAMERA_RESOLUTION_HEIGTH);
 
     // Get a CvSink. This is what actualy gets the frame from the camera
     cs::CvSink cvSink = frc::CameraServer::GetVideo();
 
     // Setup a CvSource. This will send images back to the Dashboard
-    cs::CvSource outputStream = frc::CameraServer::PutVideo("Detected", CameraResolutionWidth, CameraResolutionHeight);
+    cs::CvSource outputStream = frc::CameraServer::PutVideo("Detected", CAMERA_RESOLUTION_WIDTH, CAMERA_RESOLUTION_HEIGTH);
 
     /// @brief Matrix representing the image
     cv::Mat mat;
@@ -138,9 +138,9 @@ static void VisionThread()
                 detectedTags.push_back(detection->GetId());
 
                 // draw lines around the tag
-                for (int cornerIndex = 0; cornerIndex <= (NumberOfAprilTagCorners - 1); cornerIndex++)
+                for (int cornerIndex = 0; cornerIndex <= (NUMBER_OF_APRIL_TAG_CORNER - 1); cornerIndex++)
                 {
-                    int nextCornerIndex = (cornerIndex + 1) % NumberOfAprilTagCorners;
+                    int nextCornerIndex = (cornerIndex + 1) % NUMBER_OF_APRIL_TAG_CORNER;
 
                     // Getting the first point that we will draw a line from
                     const frc::AprilTagDetection::Point corner = detection->GetCorner(cornerIndex);
@@ -149,7 +149,7 @@ static void VisionThread()
                     const frc::AprilTagDetection::Point nextCorner = detection->GetCorner(nextCornerIndex);
 
                     // Drawing the line between the two points(corners) that we just got:
-                    line(mat, cv::Point(corner.x, corner.y), cv::Point(nextCorner.x, nextCorner.y), outlineColor, AprilTagLineWidth);
+                    line(mat, cv::Point(corner.x, corner.y), cv::Point(nextCorner.x, nextCorner.y), outlineColor, APRIL_TAG_LINE_WIDTH);
                 }
 
                 // mark the center of the tag

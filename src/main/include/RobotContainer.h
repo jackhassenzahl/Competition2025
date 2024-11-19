@@ -38,19 +38,19 @@ class RobotContainer
 
     private:
 
+        // Singleton reference to the class (returned by the GetInstance Method)
+        static RobotContainer *m_robotContainer;
+
+        // Joysticks
+        frc::Joystick m_joystickDriver{JOY_STICK_DRIVER_USB_PORT};
+        frc::Joystick m_joystickOperator{JOY_STICK_CONTROLLER_USB_PORT};
+
+        // Autonomous command chooser
+        frc::SendableChooser<frc2::Command *> m_autonomousChooser;
+
         // Private class constructor to configure the robot and SmartDashboard configuration
         RobotContainer();
 
         // Method to bind the joystick controls to the robot commands
         void ConfigureButtonBindings();
-
-        // Singleton reference to the class (returned by the GetInstance Method)
-        static RobotContainer *m_robotContainer;
-
-        // Joysticks
-        frc::Joystick m_joystickDriver{JoyStickDriverUsbPort};
-        frc::Joystick m_joystickOperator{JoyStickControllerUsbPort};
-
-        // Autonomous command chooser
-        frc::SendableChooser<frc2::Command *> m_autonomousChooser;
 };

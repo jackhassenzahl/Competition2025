@@ -8,36 +8,29 @@
 
 #include <cmath>
 
-struct MathSwerveModule
-{
-    double Drive[4];
-    double Angle[4];
-};
-
 class Drivetrain : public frc2::SubsystemBase
 {
     public:
-    
+
         Drivetrain();
-        
+
         // Robot centric, therefore no need for gyro
         void Drive(double forward, double strafe, double angle);
 
         // Field centric, so use gyro
         void Drive(double forward, double strafe, double angle, double gyro);
 
+        void GetSwerveModuleWheelVector(int swerveModuleIndex, WheelVector* wheelVector);
+
     private:
 
-        // Private method prototypes
-        void FieldCentricAngleConversion(double *forward, double *strafe, double angle);
-        void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, MathSwerveModule *swerveModule);
-        void OptimizeWheelAngle(MathSwerveModule pastSwerveModule, MathSwerveModule desiredSwerveModule, MathSwerveModule *newSwerveModule);
-        void NormalizeSpeed(MathSwerveModule *swerveModule);
-
         double PI = acos(-1.0);
-        double R  = sqrt((ChassisLength * ChassisLength) + (ChassisWidth * ChassisWidth));
+        double R  = sqrt((CHASSIS_LENGTH * CHASSIS_LENGTH) + (CHASSIS_WIDTH * CHASSIS_WIDTH));
 
-        std::unique_ptr<SwerveModule> swerveModule[4];
+        SwerveModule *m_swerveModule[NUMBER_OF_SWERVE_MODULES];  // Pointers to the four swerve modules
 
-        MathSwerveModule m_mathSwerveModule;
+        // Private methods
+        void FieldCentricAngleConversion(double *forward, double *strafe, double angle);
+        void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, WheelVector wheelVector[]);
+        void NormalizeSpeed(WheelVector wheelVector[]);
 };
