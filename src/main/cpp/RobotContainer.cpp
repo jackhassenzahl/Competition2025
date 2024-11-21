@@ -43,6 +43,7 @@ RobotContainer::RobotContainer()
     m_autonomousChooser.SetDefaultOption("Do Nothing",     new AutonomousDoNothing());
     m_autonomousChooser.AddOption("Drive Forward OneFoot", new DriveDistance(1, &m_drivetrain));
     m_autonomousChooser.AddOption("Drive Forward TwoFeet", new DriveDistance(2, &m_drivetrain));
+    m_autonomousChooser.AddOption("Led Autonomous",        new AutonomousLed(&m_leds));
 
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);

@@ -10,6 +10,7 @@ class SetLeds : public frc2::CommandHelper<frc2::Command, SetLeds>
     public:
 
         explicit SetLeds(int Mode, Leds *m_leds);
+        explicit SetLeds(int Mode, Leds *m_leds, int time);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -20,6 +21,8 @@ class SetLeds : public frc2::CommandHelper<frc2::Command, SetLeds>
     private:
 
         int   m_mode;  // The LED mode for the command
+
+        int   m_time;  // The length of time that the LEDS will be set to the given mode. Infinite by default.
 
         Leds *m_leds;  // Pointer to the LED subsystem class
 };

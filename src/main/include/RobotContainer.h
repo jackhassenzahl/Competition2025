@@ -10,6 +10,7 @@
 #include "commands/ChassisDrive.h"
 #include "commands/DriveDistance.h"
 #include "commands/SetLeds.h"
+#include "commands/AutonomousLed.h"
 
 #include <frc/Joystick.h>
 #include <frc/smartdashboard/SendableChooser.h>

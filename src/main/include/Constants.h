@@ -51,3 +51,4 @@
 // ***** LED Controls *****
 #define BRIGHTNESS                             0.5
 #define RAINBOW_RATE                             3
+#define MILLISECONDS_TO_SECONDS                 35

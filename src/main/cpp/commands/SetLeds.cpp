@@ -15,13 +15,33 @@ SetLeds::SetLeds(int Mode, Leds *m_leds) : m_mode(Mode), m_leds(m_leds)
 
     // Remember the LED mode
     m_mode = Mode;
+
+    m_time = -1;
+}
+
+/// @brief Command to set the LED mode.
+/// @param Mode The LED mode.
+/// @param m_leds The LED subsystem.
+SetLeds::SetLeds(int Mode, Leds *m_leds, int time) : m_mode(Mode), m_leds(m_leds), m_time(time)
+{
+    // Set the command name
+    SetName("SetLeds");
+
+    // Declare subsystem dependencies
+    AddRequirements({m_leds});
+
+    // Remember the LED mode
+    m_mode = Mode;
+
+    // The length of time that the led's will be run in seconds
+    m_time = time * MILLISECONDS_TO_SECONDS;
 }
 
 /// @brief Called just before this Command runs the first time.
 void SetLeds::Initialize()
 {
     // Set the LED mode
-    m_leds->SetMode((LedMode) m_mode);
+    m_leds->SetMode((LedMode)m_mode);
 }
 
 /// @brief Called repeatedly when this Command is scheduled to run.
@@ -34,6 +54,22 @@ void SetLeds::Execute()
 /// @return True is the command has completed.
 bool SetLeds::IsFinished()
 {
+    frc::SmartDashboard::PutNumber("Led Timer", m_time);
+
+    // If m_time is NULL, then it should go on forever
+    // So if m_time is NOT Null AND is less than 0, then the timer is over and it is finished
+    if (m_time == -1)// && m_time-- <= 0)
+    {
+        // frc::SmartDashboard::PutBoolean("Finished", true);
+        return false;
+    }
+    m_time--;
+    if (m_time <= 0)
+    {
+        frc::SmartDashboard::PutBoolean("Finished", true);
+        return true;
+    }
+    frc::SmartDashboard::PutBoolean("Finished", false);
     return false;
 }
 
@@ -41,7 +77,6 @@ bool SetLeds::IsFinished()
 /// @param interrupted Indicated that the command was interrupted.
 void SetLeds::End(bool interrupted)
 {
-
 }
 
 /// @brief Indicates if the command runs when the robot is disabled.
