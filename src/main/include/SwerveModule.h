@@ -29,5 +29,5 @@ class SwerveModule
 
         // Private methods
         void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
-        double ConvertAngleToTargetRange(WheelVector wheelVector, WheelVector targetWheelVector);
+        double ConvertAngleToTargetRange(WheelVector wheelVector);
 };

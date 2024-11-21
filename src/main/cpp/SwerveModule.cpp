@@ -1,5 +1,7 @@
 #include "SwerveModule.h"
 
+#include <cmath>
+
 /// @brief Class constructor for the SwerveModule class.
 /// @param driveMotorCANid The CAN ID for the swerve module drive motor.
 /// @param angleMotorCANid The CAN ID for the swerve module angle motor.
@@ -15,8 +17,8 @@ SwerveModule::SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEn
 /// @param vector The wheel vector (angle and drive).
 void SwerveModule::SetState(WheelVector vector)
 {
-   // Optimize the serve module vector to minimize wheel rotation on change of diretion
-   OptimizeWheelAngle(vector, &m_wheelVector);
+    // Optimize the serve module vector to minimize wheel rotation on change of diretion
+    OptimizeWheelAngle(vector, &m_wheelVector);
 
     // Set the Drive motor power
 
@@ -28,90 +30,71 @@ void SwerveModule::SetState(WheelVector vector)
 /// @param wheelVector The target swerve module wheel drive power and angle.
 void SwerveModule::OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector)
 {
-   // Convert the present wheel angle to the same hemi-sphere as the target wheel angle
-   double workingAngle = ConvertAngleToTargetRange(*wheelVector, targetWheelVector);
+    double driveDirection = 1.0;  // Forward direction
+
+    // Convert the present wheel angle to the same hemi-sphere as the target wheel angle
+    double workingAngle = ConvertAngleToTargetRange(*wheelVector);
                                                                                
-   // Determine the angle between the past and desired swerve angle
-   double angleDifference = targetWheelVector.Angle - workingAngle;
+    // Determine the angle between the past and desired swerve angle
+    double angleDifference = targetWheelVector.Angle - workingAngle;
 
-   // Determine if the angle is greater than 180 degrees
-   if (angleDifference > 90.0)
-   {
-      // Invert the drive power and angle
-      wheelVector->Drive = targetWheelVector.Drive * -1.0;
-      angleDifference -= 180.0;
+    // Determine if the angle is greater that obtuse (greater that 180 degrees)
+    if (angleDifference > 180.0)
+    {
+        // Get the accute angle and change wheel correction direction
+        angleDifference = angleDifference - 180.0;
+        driveDirection *= -1.0;
+    }
+    else if (angleDifference < -180.0)
+    {
+        // Get the accute angle and change wheel correction direction
+        angleDifference = angleDifference + 180.0;
+        driveDirection *= -1.0;
+    }
 
-      // Calculate the new swerve module angle
-      wheelVector->Angle += angleDifference;
-   }
-   else if (angleDifference < -90.0)  // Determine if the angle is less than 180 degrees
-   {
-      // Invert the drive power and angle
-      wheelVector->Drive = targetWheelVector.Drive * -1.0;
-      angleDifference += 180.0;
+    // Minimize the wheel rotation
+    if (angleDifference > 90.0)
+    {
+        // Get the minimized wheel angle and change wheel correction direction
+        angleDifference = angleDifference - 180.0;
 
-      // Calculate the new swerve module angle
-      wheelVector->Angle += angleDifference;
-   }
-   else
-   {
-      // Set the wheel vector to the target
-      wheelVector->Angle = wheelVector->Angle + angleDifference;
-      wheelVector->Drive = targetWheelVector.Drive;
-   }
+        // Reverse the drive direction
+        driveDirection *= -1.0;
+    }
+    else if (angleDifference < -90.0)
+    {
+        // Get the minimized wheel angle and change wheel correction direction
+        angleDifference = angleDifference + 180.0;
+
+        // Reverse the drive direction
+        driveDirection *= -1.0;
+    }
+
+    // Set the wheel vector to the target
+    wheelVector->Angle += angleDifference;
+    wheelVector->Drive  = targetWheelVector.Drive * driveDirection;
 }
 
 /// <summary>
-/// Convert any angle to -180 to 180 degrees.
+/// Convert any angle to the range -180 to 180 degrees.
 /// </summary>
 /// <param name="angle">The angle to convert.</param>
 /// <returns>The angle represented from -180 to 180 degrees.</returns>
-double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector, WheelVector targetWheelVector)
+double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector)
 {
-    // Determine the target is positive (Compute angle in 0 to 180 degrees range)
-    if (targetWheelVector.Angle >= 0.0)
-    {
-        // If the wheel angle is greater that 180 degrees
-        if (wheelVector.Angle > 180.0)
-        {
-           // Determine if the wheel angle is greater than 360 degrees
-           while (wheelVector.Angle >= 360.0)
-              wheelVector.Angle -= 360.0;
-        }
-        else
-        {
-            // Determine if the wheel angle is greater than 180 degrees
-            while (wheelVector.Angle <= -360.0)
-                wheelVector.Angle += 360.0;
+    // Get the angle between -360 and 360
+    double angle = remainder(wheelVector.Angle, 360.0);
+                  
+    // Convert large negative angles
+    if (angle <= -180.0)
+        angle += 360.0;
 
-            // Handle special case (should not happen)
-            if (wheelVector.Angle == -180.0)
-               wheelVector.Angle = 180.0;
-        }
-    }
-    else  // Targe angle less that 0 degrees (Compute angle in -180 to 0 degrees range)
-    {
-        // If the wheel angle is less that -180 degrees
-        if (wheelVector.Angle < -180.0)
-        {
-           // Determine if the wheel angle is greater than 360 degrees
-           while (wheelVector.Angle <= -360.0)
-              wheelVector.Angle += 360.0;
-        }
-        else
-        {
-            // Determine if the wheel angle is greater than 360 degrees
-            while (wheelVector.Angle >= 360.0)
-                wheelVector.Angle -= 360.0;
-
-            // Handle special case (should not happen)
-            if (wheelVector.Angle == 180.0)
-               wheelVector.Angle = -180.0;
-        }
-    }
+    // Convert large postive angles
+    if (angle > 180.0)
+        angle -= 360.0;
 
     // Return the swerve angle in the proper hemisphere (-180 to 180 degrees)
-    return wheelVector.Angle;
+    return angle;
 }
 
 /// <summary>
@@ -120,6 +103,6 @@ double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector, WheelVec
 /// <param name="wheelVector">Variable to return the swerve module wheel vector.</param>
 void SwerveModule::GetWheelVector(WheelVector* wheelVector)
 {
-   // Return the wheel vector
-   *wheelVector = m_wheelVector;
+    // Return the wheel vector
+    *wheelVector = m_wheelVector;
 }
