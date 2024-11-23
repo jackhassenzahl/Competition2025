@@ -34,7 +34,7 @@ SetLeds::SetLeds(int Mode, Leds *m_leds, int time) : m_mode(Mode), m_leds(m_leds
     m_mode = Mode;
 
     // The length of time that the led's will be run in seconds
-    m_time = time * MILLISECONDS_TO_SECONDS;
+    m_time = time * LedConstants::kMillisecondsToSeconds;
 }
 
 /// @brief Called just before this Command runs the first time.

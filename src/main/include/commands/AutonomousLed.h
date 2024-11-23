@@ -8,15 +8,9 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include "subsystems/Leds.h"
 
-/**
- * An example command.
- *
- * <p>Note that this extends CommandHelper, rather extending Command
- * directly; this is crucially important, or else the decorator functions in
- * Command will *not* work!
- */
 class AutonomousLed : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousLed>
 {
- public:
-  AutonomousLed(Leds *m_leds);
+    public:
+
+        AutonomousLed(Leds *m_leds);
 };

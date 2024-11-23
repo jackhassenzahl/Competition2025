@@ -22,12 +22,12 @@ class SwerveModule
 
     private:
 
+        // Private methods
+        void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
+        double ConvertAngleToTargetRange(WheelVector wheelVector);
+
         WheelVector m_wheelVector;
 
         std::unique_ptr<ctre::phoenix6::hardware::TalonFX>  talonMotor;
         std::unique_ptr<ctre::phoenix6::hardware::CANcoder> encoder;
-
-        // Private methods
-        void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
-        double ConvertAngleToTargetRange(WheelVector wheelVector);
 };

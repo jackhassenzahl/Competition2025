@@ -33,21 +33,19 @@ class Leds : public frc2::SubsystemBase
 
     private:
 
-        static constexpr int kLength = 410;  // The length of the LED string
-
-        LedMode m_ledMode;                   // The LED mode
-
-        int firstPixelHue = 0;               // Store the hue of the first pixel for rainbow mode
-        int cycleCounter  = 0;               // Counter for dynamic LED modes
-
-        frc::AddressableLED m_led{LED_PWM_PORT};
-        
-        std::array<frc::AddressableLED::LEDData, kLength> m_ledBuffer;  // Instatntiate the LED data buffer
-
         void Off();
         void SolidColor(int red, int green, int blue);
         void Rainbow();
         void HvaColors();
         void Strobe();
         void ShootingAnimation();
+        
+        LedMode m_ledMode;                   // The LED mode
+
+        int firstPixelHue = 0;               // Store the hue of the first pixel for rainbow mode
+        int cycleCounter  = 0;               // Counter for dynamic LED modes
+
+        frc::AddressableLED m_led{LedConstants::kPwmPort};
+        
+        std::array<frc::AddressableLED::LEDData, LedConstants::kLength> m_ledBuffer;  // Instatntiate the LED data buffer
 };

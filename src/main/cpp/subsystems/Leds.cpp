@@ -10,7 +10,7 @@ using namespace std;
 Leds::Leds()
 {
     // Length is expensive to set, so only set it once, then just update data
-    m_led.SetLength(kLength);
+    m_led.SetLength(LedConstants::kLength);
 
     // Set the default mode
     SetMode(LedMode::Off);
@@ -106,25 +106,25 @@ void Leds::SetMode(LedMode ledMode)
 void Leds::SolidColor(int red, int green, int blue)
 {
     // Set the value for every pixel
-    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
-        m_ledBuffer[ledIndex].SetRGB(red * BRIGHTNESS, green * BRIGHTNESS, blue * BRIGHTNESS);
+    for (int ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
+        m_ledBuffer[ledIndex].SetRGB(red * LedConstants::kBrightness, green * LedConstants::kBrightness, blue * LedConstants::kBrightness);
 }
 
 /// @brief Method to support setting the LED string to HVA alternating color.
 void Leds::HvaColors()
 {
     // For every pixel
-    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
+    for (int ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
     {
         if (ledIndex % 2 == 0)
         {
             // Set the value
-            m_ledBuffer[ledIndex].SetRGB(0, 0, 255 * BRIGHTNESS);
+            m_ledBuffer[ledIndex].SetRGB(0, 0, 255 * LedConstants::kBrightness);
         }
         else
         {
             // Set the value
-            m_ledBuffer[ledIndex].SetRGB(0, 0, 100 * BRIGHTNESS);
+            m_ledBuffer[ledIndex].SetRGB(0, 0, 100 * LedConstants::kBrightness);
         }
     }
 
@@ -154,18 +154,18 @@ void Leds::ShootingAnimation()
 void Leds::Rainbow()
 {
     // For every pixel
-    for (int ledIndex = 0; ledIndex < kLength; ledIndex++)
+    for (int ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
     {
         // Calculate the hue - hue is easier for rainbows because the color
         // shape is a circle so only one value needs to precess
-        const auto pixelHue = (firstPixelHue + (ledIndex * 45 / kLength)) % 360;
+        const auto pixelHue = (firstPixelHue + (ledIndex * 45 / LedConstants::kLength)) % 360;
 
         // Set the value
-        m_ledBuffer[ledIndex].SetHSV(pixelHue, 255, (int)(255 * BRIGHTNESS));
+        m_ledBuffer[ledIndex].SetHSV(pixelHue, 255, (int)(255 * LedConstants::kBrightness));
     }
 
     // Increase by to make the rainbow "move"
-    firstPixelHue += RAINBOW_RATE;
+    firstPixelHue += LedConstants::kRainbowRate;
 
     // Check bounds
     firstPixelHue %= 180;

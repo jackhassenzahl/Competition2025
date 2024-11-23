@@ -24,13 +24,13 @@ class Drivetrain : public frc2::SubsystemBase
 
     private:
 
-        double PI = acos(-1.0);
-        double R  = sqrt((CHASSIS_LENGTH * CHASSIS_LENGTH) + (CHASSIS_WIDTH * CHASSIS_WIDTH));
-
-        SwerveModule *m_swerveModule[NUMBER_OF_SWERVE_MODULES];  // Pointers to the four swerve modules
-
         // Private methods
         void FieldCentricAngleConversion(double *forward, double *strafe, double angle);
         void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, WheelVector wheelVector[]);
         void NormalizeSpeed(WheelVector wheelVector[]);
+
+        double PI = acos(-1.0);
+        double R  = sqrt((ChassisConstants::kChassisLength * ChassisConstants::kChassisLength) + (ChassisConstants::kChassisWidth * ChassisConstants::kChassisWidth));
+
+        SwerveModule *m_swerveModule[ChassisConstants::kNumberOfSwerveModules];  // Pointers to the four swerve modules
 };
