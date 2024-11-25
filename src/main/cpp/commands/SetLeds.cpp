@@ -22,7 +22,7 @@ SetLeds::SetLeds(int Mode, Leds *m_leds) : m_mode(Mode), m_leds(m_leds)
 /// @brief Command to set the LED mode.
 /// @param Mode The LED mode.
 /// @param m_leds The LED subsystem.
-SetLeds::SetLeds(int Mode, Leds *m_leds, int time) : m_mode(Mode), m_leds(m_leds), m_time(time)
+SetLeds::SetLeds(int Mode, int time, Leds *m_leds) : m_mode(Mode), m_time(time), m_leds(m_leds)
 {
     // Set the command name
     SetName("SetLeds");
@@ -44,12 +44,6 @@ void SetLeds::Initialize()
     m_leds->SetMode((LedMode)m_mode);
 }
 
-/// @brief Called repeatedly when this Command is scheduled to run.
-void SetLeds::Execute()
-{
-    m_leds->Periodic();
-}
-
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
 /// @return True is the command has completed.
 bool SetLeds::IsFinished()
@@ -69,6 +63,7 @@ bool SetLeds::IsFinished()
         frc::SmartDashboard::PutBoolean("Finished", true);
         return true;
     }
+
     frc::SmartDashboard::PutBoolean("Finished", false);
     return false;
 }
@@ -77,6 +72,7 @@ bool SetLeds::IsFinished()
 /// @param interrupted Indicated that the command was interrupted.
 void SetLeds::End(bool interrupted)
 {
+    
 }
 
 /// @brief Indicates if the command runs when the robot is disabled.

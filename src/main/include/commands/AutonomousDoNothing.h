@@ -8,13 +8,4 @@ class AutonomousDoNothing : public frc2::CommandHelper<frc2::Command, Autonomous
     public:
 
         explicit AutonomousDoNothing();
-
-        void     Initialize()          override;
-        void     Execute()             override;
-        bool     IsFinished()          override;
-        void     End(bool interrupted) override;
-    
-        bool     RunsWhenDisabled()    const override;
-
-    private:
 };

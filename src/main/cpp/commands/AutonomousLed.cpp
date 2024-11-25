@@ -13,9 +13,9 @@ AutonomousLed::AutonomousLed(Leds *leds)
   SetName("AutonomusLed");
 
   AddCommands(
-    SetLeds(LedMode::Rainbow, leds, 5),
-    SetLeds(LedMode::Strobe, leds, 5),
-    SetLeds(LedMode::HvaColors, leds, 5)
+    SetLeds(LedMode::Rainbow,   5, leds),
+    SetLeds(LedMode::Strobe,    5, leds),
+    SetLeds(LedMode::HvaColors, 5, leds)
   );
 }
 

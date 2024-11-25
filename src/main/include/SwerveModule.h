@@ -1,8 +1,10 @@
 #pragma once
 
-#include <ctre/phoenix6/TalonFX.hpp>
+#include "AHRS.h"
+
+#include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
-#include <ctre/phoenix6/configs/Configs.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 struct WheelVector
 {
@@ -23,11 +25,18 @@ class SwerveModule
     private:
 
         // Private methods
+        void   ConfigureDriveMotor(int driveMotorCANid);
+        void   ConfigureAngleMotor(int angleMotorCANid, int angleEncoderCANid);
+
         void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
         double ConvertAngleToTargetRange(WheelVector wheelVector);
 
-        WheelVector m_wheelVector;
+        WheelVector                         m_wheelVector;
 
-        std::unique_ptr<ctre::phoenix6::hardware::TalonFX>  talonMotor;
-        std::unique_ptr<ctre::phoenix6::hardware::CANcoder> encoder;
+        ctre::phoenix6::hardware::TalonFX  *m_driveMotor;
+
+        rev::CANSparkMax                   *m_angleMotor;
+        rev::SparkRelativeEncoder          *m_angleEncoder;
+        ctre::phoenix6::hardware::CANcoder *m_angleAbsoluteEncoder;
+        rev::SparkPIDController            *m_pidController;
 };

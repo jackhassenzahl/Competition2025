@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 //************************************************************************
 // ***** Robio RIO Wiring Connections *****
 //
@@ -31,27 +33,41 @@
 //
 //************************************************************************
 
+namespace CanConstants
+{
+    const std::string kCanBus = "rio";
+
+    constexpr int kSwerveFrontRightDriveMotorCanId   = 1;
+    constexpr int kSwerveFrontRightAngleMotorCanId   = 2;   
+    constexpr int kSwerveFrontRightAngleEncoderCanId = 3;  
+
+    constexpr int kSwerveFrontLeftDriveMotorCanId    = 4;
+    constexpr int kSwerveFrontLeftAngleMotorCanId    = 5;   
+    constexpr int kSwerveFrontLeftAngleEncoderCanId  = 6; 
+
+    constexpr int kSwerveRearLeftDriveMotorCanId     = 7;
+    constexpr int kSwerveRearLeftAngleMotorCanId     = 8;   
+    constexpr int kSwerveRearLeftAngleEncoderCanId   = 9; 
+
+    constexpr int kSwerveRearRightDriveMotorCanId    = 0;
+    constexpr int kSwerveRearRightAngleMotorCanId    = 1;   
+    constexpr int kSwerveRearRightAngleEncoderCanId  = 2;  
+}
+
 namespace ChassisConstants
 {
-    constexpr int kNumberOfSwerveModules             =   4;
-    constexpr int kChassisLength                     = 100;
-    constexpr int kChassisWidth                      = 100;
+    constexpr int    kNumberOfSwerveModules           =     4;
 
-    constexpr int kSwerveFrontRightDriveMotorCanId   =   1;
-    constexpr int kSwerveFrontRightAngleMotorCanId   =   2;   
-    constexpr int kSwerveFrontRightAngleEncoderCanId =   3;  
+    constexpr int    kChassisLength                   =   100;
+    constexpr int    kChassisWidth                    =   100;
+    \
+    constexpr int    kSwerveMaxAmperage               =    30;
 
-    constexpr int kSwerveFrontLeftDriveMotorCanId    =   4;
-    constexpr int kSwerveFrontLeftAngleMotorCanId    =   5;   
-    constexpr int kSwerveFrontLeftAngleEncoderCanId  =   6; 
+    constexpr int    kSwerveWheelCountsPerRevoplution =    21;
 
-    constexpr int kSwerveRearLeftDriveMotorCanId     =   7;
-    constexpr int kSwerveRearLeftAngleMotorCanId     =   8;   
-    constexpr int kSwerveRearLeftAngleEncoderCanId   =   9; 
-
-    constexpr int kSwerveRearRightDriveMotorCanId    =   0;
-    constexpr int kSwerveRearRightAngleMotorCanId    =   1;   
-    constexpr int kSwerveRearRightAngleEncoderCanId  =   2;             
+    constexpr double kSwerveP                         = 0.700;      
+    constexpr double kSwerveI                         = 0.000;   
+    constexpr double kSwerveD                         = 0.001;
 }
 
 namespace JoystickConstants

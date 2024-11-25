@@ -3,7 +3,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/ParallelRaceGroup.h>
 
-RobotContainer *RobotContainer::m_robotContainer = NULL;  // Reference to the RobotContainer singleton class
+// Reference to the RobotContainer singleton class
+RobotContainer *RobotContainer::m_robotContainer = NULL;  
 
 /// @brief Method to return a pointer to the RobotContainer class.
 /// @return Pointer to the RobotContainer class.
@@ -32,7 +33,7 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("SetLeds: ShootingAnimation", new SetLeds(LedMode::ShootingAnimation, &m_leds));
     frc::SmartDashboard::PutData("SetLeds: Rainbow",           new SetLeds(LedMode::Rainbow,           &m_leds));
 
-    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new ChassisDrive(0, 0,                  &m_drivetrain));
+    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new DriveDistance(0,                    &m_drivetrain));
     frc::SmartDashboard::PutData("DriveDistance: OneFoot",     new DriveDistance(1,                    &m_drivetrain));
     frc::SmartDashboard::PutData("DriveDistance: TwoFeet",     new DriveDistance(2,                    &m_drivetrain));
 
@@ -49,7 +50,12 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);
 
     // Set the default commands for the subsystems
-    m_drivetrain.SetDefaultCommand(ChassisDrive(0, 0, &m_drivetrain));
+    m_drivetrain.SetDefaultCommand(ChassisDrive(
+        [this] { return getJoystickDriver()->GetRawAxis(0); },
+        [this] { return getJoystickDriver()->GetRawAxis(1); }, 
+        [this] { return 0.0; },
+        &m_drivetrain));
+
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
 }
 

@@ -22,9 +22,11 @@ Leds::Leds()
     m_led.Start();
 }
 
-/// @brief This method will be called once per scheduler run.
+/// @brief This method will be called once periodically.
 void Leds::Periodic()
 {
+    frc::SmartDashboard::PutNumber("LED Counter", m_liveCounter++);
+
     switch (m_ledMode)
     {
     case LedMode::Off:
@@ -73,17 +75,17 @@ void Leds::SetMode(LedMode ledMode)
         break;
 
     case LedMode::HvaColors:
-        cycleCounter = 0;
+        m_cycleCounter = 0;
         HvaColors();
         break;
 
     case LedMode::Strobe:
-        cycleCounter = 0;
+        m_cycleCounter = 0;
         Strobe();
         break;
 
     case LedMode::ShootingAnimation:
-        cycleCounter = 0;
+        m_cycleCounter = 0;
         ShootingAnimation();
         break;
 
@@ -129,19 +131,19 @@ void Leds::HvaColors()
     }
 
     // Update the cycle counter
-    cycleCounter++;
+    m_cycleCounter++;
 }
 
 /// @brief Method to strobe the LED string.
 void Leds::Strobe()
 {
-    if (cycleCounter % 20 == 0)
+    if (m_cycleCounter % 20 == 0)
         SolidColor(255, 255, 255);
     else
         SolidColor(0, 0, 0);
 
     // Update the cycle counter
-    cycleCounter++;
+    m_cycleCounter++;
 }
 
 /// @brief Methdo to set the LED stdring to shooting animation.
@@ -158,15 +160,15 @@ void Leds::Rainbow()
     {
         // Calculate the hue - hue is easier for rainbows because the color
         // shape is a circle so only one value needs to precess
-        const auto pixelHue = (firstPixelHue + (ledIndex * 45 / LedConstants::kLength)) % 360;
+        const auto pixelHue = (m_firstPixelHue + (ledIndex * 45 / LedConstants::kLength)) % 360;
 
         // Set the value
         m_ledBuffer[ledIndex].SetHSV(pixelHue, 255, (int)(255 * LedConstants::kBrightness));
     }
 
     // Increase by to make the rainbow "move"
-    firstPixelHue += LedConstants::kRainbowRate;
+    m_firstPixelHue += LedConstants::kRainbowRate;
 
     // Check bounds
-    firstPixelHue %= 180;
+    m_firstPixelHue %= 180;
 }

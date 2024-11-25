@@ -14,12 +14,10 @@ class Drivetrain : public frc2::SubsystemBase
 
         Drivetrain();
 
-        // Robot centric, therefore no need for gyro
-        void Drive(double forward, double strafe, double angle);
-
-        // Field centric, so use gyro
         void Drive(double forward, double strafe, double angle, double gyro);
 
+        void SetFieldCentric(bool fieldCentric);
+        
         void GetSwerveModuleWheelVector(int swerveModuleIndex, WheelVector* wheelVector);
 
     private:
@@ -28,6 +26,8 @@ class Drivetrain : public frc2::SubsystemBase
         void FieldCentricAngleConversion(double *forward, double *strafe, double angle);
         void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, WheelVector wheelVector[]);
         void NormalizeSpeed(WheelVector wheelVector[]);
+
+        bool   m_fieldCentric = false;
 
         double PI = acos(-1.0);
         double R  = sqrt((ChassisConstants::kChassisLength * ChassisConstants::kChassisLength) + (ChassisConstants::kChassisWidth * ChassisConstants::kChassisWidth));

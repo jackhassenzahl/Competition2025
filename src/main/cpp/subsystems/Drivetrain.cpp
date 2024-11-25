@@ -1,6 +1,8 @@
 #include "Constants.h"
 #include "subsystems/DriveTrain.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include <iostream>
 
 /// @brief Class constructor for the DriveTrain subassembly.
@@ -19,34 +21,18 @@
 Drivetrain::Drivetrain()
 {
     // Create the robot swerve modules
-    m_swerveModule[0] = new SwerveModule(ChassisConstants::kSwerveFrontRightDriveMotorCanId,
-                                         ChassisConstants::kSwerveFrontRightAngleMotorCanId,
-                                         ChassisConstants::kSwerveFrontRightAngleEncoderCanId);
-    m_swerveModule[1] = new SwerveModule(ChassisConstants::kSwerveFrontLeftDriveMotorCanId,
-                                         ChassisConstants::kSwerveFrontLeftAngleMotorCanId,
-                                         ChassisConstants::kSwerveFrontLeftAngleEncoderCanId);
-    m_swerveModule[2] = new SwerveModule(ChassisConstants::kSwerveRearLeftDriveMotorCanId,
-                                         ChassisConstants::kSwerveRearLeftAngleMotorCanId,
-                                         ChassisConstants::kSwerveRearLeftAngleEncoderCanId);
-    m_swerveModule[3] = new SwerveModule(ChassisConstants::kSwerveRearRightDriveMotorCanId,
-                                         ChassisConstants::kSwerveRearRightAngleMotorCanId,
-                                         ChassisConstants::kSwerveRearRightAngleEncoderCanId);
-}
-
-/// @brief Robot centric, therefore no need for gyro.
-/// @param forward The forward operater input.
-/// @param strafe The strafe operater input.
-/// @param angle The angle operater input.
-void Drivetrain::Drive(double forward, double strafe, double angle)
-{
-    WheelVector wheelVector[ChassisConstants::kNumberOfSwerveModules];     // Used for wheel vector calculations
-
-    // Calcualte the drive paramters
-    CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
-
-    // Update the swerve module
-    for (int swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::kNumberOfSwerveModules; swerveModuleIndex++)
-        m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
+    m_swerveModule[0] = new SwerveModule(CanConstants::kSwerveFrontRightDriveMotorCanId,
+                                         CanConstants::kSwerveFrontRightAngleMotorCanId,
+                                         CanConstants::kSwerveFrontRightAngleEncoderCanId);
+    m_swerveModule[1] = new SwerveModule(CanConstants::kSwerveFrontLeftDriveMotorCanId,
+                                         CanConstants::kSwerveFrontLeftAngleMotorCanId,
+                                         CanConstants::kSwerveFrontLeftAngleEncoderCanId);
+    m_swerveModule[2] = new SwerveModule(CanConstants::kSwerveRearLeftDriveMotorCanId,
+                                         CanConstants::kSwerveRearLeftAngleMotorCanId,
+                                         CanConstants::kSwerveRearLeftAngleEncoderCanId);
+    m_swerveModule[3] = new SwerveModule(CanConstants::kSwerveRearRightDriveMotorCanId,
+                                         CanConstants::kSwerveRearRightAngleMotorCanId,
+                                         CanConstants::kSwerveRearRightAngleEncoderCanId);
 }
 
 /// @brief Field centric, so use gyro.
@@ -56,11 +42,32 @@ void Drivetrain::Drive(double forward, double strafe, double angle)
 /// @param gyro The robot direction in relation to the field.
 void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
 {
+    frc::SmartDashboard::PutNumber("Forward", forward);
+    frc::SmartDashboard::PutNumber("Strafe",  strafe);
+    frc::SmartDashboard::PutNumber("Angle",   angle);
+    frc::SmartDashboard::PutNumber("Gyro",    gyro);
+
     // Convert to field centric
-    FieldCentricAngleConversion(&forward, &strafe, angle);
+    if (m_fieldCentric)
+       FieldCentricAngleConversion(&forward, &strafe, angle);
+
+    // Create a wheel vector array for wheel vector calculations
+    WheelVector wheelVector[ChassisConstants::kNumberOfSwerveModules];    
 
     // Calcualte the drive paramters
-    Drive(forward, strafe, angle);
+    CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
+
+    // Update the swerve module
+    for (int swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::kNumberOfSwerveModules; swerveModuleIndex++)
+        m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
+}
+
+/// @brief Method to set the robot control field centricity.
+/// @param fieldCentric Boolean to indicate if the robor control should be field centric.
+void Drivetrain::SetFieldCentric(bool fieldCentric)
+{
+    // Set the field centric member variable
+    m_fieldCentric = fieldCentric;
 }
 
 /// <summary>

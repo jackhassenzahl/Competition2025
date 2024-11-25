@@ -1,10 +1,12 @@
 #include "commands/ChassisDrive.h"
+#include "subsystems/Drivetrain.h"
 
 /// @brief The operator chassis drive command.
 /// @param Left
 /// @param Right
 /// @param m_drivetrain
-ChassisDrive::ChassisDrive(double Left, double Right, Drivetrain *m_drivetrain) : m_Left(Left), m_Right(Right), m_drivetrain(m_drivetrain)
+ChassisDrive::ChassisDrive(std::function<double()> left, std::function<double()> right, std::function<double()> gyro, Drivetrain *m_drivetrain) : 
+                           m_left{std::move(left)}, m_right{std::move(right)}, m_gyro{std::move(gyro)}, m_drivetrain(m_drivetrain)
 {
     // Set the command name
     SetName("ChassisDrive");
@@ -22,7 +24,7 @@ void ChassisDrive::Initialize()
 /// @brief Called repeatedly when this Command is scheduled to run.
 void ChassisDrive::Execute()
 {
-
+    m_drivetrain->Drive(m_left(), m_right(), 0.0, m_gyro());
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().

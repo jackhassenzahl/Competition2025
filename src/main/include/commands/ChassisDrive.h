@@ -9,7 +9,7 @@ class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>
 {
     public:
 
-        explicit ChassisDrive(double Left, double Right, Drivetrain *m_drivetrain);
+        explicit ChassisDrive(std::function<double()> Left, std::function<double()> Right, std::function<double()> gyro, Drivetrain *m_drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -20,8 +20,9 @@ class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>
 
     private:
 
-        double m_Left;
-        double m_Right;
+        std::function<double()> m_left;
+        std::function<double()> m_right;
+        std::function<double()> m_gyro;
 
         Drivetrain *m_drivetrain;
 };

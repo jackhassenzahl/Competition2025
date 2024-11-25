@@ -40,10 +40,11 @@ class Leds : public frc2::SubsystemBase
         void Strobe();
         void ShootingAnimation();
         
-        LedMode m_ledMode;                   // The LED mode
+        LedMode m_ledMode;                         // The LED mode
 
-        int firstPixelHue = 0;               // Store the hue of the first pixel for rainbow mode
-        int cycleCounter  = 0;               // Counter for dynamic LED modes
+        int     m_firstPixelHue = 0;               // Store the hue of the first pixel for rainbow mode
+        int     m_cycleCounter  = 0;               // Counter for dynamic LED modes
+        int     m_liveCounter   = 0;               // Counter to indicate that the periodic method is being called
 
         frc::AddressableLED m_led{LedConstants::kPwmPort};
         

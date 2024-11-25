@@ -26,16 +26,16 @@ class RobotContainer
         static RobotContainer *GetInstance();
 
         // Method to get a pointer to the selected autonomous command
-        frc2::Command *GetAutonomousCommand();
+        frc2::Command         *GetAutonomousCommand();
 
         // Methods to get a reference to the robot joysticks
-        frc::Joystick *getJoystickDriver();
-        frc::Joystick *getJoystickOperator();
+        frc::Joystick         *getJoystickDriver();
+        frc::Joystick         *getJoystickOperator();
 
         // Instantiate the robot subsystems
-        AprilTags  m_aprilTags;
-        Drivetrain m_drivetrain;
-        Leds       m_leds;
+        AprilTags              m_aprilTags;
+        Drivetrain             m_drivetrain;
+        Leds                   m_leds;
 
     private:
 
@@ -46,11 +46,11 @@ class RobotContainer
         void ConfigureButtonBindings();
         
         // Singleton reference to the class (returned by the GetInstance Method)
-        static RobotContainer *m_robotContainer;
+        static RobotContainer                *m_robotContainer;
 
         // Joysticks
-        frc::Joystick m_joystickDriver{JoystickConstants::kJoystickDriverUsbPort};
-        frc::Joystick m_joystickOperator{JoystickConstants::kJoystickOperatorUsbPort};
+        frc::Joystick                         m_joystickDriver{JoystickConstants::kJoystickDriverUsbPort};
+        frc::Joystick                         m_joystickOperator{JoystickConstants::kJoystickOperatorUsbPort};
 
         // Autonomous command chooser
         frc::SendableChooser<frc2::Command *> m_autonomousChooser;
