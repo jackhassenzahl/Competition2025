@@ -1,4 +1,5 @@
 #include "RobotContainer.h"
+#include "Constants.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/ParallelRaceGroup.h>
@@ -33,17 +34,17 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("SetLeds: ShootingAnimation", new SetLeds(LedMode::ShootingAnimation, &m_leds));
     frc::SmartDashboard::PutData("SetLeds: Rainbow",           new SetLeds(LedMode::Rainbow,           &m_leds));
 
-    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new DriveDistance(0,                    &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: OneFoot",     new DriveDistance(1,                    &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: TwoFeet",     new DriveDistance(2,                    &m_drivetrain));
+    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new DriveDistance(0, 0.0,               &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: OneFoot",     new DriveDistance(1, 0.5,               &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: TwoFeet",     new DriveDistance(2, 0.5,               &m_drivetrain));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
     // Configure the autonomous command chooser
     m_autonomousChooser.SetDefaultOption("Do Nothing",     new AutonomousDoNothing());
-    m_autonomousChooser.AddOption("Drive Forward OneFoot", new DriveDistance(1, &m_drivetrain));
-    m_autonomousChooser.AddOption("Drive Forward TwoFeet", new DriveDistance(2, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward OneFoot", new DriveDistance(1, 0.5, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward TwoFeet", new DriveDistance(2, 0.5, &m_drivetrain));
     m_autonomousChooser.AddOption("Led Autonomous",        new AutonomousLed(&m_leds));
 
     // Send the autonomous mode chooser to the SmartDashboard
@@ -51,8 +52,9 @@ RobotContainer::RobotContainer()
 
     // Set the default commands for the subsystems
     m_drivetrain.SetDefaultCommand(ChassisDrive(
-        [this] { return getJoystickDriver()->GetRawAxis(0); },
-        [this] { return getJoystickDriver()->GetRawAxis(1); }, 
+        [this] { return Forward(); },
+        [this] { return Strife();  },
+        [this] { return Angle();   }, 
         [this] { return 0.0; },
         &m_drivetrain));
 
@@ -71,7 +73,7 @@ void RobotContainer::ConfigureButtonBindings()
 
 /// @brief Method to return a pointer to the driver joystick.
 /// @return Pointer to the driver joystick.
-frc::Joystick *RobotContainer::getJoystickDriver()
+frc::Joystick *RobotContainer::GetJoystickDriver()
 {
     // Return the pointer to the driver joystick
     return &m_joystickDriver;
@@ -79,7 +81,7 @@ frc::Joystick *RobotContainer::getJoystickDriver()
 
 /// @brief Method to return a pointer to the controller joystick.
 /// @return Pointer to the controller joystick.
-frc::Joystick *RobotContainer::getJoystickOperator()
+frc::Joystick *RobotContainer::GetJoystickOperator()
 {
     // Return the pointer to the operator joystick
     return &m_joystickOperator;
@@ -91,4 +93,58 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 {
     // The selected command will be run in autonomous
     return m_autonomousChooser.GetSelected();
+}
+
+/// @brief 
+/// @return 
+double RobotContainer::Forward()
+{
+    double joystickForward = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
+
+    return GetExponentialValue(joystickForward, JoystickConstants::kExponentForward);
+}
+
+/// @brief 
+/// @return 
+double RobotContainer::Strife()
+{
+    double joystickStrife = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickStrifeIndex);
+
+    return GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife);
+}
+
+/// @brief 
+/// @return 
+double RobotContainer::Angle()
+{
+    double joystickAngle = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickAngleIndex);
+
+    return GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle);
+}
+
+/// <summary>
+/// Method to convert a joystick value from -1.0 to 1.0 to exponential mode.
+/// </summary>
+/// <param name="joystickValue">The raw joystick value.</param>
+/// <returns>The resultant exponential value.</returns>
+double RobotContainer::GetExponentialValue(double joystickValue, double exponent)
+{
+    double output = 0.0;
+
+    // Ignore joystick input if it's too small
+    if (abs(joystickValue) < JoystickConstants::kJoystickDeadZone)
+        return 0.0;
+
+    // Direction is either 1 or -1, based on joystick value
+    int direction = abs(joystickValue) / joystickValue;
+
+    // Plug joystick value into exponential function
+    output = direction * pow(abs(joystickValue), exponent);
+    
+    // Ensure the range of the output
+    if (output < -1.0)  output = -1.0;
+    if (output >  1.0)  output =  1.0;
+
+    // Return the calculated value
+    return output;
 }

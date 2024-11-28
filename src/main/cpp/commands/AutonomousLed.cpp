@@ -7,8 +7,6 @@
 
 AutonomousLed::AutonomousLed(Leds *leds)
 {
-  // Use addRequirements() here to declare subsystem dependencies.
-
   // Set the command name
   SetName("AutonomusLed");
 

@@ -42,13 +42,13 @@ Drivetrain::Drivetrain()
 /// @param gyro The robot direction in relation to the field.
 void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
 {
-    frc::SmartDashboard::PutNumber("Forward", forward);
-    frc::SmartDashboard::PutNumber("Strafe",  strafe);
-    frc::SmartDashboard::PutNumber("Angle",   angle);
-    frc::SmartDashboard::PutNumber("Gyro",    gyro);
+    frc::SmartDashboard::PutNumber("Chassis Forward", forward);
+    frc::SmartDashboard::PutNumber("Chassis Strafe",  strafe);
+    frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
+    frc::SmartDashboard::PutNumber("Chassis Gyro",    gyro);
 
     // Convert to field centric
-    if (m_fieldCentric)
+    if (m_fieldCentricity)
        FieldCentricAngleConversion(&forward, &strafe, angle);
 
     // Create a wheel vector array for wheel vector calculations
@@ -64,10 +64,18 @@ void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
 
 /// @brief Method to set the robot control field centricity.
 /// @param fieldCentric Boolean to indicate if the robor control should be field centric.
-void Drivetrain::SetFieldCentric(bool fieldCentric)
+void Drivetrain::SetFieldCentricity(bool fieldCentric)
 {
     // Set the field centric member variable
-    m_fieldCentric = fieldCentric;
+    m_fieldCentricity = fieldCentric;
+}
+
+/// @brief  
+/// @return 
+bool Drivetrain::GetFieldCentricity()
+{
+    // Return the field centricity setting
+    return m_fieldCentricity;
 }
 
 /// <summary>

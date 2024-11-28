@@ -1,43 +1,46 @@
 #include "commands/DriveDistance.h"
 
-DriveDistance::DriveDistance(double Distance, Drivetrain *m_drivetrain) : m_Distance(Distance), m_drivetrain(m_drivetrain)
+DriveDistance::DriveDistance(double distance, double speed, Drivetrain *drivetrain) : m_distance(distance), m_speed(speed), m_drivetrain(drivetrain)
 {
     // Set the command name
     SetName("DriveDistance");
 
     // Declare subsystem dependencies
-    AddRequirements({m_drivetrain});
+    AddRequirements(drivetrain);
 }
 
 /// @brief Called just before this Command runs the first time.
 void DriveDistance::Initialize()
 {
-
+    // Remember the field centric setting
+    m_fieldCentricity = m_drivetrain->GetFieldCentricity();
+    
+    // Do not use field coordinates
+    m_drivetrain->SetFieldCentricity(false);
 }
 
 /// @brief Called repeatedly when this Command is scheduled to run.
 void DriveDistance::Execute()
 {
-
+    // Start driving
+    m_drivetrain->Drive(m_speed, 0.0, 0.0, 0.0);
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
 /// @return True is the command has completed.
 bool DriveDistance::IsFinished()
 {
-    return false;
+    // Determine if the chassis has completed the drive distance
+    return true;
 }
 
 /// @brief Called once after isFinished returns true.
 /// @param interrupted Indicated that the command was interrupted.
 void DriveDistance::End(bool interrupted)
 {
+    // Stop the move
+    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
 
-}
-
-/// @brief Indicates if the command runs when the robot is disabled.
-/// @return True is the command should run when the robot is disabled.
-bool DriveDistance::RunsWhenDisabled() const
-{
-    return false;
+    // Restore the field centricity
+    m_drivetrain->SetFieldCentricity(m_fieldCentricity);
 }

@@ -29,8 +29,12 @@ class RobotContainer
         frc2::Command         *GetAutonomousCommand();
 
         // Methods to get a reference to the robot joysticks
-        frc::Joystick         *getJoystickDriver();
-        frc::Joystick         *getJoystickOperator();
+        frc::Joystick         *GetJoystickDriver();
+        frc::Joystick         *GetJoystickOperator();
+
+        double                 Forward();
+        double                 Strife();
+        double                 Angle();
 
         // Instantiate the robot subsystems
         AprilTags              m_aprilTags;
@@ -44,6 +48,8 @@ class RobotContainer
 
         // Method to bind the joystick controls to the robot commands
         void ConfigureButtonBindings();
+        
+        double GetExponentialValue(double joystickValue, double exponent);
         
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;

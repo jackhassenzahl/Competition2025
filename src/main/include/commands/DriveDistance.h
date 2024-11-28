@@ -9,18 +9,18 @@ class DriveDistance : public frc2::CommandHelper<frc2::Command, DriveDistance>
 {
     public:
 
-        explicit DriveDistance(double Distance, Drivetrain *m_drivetrain);
+        explicit DriveDistance(double distance, double speed, Drivetrain *m_drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
         bool     IsFinished()          override;
         void     End(bool interrupted) override;
 
-        bool     RunsWhenDisabled()    const override;
-
     private:
 
-        double m_Distance;
+        bool        m_fieldCentricity;
+        double      m_distance;
+        double      m_speed;
 
         Drivetrain *m_drivetrain;
 };

@@ -60,7 +60,7 @@ namespace ChassisConstants
 
     constexpr int    kChassisLength                   =   100;
     constexpr int    kChassisWidth                    =   100;
-    \
+
     constexpr int    kSwerveMaxAmperage               =    30;
 
     constexpr int    kSwerveWheelCountsPerRevoplution =    21;
@@ -72,8 +72,18 @@ namespace ChassisConstants
 
 namespace JoystickConstants
 {
-    constexpr int kJoystickDriverUsbPort   = 0;
-    constexpr int kJoystickOperatorUsbPort = 1;
+    constexpr int    kJoystickDriverUsbPort   = 0;
+    constexpr int    kJoystickOperatorUsbPort = 1;
+
+    constexpr int    kJoystickForwardIndex    = 1;
+    constexpr int    kJoystickStrifeIndex     = 0;
+    constexpr int    kJoystickAngleIndex      = 4;
+
+    constexpr double kJoystickDeadZone        = 0.1;
+
+    constexpr double kExponentForward         = 2.0;
+    constexpr double kExponentStrife          = 2.0;
+    constexpr double kExponentAngle           = 2.0;
 }
 
 namespace ApriltagConstants

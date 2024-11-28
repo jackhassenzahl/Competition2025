@@ -16,7 +16,8 @@ class Drivetrain : public frc2::SubsystemBase
 
         void Drive(double forward, double strafe, double angle, double gyro);
 
-        void SetFieldCentric(bool fieldCentric);
+        void SetFieldCentricity(bool fieldCentric);
+        bool GetFieldCentricity();
         
         void GetSwerveModuleWheelVector(int swerveModuleIndex, WheelVector* wheelVector);
 
@@ -27,7 +28,7 @@ class Drivetrain : public frc2::SubsystemBase
         void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, WheelVector wheelVector[]);
         void NormalizeSpeed(WheelVector wheelVector[]);
 
-        bool   m_fieldCentric = false;
+        bool   m_fieldCentricity = false;
 
         double PI = acos(-1.0);
         double R  = sqrt((ChassisConstants::kChassisLength * ChassisConstants::kChassisLength) + (ChassisConstants::kChassisWidth * ChassisConstants::kChassisWidth));
