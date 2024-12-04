@@ -2,6 +2,8 @@
 
 #include <string>
 
+//#define ROBOT  // Enable code to run on the robot
+
 //************************************************************************
 // ***** Robio RIO Wiring Connections *****
 //

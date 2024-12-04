@@ -55,7 +55,7 @@ RobotContainer::RobotContainer()
         [this] { return Forward(); },
         [this] { return Strife();  },
         [this] { return Angle();   }, 
-        [this] { return 0.0; },
+        [this] { return Gyro();    },
         &m_drivetrain));
 
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
@@ -95,17 +95,17 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
     return m_autonomousChooser.GetSelected();
 }
 
-/// @brief 
-/// @return 
+/// @brief Method to return the forward joystick value.
+/// @return The forward joystick value.
 double RobotContainer::Forward()
 {
-    double joystickForward = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
+    double joystickForward = -GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
 
     return GetExponentialValue(joystickForward, JoystickConstants::kExponentForward);
 }
 
-/// @brief 
-/// @return 
+/// @brief Method to return the strife joystick value.
+/// @return The strife joystick value.
 double RobotContainer::Strife()
 {
     double joystickStrife = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickStrifeIndex);
@@ -113,13 +113,23 @@ double RobotContainer::Strife()
     return GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife);
 }
 
-/// @brief 
-/// @return 
+/// @brief Method to return the angle joystick value.
+/// @return The angle joystick value.
 double RobotContainer::Angle()
 {
     double joystickAngle = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickAngleIndex);
 
     return GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle);
+}
+
+/// @brief 
+/// @return 
+double RobotContainer::Gyro()
+{
+    // Test using joystick
+    double joystickGyro = GetJoystickDriver()->GetRawAxis(5);
+
+    return GetExponentialValue(joystickGyro, JoystickConstants::kExponentAngle);
 }
 
 /// <summary>

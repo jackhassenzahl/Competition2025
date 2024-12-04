@@ -35,6 +35,7 @@ class RobotContainer
         double                 Forward();
         double                 Strife();
         double                 Angle();
+        double                 Gyro();
 
         // Instantiate the robot subsystems
         AprilTags              m_aprilTags;

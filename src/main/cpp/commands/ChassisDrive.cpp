@@ -19,7 +19,7 @@ ChassisDrive::ChassisDrive(std::function<double()> forward,
                            Drivetrain *drivetrain) :
                            m_forward{std::move(forward)},
                            m_strafe{std::move(strafe)},
-                           m_angle{std::move(gyro)},
+                           m_angle{std::move(angle)},
                            m_gyro{std::move(gyro)},
                            m_drivetrain(drivetrain)
 {

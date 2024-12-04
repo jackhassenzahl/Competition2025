@@ -108,7 +108,7 @@ void Leds::SetMode(LedMode ledMode)
 void Leds::SolidColor(int red, int green, int blue)
 {
     // Set the value for every pixel
-    for (int ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
+    for (auto ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
         m_ledBuffer[ledIndex].SetRGB(red * LedConstants::kBrightness, green * LedConstants::kBrightness, blue * LedConstants::kBrightness);
 }
 
@@ -116,7 +116,7 @@ void Leds::SolidColor(int red, int green, int blue)
 void Leds::HvaColors()
 {
     // For every pixel
-    for (int ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
+    for (auto ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
     {
         if (ledIndex % 2 == 0)
         {
@@ -156,7 +156,7 @@ void Leds::ShootingAnimation()
 void Leds::Rainbow()
 {
     // For every pixel
-    for (int ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
+    for (auto ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
     {
         // Calculate the hue - hue is easier for rainbows because the color
         // shape is a circle so only one value needs to precess

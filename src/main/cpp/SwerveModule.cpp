@@ -6,8 +6,6 @@
 
 #include <cmath>
 
-//#define ROBOT
-
 /// @brief Class constructor for the SwerveModule class.
 /// @param driveMotorCANid The CAN ID for the swerve module drive motor.
 /// @param angleMotorCANid The CAN ID for the swerve module angle motor.
@@ -95,7 +93,11 @@ void SwerveModule::SetState(WheelVector vector)
 
     // Set the angle motor PID set angle
     m_pidController->SetReference(vector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::CANSparkMax::ControlType::kPosition);
-#endif
+#else
+    // Simulate the swerve module drive and angle
+    m_wheelVector.Drive = vector.Drive;
+    m_wheelVector.Angle = vector.Angle;
+#endif    
 }
 
 /// @brief Method to determine the optimal swerve module wheel angle given the desired wheel vector.

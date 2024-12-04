@@ -138,7 +138,7 @@ static void VisionThread()
                 detectedTags.push_back(detection->GetId());
 
                 // draw lines around the tag
-                for (int cornerIndex = 0; cornerIndex <= (ApriltagConstants::NumberOfAprilTagCorners - 1); cornerIndex++)
+                for (auto cornerIndex = 0; cornerIndex <= (ApriltagConstants::NumberOfAprilTagCorners - 1); cornerIndex++)
                 {
                     int nextCornerIndex = (cornerIndex + 1) % ApriltagConstants::NumberOfAprilTagCorners;
 

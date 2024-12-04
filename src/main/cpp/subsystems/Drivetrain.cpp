@@ -57,8 +57,28 @@ void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
     // Calcualte the drive paramters
     CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
 
+    ///          Front
+    ///       +---------+ ---
+    ///       |[1]   [0]|  ^       0   Front Right
+    ///       |         |  |       1   Front Left
+    ///       |         | Length   2   Rear Left
+    ///       |         |  |       3   Rear Right
+    ///       |[2]   [3]|  v
+    ///       +---------+ ---
+    ///       |         |
+    ///       |< Width >|
+
+    frc::SmartDashboard::PutNumber("Front Right Drive", wheelVector[0].Drive);
+    frc::SmartDashboard::PutNumber("Front Right Angle", wheelVector[0].Angle);
+    frc::SmartDashboard::PutNumber("Front Left Drive",  wheelVector[1].Drive);
+    frc::SmartDashboard::PutNumber("Front Left Angle",  wheelVector[1].Angle);
+    frc::SmartDashboard::PutNumber("Rear Left Drive",   wheelVector[2].Drive);
+    frc::SmartDashboard::PutNumber("Rear Left Angle",   wheelVector[2].Angle);
+    frc::SmartDashboard::PutNumber("Rear Right Drive",  wheelVector[3].Drive);
+    frc::SmartDashboard::PutNumber("Rear Right Angle",  wheelVector[3].Angle);
+
     // Update the swerve module
-    for (int swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::kNumberOfSwerveModules; swerveModuleIndex++)
+    for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::kNumberOfSwerveModules; swerveModuleIndex++)
         m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
 }
 
@@ -167,12 +187,12 @@ void Drivetrain::NormalizeSpeed(WheelVector wheelVector[])
 {
     // Determine the maximum speed
     double maxSpeed = wheelVector[0].Drive;
-    for (int wheelVectorIndex = 1; wheelVectorIndex < ChassisConstants::kNumberOfSwerveModules; wheelVectorIndex++)
+    for (auto wheelVectorIndex = 1; wheelVectorIndex < ChassisConstants::kNumberOfSwerveModules; wheelVectorIndex++)
         if (wheelVector[wheelVectorIndex].Drive > maxSpeed)
             maxSpeed = wheelVector[wheelVectorIndex].Drive;
 
     // Normalizes speeds so they're within the ranges of -1 to 1
     if (maxSpeed > 1)
-        for (int wheelVectorIndex = 0; wheelVectorIndex < ChassisConstants::kNumberOfSwerveModules; wheelVectorIndex++)
+        for (auto wheelVectorIndex = 0; wheelVectorIndex < ChassisConstants::kNumberOfSwerveModules; wheelVectorIndex++)
             wheelVector[wheelVectorIndex].Drive /= maxSpeed;
 }
