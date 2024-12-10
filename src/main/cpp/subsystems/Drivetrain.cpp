@@ -80,6 +80,16 @@ void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
     // Update the swerve module
     for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::kNumberOfSwerveModules; swerveModuleIndex++)
         m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
+
+    // Read the swerve module angles and drive
+    frc::SmartDashboard::PutNumber("Vector Front Right Drive", m_swerveModule[0]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Front Right Angle", m_swerveModule[0]->GetWheelVector()->Angle);
+    frc::SmartDashboard::PutNumber("Vector Front Left Drive",  m_swerveModule[1]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Front Left Angle",  m_swerveModule[1]->GetWheelVector()->Angle);
+    frc::SmartDashboard::PutNumber("Vector Rear Left Drive",   m_swerveModule[2]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Rear Left Angle",   m_swerveModule[2]->GetWheelVector()->Angle);
+    frc::SmartDashboard::PutNumber("Vector Rear Right Drive",  m_swerveModule[3]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Rear Right Angle",  m_swerveModule[3]->GetWheelVector()->Angle);
 }
 
 /// @brief Method to set the robot control field centricity.
@@ -103,10 +113,10 @@ bool Drivetrain::GetFieldCentricity()
 /// </summary>
 /// <param name="swerveModuleIndex">The swerve module index.</param>
 /// <param name="wheelVector">Variable to return the specified swerve module wheel vector.</param>
-void Drivetrain::GetSwerveModuleWheelVector(int swerveModuleIndex, WheelVector* wheelVector)
+WheelVector* Drivetrain::GetSwerveModuleWheelVector(int swerveModuleIndex)
 {
     // Get the specified swerve module wheel vector
-    m_swerveModule[swerveModuleIndex]->GetWheelVector(wheelVector);
+    return m_swerveModule[swerveModuleIndex]->GetWheelVector();
 }
 
 /// <summary>

@@ -84,20 +84,20 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCANid, int angleEncoderCANi
 /// @param vector The wheel vector (angle and drive).
 void SwerveModule::SetState(WheelVector vector)
 {
-    // Optimize the serve module vector to minimize wheel rotation on change of diretion
-    OptimizeWheelAngle(vector, &m_wheelVector);
+    // Do not change the angle if the wheel is not driven
+    if (vector.Drive > 0.0)
+    {
+        // Optimize the serve module vector to minimize wheel rotation on change of diretion
+       OptimizeWheelAngle(vector, &m_wheelVector);
 
 #if defined(ROBOT)
-    // Set the Drive motor power
-    m_driveMotor->Set(vector.Drive);
+        // Set the Drive motor power
+        m_driveMotor->Set(m_wheelVector.Drive);
 
-    // Set the angle motor PID set angle
-    m_pidController->SetReference(vector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::CANSparkMax::ControlType::kPosition);
-#else
-    // Simulate the swerve module drive and angle
-    m_wheelVector.Drive = vector.Drive;
-    m_wheelVector.Angle = vector.Angle;
+        // Set the angle motor PID set angle
+       m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::CANSparkMax::ControlType::kPosition);
 #endif    
+    }
 }
 
 /// @brief Method to determine the optimal swerve module wheel angle given the desired wheel vector.
@@ -176,8 +176,8 @@ double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector)
 /// Method to get the swerve module wheel vector.
 /// </summary>
 /// <param name="wheelVector">Variable to return the swerve module wheel vector.</param>
-void SwerveModule::GetWheelVector(WheelVector* wheelVector)
+WheelVector* SwerveModule::GetWheelVector()
 {
     // Return the wheel vector
-    *wheelVector = m_wheelVector;
+    return &m_wheelVector;
 }

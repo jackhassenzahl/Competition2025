@@ -20,7 +20,7 @@ class SwerveModule
 
         void SetState(WheelVector wheelVector);
 
-        void GetWheelVector(WheelVector *wheelVector);
+        WheelVector* GetWheelVector();
 
     private:
 

@@ -14,12 +14,12 @@ class Drivetrain : public frc2::SubsystemBase
 
         Drivetrain();
 
-        void Drive(double forward, double strafe, double angle, double gyro);
+        void         Drive(double forward, double strafe, double angle, double gyro);
 
-        void SetFieldCentricity(bool fieldCentric);
-        bool GetFieldCentricity();
+        void         SetFieldCentricity(bool fieldCentric);
+        bool         GetFieldCentricity();
         
-        void GetSwerveModuleWheelVector(int swerveModuleIndex, WheelVector* wheelVector);
+        WheelVector* GetSwerveModuleWheelVector(int swerveModuleIndex);
 
     private:
 
