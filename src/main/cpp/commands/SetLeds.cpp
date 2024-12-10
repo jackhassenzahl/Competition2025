@@ -15,14 +15,12 @@ SetLeds::SetLeds(int Mode, Leds *m_leds) : m_mode(Mode), m_leds(m_leds)
 
     // Remember the LED mode
     m_mode = Mode;
-
-    m_time = -1;
 }
 
 /// @brief Command to set the LED mode.
 /// @param Mode The LED mode.
 /// @param m_leds The LED subsystem.
-SetLeds::SetLeds(int Mode, int time, Leds *m_leds) : m_mode(Mode), m_time(time), m_leds(m_leds)
+SetLeds::SetLeds(int Mode, units::second_t time, Leds *m_leds) : m_mode(Mode), m_time(time), m_leds(m_leds)
 {
     // Set the command name
     SetName("SetLeds");
@@ -33,8 +31,8 @@ SetLeds::SetLeds(int Mode, int time, Leds *m_leds) : m_mode(Mode), m_time(time),
     // Remember the LED mode
     m_mode = Mode;
 
-    // The length of time that the led's will be run in seconds
-    m_time = time * LedConstants::kMillisecondsToSeconds;
+    // Indicate that the LED sequence has a time-out
+    m_timed = true;
 }
 
 /// @brief Called just before this Command runs the first time.
@@ -42,23 +40,26 @@ void SetLeds::Initialize()
 {
     // Set the LED mode
     m_leds->SetMode((LedMode)m_mode);
+
+    // Get the LED sequence start time
+    m_startTime = frc::GetTime();
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
 /// @return True is the command has completed.
 bool SetLeds::IsFinished()
 {
-    frc::SmartDashboard::PutNumber("Led Timer", m_time);
+    frc::SmartDashboard::PutNumber("Led Timer", (double) (frc::GetTime() - m_startTime));
 
-    // If m_time is NULL, then it should go on forever
-    // So if m_time is NOT Null AND is less than 0, then the timer is over and it is finished
-    if (m_time == -1)// && m_time-- <= 0)
+    // Determine if a timed LED sequence
+    if (m_timed == false)
     {
         // frc::SmartDashboard::PutBoolean("Finished", true);
         return false;
     }
-    m_time--;
-    if (m_time <= 0)
+
+    // Determine if the LED sequence is complete
+    if (frc::GetTime() - m_startTime > m_time)
     {
         frc::SmartDashboard::PutBoolean("Finished", true);
         return true;

@@ -5,13 +5,15 @@
 #pragma once
 
 #include "subsystems/Leds.h"
+#include "subsystems/Drivetrain.h"
 
 #include <frc2/command/CommandHelper.h>
+#include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-class AutonomousLed : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousLed>
+class AutonomousParallel : public frc2::CommandHelper<frc2::ParallelCommandGroup, AutonomousParallel>
 {
     public:
 
-        AutonomousLed(Leds *m_leds);
+        AutonomousParallel(Leds *m_leds, Drivetrain *m_drivetrain);
 };

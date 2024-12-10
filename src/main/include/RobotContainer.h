@@ -7,10 +7,12 @@
 
 // Commands
 #include "commands/AutonomousDoNothing.h"
+#include "commands/AutonomousLed.h"
+#include "commands/AutonomousParallel.h"
 #include "commands/ChassisDrive.h"
 #include "commands/DriveDistance.h"
+#include "commands/DriveTime.h"
 #include "commands/SetLeds.h"
-#include "commands/AutonomousLed.h"
 
 #include <frc/Joystick.h>
 #include <frc/smartdashboard/SendableChooser.h>

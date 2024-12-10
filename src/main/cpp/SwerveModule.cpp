@@ -98,6 +98,16 @@ void SwerveModule::SetState(WheelVector vector)
        m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::CANSparkMax::ControlType::kPosition);
 #endif    
     }
+    else
+    {
+        // Ensure the drive motor is disabled
+        m_wheelVector.Drive = 0.0;
+
+#if defined(ROBOT)
+        // Set the Drive motor power to zero
+        m_driveMotor->Set(m_wheelVector.Drive);
+#endif  
+    }
 }
 
 /// @brief Method to determine the optimal swerve module wheel angle given the desired wheel vector.
