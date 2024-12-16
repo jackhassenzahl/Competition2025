@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="228" y="24"/>
+	</widget>
 	<widget field="Vector Rear Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="220" y="635"/>
 	</widget>
@@ -75,7 +78,7 @@
 		<location x="358" y="250"/>
 	</widget>
 	<widget field="LED Counter" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="270" y="154"/>
+		<location x="445" y="139"/>
 	</widget>
 	<widget field="Gyro" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="429" y="414"/>
@@ -90,13 +93,10 @@
 		<location x="412" y="339"/>
 	</widget>
 	<widget field="Finished" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="290" y="203"/>
+		<location x="466" y="192"/>
 	</widget>
 	<widget field="Led Timer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="282" y="178"/>
-	</widget>
-	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="236" y="15"/>
+		<location x="458" y="166"/>
 	</widget>
 	<widget field="pose_0" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="589" y="450"/>

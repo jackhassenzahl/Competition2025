@@ -9,6 +9,7 @@
 #include "commands/AutonomousDoNothing.h"
 #include "commands/AutonomousLed.h"
 #include "commands/AutonomousParallel.h"
+#include "commands/AutonomousComplex.h"
 #include "commands/ChassisDrive.h"
 #include "commands/DriveDistance.h"
 #include "commands/DriveTime.h"
