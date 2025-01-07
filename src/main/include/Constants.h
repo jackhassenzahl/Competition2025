@@ -1,5 +1,7 @@
 #pragma once
 
+#include <units/current.h>
+
 #include <string>
 
 //#define ROBOT  // Enable code to run on the robot
@@ -58,18 +60,20 @@ namespace CanConstants
 
 namespace ChassisConstants
 {
-    constexpr int    kNumberOfSwerveModules           =     4;
+    constexpr int                      kNumberOfSwerveModules           =     4;
 
-    constexpr int    kChassisLength                   =   100;
-    constexpr int    kChassisWidth                    =   100;
+    constexpr int                      kChassisLength                   =   100;
+    constexpr int                      kChassisWidth                    =   100;
 
-    constexpr int    kSwerveMaxAmperage               =    30;
+    constexpr units::current::ampere_t kSwerveDriveMaxAmperage          =  30_A;
 
-    constexpr int    kSwerveWheelCountsPerRevoplution =    21;
+    constexpr int                      kSwerveAngleMaxAmperage          =    30;
 
-    constexpr double kSwerveP                         = 0.700;      
-    constexpr double kSwerveI                         = 0.000;   
-    constexpr double kSwerveD                         = 0.001;
+    constexpr int                      kSwerveWheelCountsPerRevoplution =    21;
+
+    constexpr double                   kSwerveP                         = 0.700;      
+    constexpr double                   kSwerveI                         = 0.000;   
+    constexpr double                   kSwerveD                         = 0.001;
 }
 
 namespace JoystickConstants

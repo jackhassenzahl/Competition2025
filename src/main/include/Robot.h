@@ -1,9 +1,9 @@
 #pragma once
 
-#include "RobotContainer.h"
-
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
+
+#include "RobotContainer.h"
 
 class Robot : public frc::TimedRobot
 {

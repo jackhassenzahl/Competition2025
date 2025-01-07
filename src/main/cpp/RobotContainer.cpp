@@ -1,8 +1,8 @@
-#include "RobotContainer.h"
-#include "Constants.h"
-
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/ParallelRaceGroup.h>
+
+#include "Constants.h"
+#include "RobotContainer.h"
 
 // Reference to the RobotContainer singleton class
 RobotContainer *RobotContainer::m_robotContainer = NULL;  

@@ -1,9 +1,6 @@
 {
   "HALProvider": {
     "Addressable LEDs": {
-      "0": {
-        "columns": 50
-      },
       "window": {
         "visible": true
       }
@@ -12,22 +9,19 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Auto Mode": "String Chooser",
-      "/SmartDashboard/Autonomous Command": "Command",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/class frc2::SubsystemBase": "Subsystem",
       "/SmartDashboard/Autonomous Mode": "String Chooser",
       "/SmartDashboard/ChassisDrive: Stop": "Command",
       "/SmartDashboard/DriveDistance: OneFoot": "Command",
       "/SmartDashboard/DriveDistance: TwoFeet": "Command",
-      "/SmartDashboard/Drivetrain": "Subsystem",
-      "/SmartDashboard/Leds": "Subsystem",
       "/SmartDashboard/SetLeds: HvaColors": "Command",
       "/SmartDashboard/SetLeds: Off": "Command",
       "/SmartDashboard/SetLeds: Rainbow": "Command",
       "/SmartDashboard/SetLeds: ShootingAnimation": "Command",
       "/SmartDashboard/SetLeds: SolidGreen": "Command",
       "/SmartDashboard/SetLeds: SolidRed": "Command",
-      "/SmartDashboard/SetLeds: Strobe": "Command",
-      "/SmartDashboard/class frc2::SubsystemBase": "Subsystem"
+      "/SmartDashboard/SetLeds: Strobe": "Command"
     }
   },
   "NetworkTables Info": {

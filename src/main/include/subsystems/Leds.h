@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Constants.h"
-
 #include <array>
 
 #include <frc/AddressableLED.h>
 #include <frc2/command/SubsystemBase.h>
+
+#include "Constants.h"
 
 /// @brief modes for the LED string.
 enum LedMode

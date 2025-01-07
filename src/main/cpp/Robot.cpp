@@ -1,8 +1,8 @@
-#include "Robot.h"
-
 #include <hal/FRCUsageReporting.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
+
+#include "Robot.h"
 
 /// @brief Method called when the robot class is instantiated.
 void Robot::RobotInit()

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "AHRS.h"
-
-#include <rev/CANSparkMax.h>
+#include <rev/SparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
@@ -31,12 +29,15 @@ class SwerveModule
         void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
         double ConvertAngleToTargetRange(WheelVector wheelVector);
 
-        WheelVector                         m_wheelVector;
+        // Swerve vector struture (Drive and Angle)
+        WheelVector                            m_wheelVector;
 
-        ctre::phoenix6::hardware::TalonFX  *m_driveMotor;
-
-        rev::CANSparkMax                   *m_angleMotor;
-        rev::SparkRelativeEncoder          *m_angleEncoder;
-        ctre::phoenix6::hardware::CANcoder *m_angleAbsoluteEncoder;
-        rev::SparkPIDController            *m_pidController;
+        // Swerve drive motor
+        ctre::phoenix6::hardware::TalonFX     *m_driveMotor;
+        
+        // Swerve angle motor, encoder and PID controller
+        rev::spark::SparkMax                  *m_angleMotor;
+        rev::spark::SparkClosedLoopController *m_pidController;
+        rev::spark::SparkRelativeEncoder      *m_angleEncoder;
+        ctre::phoenix6::hardware::CANcoder    *m_angleAbsoluteEncoder;
 };

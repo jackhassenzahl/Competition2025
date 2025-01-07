@@ -1,5 +1,10 @@
 #pragma once
 
+#include <frc/Joystick.h>
+#include <frc/smartdashboard/SendableChooser.h>
+#include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/Command.h>
+
 // Subsystems
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Leds.h"
@@ -14,11 +19,6 @@
 #include "commands/DriveDistance.h"
 #include "commands/DriveTime.h"
 #include "commands/SetLeds.h"
-
-#include <frc/Joystick.h>
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc2/command/button/JoystickButton.h>
-#include <frc2/command/Command.h>
 
 /// @brief Class to instantiate the robot subsystems and commands along with the operator controls
 class RobotContainer

@@ -1,7 +1,3 @@
-#include "Constants.h"
-
-#include "subsystems/AprilTags.h"
-
 #include <cstdio>
 #include <span>
 #include <sstream>
@@ -21,6 +17,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <units/angle.h>
 #include <units/length.h>
+
+#include "Constants.h"
+#include "subsystems/AprilTags.h"
 
 #if defined(__linux__) || defined(_WIN32)
 

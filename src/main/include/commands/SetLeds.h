@@ -1,10 +1,10 @@
 #pragma once
 
-#include "subsystems/Leds.h"
-
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/Command.h>
 #include <frc/Timer.h>
+
+#include "subsystems/Leds.h"
 
 class SetLeds : public frc2::CommandHelper<frc2::Command, SetLeds>
 {

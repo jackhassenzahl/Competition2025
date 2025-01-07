@@ -1,9 +1,10 @@
-#include "Constants.h"
-#include "subsystems/DriveTrain.h"
+#include <numbers>
+#include <iostream>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include <iostream>
+#include "Constants.h"
+#include "subsystems/DriveTrain.h"
 
 /// @brief Class constructor for the DriveTrain subassembly.
 /// Swerve Module Indexes:
@@ -134,7 +135,7 @@ void Drivetrain::FieldCentricAngleConversion(double *forward, double *strafe, do
     double strafeParamewter = *strafe;
 
     // Convert the angle from degrees to radians
-    angle = angle * PI / 180;
+    angle = angle * std::numbers::pi / 180;
 
     // Modify the input parameters for field centric control
     *forward =  forwardParameter * cos(angle) + strafeParamewter * sin(angle);
@@ -174,10 +175,10 @@ void Drivetrain::CalculateSwerveModuleDriveAndAngle(double forward, double straf
     double D = forward + rotate * (ChassisConstants::kChassisWidth  / R);
 
     // Calculate the wheel angle and convert radians to degrees
-    wheelVector[0].Angle = atan2(B, C) * 180 / PI;
-    wheelVector[1].Angle = atan2(B, D) * 180 / PI;
-    wheelVector[2].Angle = atan2(A, D) * 180 / PI;
-    wheelVector[3].Angle = atan2(A, C) * 180 / PI;
+    wheelVector[0].Angle = atan2(B, C) * 180 / std::numbers::pi;
+    wheelVector[1].Angle = atan2(B, D) * 180 / std::numbers::pi;
+    wheelVector[2].Angle = atan2(A, D) * 180 / std::numbers::pi;
+    wheelVector[3].Angle = atan2(A, C) * 180 / std::numbers::pi;
 
     // Calculate the speed
     wheelVector[0].Drive = sqrt(B * B + C * C);
