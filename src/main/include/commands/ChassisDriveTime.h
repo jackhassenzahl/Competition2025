@@ -7,11 +7,11 @@
 
 #include "subsystems/Drivetrain.h"
 
-class DriveTime : public frc2::CommandHelper<frc2::Command, DriveTime>
+class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveTime>
 {
     public:
 
-        explicit DriveTime(units::second_t time, double speed, Drivetrain *m_drivetrain);
+        explicit ChassisDriveTime(units::second_t time, double speed, Drivetrain *m_drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;

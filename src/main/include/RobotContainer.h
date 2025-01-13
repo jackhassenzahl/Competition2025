@@ -16,8 +16,8 @@
 #include "commands/AutonomousParallel.h"
 #include "commands/AutonomousComplex.h"
 #include "commands/ChassisDrive.h"
-#include "commands/DriveDistance.h"
-#include "commands/DriveTime.h"
+#include "commands/ChassisDriveDistance.h"
+#include "commands/ChassisDriveTime.h"
 #include "commands/SetLeds.h"
 
 /// @brief Class to instantiate the robot subsystems and commands along with the operator controls

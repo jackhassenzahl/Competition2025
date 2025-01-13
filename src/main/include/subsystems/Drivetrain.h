@@ -12,7 +12,7 @@ class Drivetrain : public frc2::SubsystemBase
 {
     public:
 
-        Drivetrain();
+        explicit     Drivetrain();
 
         void         Drive(double forward, double strafe, double angle, double gyro);
 

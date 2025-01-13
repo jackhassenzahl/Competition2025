@@ -34,17 +34,17 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("SetLeds: ShootingAnimation", new SetLeds(LedMode::ShootingAnimation, &m_leds));
     frc::SmartDashboard::PutData("SetLeds: Rainbow",           new SetLeds(LedMode::Rainbow,           &m_leds));
 
-    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new DriveDistance(0, 0.0,               &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: OneFoot",     new DriveDistance(1, 0.5,               &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: TwoFeet",     new DriveDistance(2, 0.5,               &m_drivetrain));
+    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new ChassisDriveDistance(0, 0.0,               &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: OneFoot",     new ChassisDriveDistance(1, 0.5,               &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: TwoFeet",     new ChassisDriveDistance(2, 0.5,               &m_drivetrain));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
     // Configure the autonomous command chooser
     m_autonomousChooser.SetDefaultOption("Do Nothing",     new AutonomousDoNothing());
-    m_autonomousChooser.AddOption("Drive Forward OneFoot", new DriveDistance(1, 0.5, &m_drivetrain));
-    m_autonomousChooser.AddOption("Drive Forward TwoFeet", new DriveDistance(2, 0.5, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward OneFoot", new ChassisDriveDistance(1, 0.5, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward TwoFeet", new ChassisDriveDistance(2, 0.5, &m_drivetrain));
     m_autonomousChooser.AddOption("Led Autonomous",        new AutonomousLed(&m_leds));
     m_autonomousChooser.AddOption("Parallel Test",         new AutonomousParallel(&m_leds, &m_drivetrain));
     m_autonomousChooser.AddOption("Complex Test",          new AutonomousComplex(&m_leds, &m_drivetrain));

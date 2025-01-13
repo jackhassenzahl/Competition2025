@@ -3,11 +3,11 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-class AutonomousCommand : public frc2::CommandHelper<frc2::Command, AutonomousCommand>
+class ChassisTurnAngle : public frc2::CommandHelper<frc2::Command, ChassisTurnAngle>
 {
     public:
 
-        explicit AutonomousCommand();
+        explicit ChassisTurnAngle();
 
         void     Initialize()          override;
         void     Execute()             override;

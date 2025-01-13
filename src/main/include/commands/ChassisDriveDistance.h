@@ -5,11 +5,11 @@
 
 #include "subsystems/Drivetrain.h"
 
-class DriveDistance : public frc2::CommandHelper<frc2::Command, DriveDistance>
+class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDriveDistance>
 {
     public:
 
-        explicit DriveDistance(double distance, double speed, Drivetrain *m_drivetrain);
+        explicit ChassisDriveDistance(double distance, double speed, Drivetrain *m_drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;

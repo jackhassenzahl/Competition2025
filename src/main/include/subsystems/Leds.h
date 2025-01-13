@@ -23,13 +23,10 @@ class Leds : public frc2::SubsystemBase
 {
     public:
 
-        // Class constructor
-        Leds();
+        explicit Leds();
 
-        // Will be called periodically whenever the CommandScheduler runs.
-        void Periodic() override;
-
-        void SetMode(LedMode ledMode);
+        void     Periodic() override;
+        void     SetMode(LedMode ledMode);
 
     private:
 

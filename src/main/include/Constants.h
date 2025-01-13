@@ -83,7 +83,7 @@ namespace JoystickConstants
 
     constexpr int    kJoystickForwardIndex    = 1;
     constexpr int    kJoystickStrifeIndex     = 0;
-    constexpr int    kJoystickAngleIndex      = 4;
+    constexpr int    kJoystickAngleIndex      = 2;  // 4 for xbox controller
 
     constexpr double kJoystickDeadZone        = 0.1;
 
