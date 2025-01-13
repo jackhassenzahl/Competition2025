@@ -11,7 +11,7 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 {
     public:
 
-        explicit ChassisDriveTime(units::second_t time, double speed, Drivetrain *m_drivetrain);
+        explicit ChassisDriveTime(units::second_t time, double speed, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;

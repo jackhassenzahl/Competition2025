@@ -11,5 +11,5 @@ class AutonomousParallel : public frc2::CommandHelper<frc2::ParallelCommandGroup
 {
     public:
 
-        explicit AutonomousParallel(Leds *m_leds, Drivetrain *m_drivetrain);
+        explicit AutonomousParallel(Leds *leds, Drivetrain *drivetrain);
 };

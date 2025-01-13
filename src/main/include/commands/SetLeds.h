@@ -10,8 +10,8 @@ class SetLeds : public frc2::CommandHelper<frc2::Command, SetLeds>
 {
     public:
 
-        explicit SetLeds(int Mode,                       Leds *m_leds);
-        explicit SetLeds(int Mode, units::second_t time, Leds *m_leds);
+        explicit SetLeds(int Mode,                       Leds *leds);
+        explicit SetLeds(int Mode, units::second_t time, Leds *leds);
 
         void     Initialize()          override;
         bool     IsFinished()          override;

@@ -5,7 +5,7 @@
 /// @brief Command to set the LED mode.
 /// @param Mode The LED mode.
 /// @param m_leds The LED subsystem.
-SetLeds::SetLeds(int Mode, Leds *m_leds) : m_mode(Mode), m_leds(m_leds)
+SetLeds::SetLeds(int Mode, Leds *leds) : m_mode(Mode), m_leds(leds)
 {
     // Set the command name
     SetName("SetLeds");
@@ -20,7 +20,7 @@ SetLeds::SetLeds(int Mode, Leds *m_leds) : m_mode(Mode), m_leds(m_leds)
 /// @brief Command to set the LED mode.
 /// @param Mode The LED mode.
 /// @param m_leds The LED subsystem.
-SetLeds::SetLeds(int Mode, units::second_t time, Leds *m_leds) : m_mode(Mode), m_time(time), m_leds(m_leds)
+SetLeds::SetLeds(int Mode, units::second_t time, Leds *leds) : m_mode(Mode), m_time(time), m_leds(leds)
 {
     // Set the command name
     SetName("SetLeds");
