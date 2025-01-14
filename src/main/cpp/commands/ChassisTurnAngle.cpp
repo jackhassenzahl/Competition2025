@@ -3,14 +3,18 @@
 ChassisTurnAngle::ChassisTurnAngle(units::angle::degrees angle, double speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) : 
                                    m_angle(angle), m_timeoutTime(timeoutTime), m_speed(speed), m_drivetrain(drivetrain)
 {
-  // Use addRequirements() here to declare subsystem dependencies
+    // Set the command name
+    SetName("ChassisTurnAngle");
 
+    // Declare subsystem dependencies
+    AddRequirements(drivetrain);
 }
 
 /// @brief Called just before this Command runs the first time.
 void ChassisTurnAngle::Initialize()
 {
-
+    // Get the start time
+    m_startTime = frc::GetTime();
 }
 
 /// @brief Called repeatedly when this Command is scheduled to run.
@@ -23,12 +27,18 @@ void ChassisTurnAngle::Execute()
 /// @return True is the command has completed.
 bool ChassisTurnAngle::IsFinished()
 {
-  return false;
+    // Determine if the sequence is complete
+    if (frc::GetTime() - m_startTime > m_timeoutTime)
+        return true;
+
+    // Still driving
+    return false; 
 }
 
 /// @brief Called once after isFinished returns true.
 /// @param interrupted Indicated that the command was interrupted.
 void ChassisTurnAngle::End(bool interrupted) 
 {
-
+    // Stop the move
+    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
 }

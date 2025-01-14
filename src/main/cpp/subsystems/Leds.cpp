@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/LEDPattern.h>
 
 #include "subsystems/Leds.h"
 
@@ -29,23 +30,29 @@ void Leds::Periodic()
 
     switch (m_ledMode)
     {
-    case LedMode::Off:
-    case LedMode::SolidGreen:
-    case LedMode::SolidRed:
-    case LedMode::HvaColors:
-        return;
+        case LedMode::Off:
+        case LedMode::SolidGreen:
+        case LedMode::SolidRed:
+        case LedMode::HvaColors:
+            return;
+    
+        case LedMode::Strobe:
+            Strobe();
+            break;
+    
+        case LedMode::ShootingAnimation:
+        {
+            // Apply the shootime pattern to the data buffer
+            m_shooting.ApplyTo(m_ledBuffer);
+            break;
+        }
 
-    case LedMode::Strobe:
-        Strobe();
-        break;
-
-    case LedMode::ShootingAnimation:
-        ShootingAnimation();
-        break;
-
-    case LedMode::Rainbow:
-        Rainbow();
-        break;
+        case LedMode::Rainbow:
+        {
+            // Run the rainbow pattern and apply it to the buffer
+            m_scrollingRainbow.ApplyTo(m_ledBuffer);    
+            break;
+        }
     }
 
     // Set the LEDs
@@ -82,15 +89,6 @@ void Leds::SetMode(LedMode ledMode)
     case LedMode::Strobe:
         m_cycleCounter = 0;
         Strobe();
-        break;
-
-    case LedMode::ShootingAnimation:
-        m_cycleCounter = 0;
-        ShootingAnimation();
-        break;
-
-    case LedMode::Rainbow:
-        Rainbow();
         break;
 
     default:
@@ -144,31 +142,4 @@ void Leds::Strobe()
 
     // Update the cycle counter
     m_cycleCounter++;
-}
-
-/// @brief Methdo to set the LED stdring to shooting animation.
-void Leds::ShootingAnimation()
-{
-
-}
-
-/// @brief 
-void Leds::Rainbow()
-{
-    // For every pixel
-    for (auto ledIndex = 0; ledIndex < LedConstants::kLength; ledIndex++)
-    {
-        // Calculate the hue - hue is easier for rainbows because the color
-        // shape is a circle so only one value needs to precess
-        const auto pixelHue = (m_firstPixelHue + (ledIndex * 45 / LedConstants::kLength)) % 360;
-
-        // Set the value
-        m_ledBuffer[ledIndex].SetHSV(pixelHue, 255, (int)(255 * LedConstants::kBrightness));
-    }
-
-    // Increase by to make the rainbow "move"
-    m_firstPixelHue += LedConstants::kRainbowRate;
-
-    // Check bounds
-    m_firstPixelHue %= 180;
 }

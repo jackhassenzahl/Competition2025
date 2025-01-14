@@ -113,7 +113,7 @@ namespace ApriltagConstants
 
 namespace LedConstants
 {
-    constexpr int    kLength                = 410;  // The length of the LED string
+    constexpr int    kLength                =  40;  // The length of the LED string
 
     constexpr int    kPwmPort               =   5;
 
