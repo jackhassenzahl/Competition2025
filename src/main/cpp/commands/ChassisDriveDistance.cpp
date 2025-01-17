@@ -1,6 +1,6 @@
 #include "commands/ChassisDriveDistance.h"
 
-ChassisDriveDistance::ChassisDriveDistance(double distance, double speed, Drivetrain *drivetrain) : m_distance(distance), m_speed(speed), m_drivetrain(drivetrain)
+ChassisDriveDistance::ChassisDriveDistance(units::meter_t distance, units::meters_per_second_t speed, Drivetrain *drivetrain) : m_distance(distance), m_speed(speed), m_drivetrain(drivetrain)
 {
     // Set the command name
     SetName("ChassisDriveDistance");
@@ -23,7 +23,7 @@ void ChassisDriveDistance::Initialize()
 void ChassisDriveDistance::Execute()
 {
     // Start driving
-    m_drivetrain->Drive(m_speed, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(m_speed, 0_mps, 0_rad_per_s, true, 0.02_s);
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
@@ -39,7 +39,7 @@ bool ChassisDriveDistance::IsFinished()
 void ChassisDriveDistance::End(bool interrupted)
 {
     // Stop the move
-    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, true, 0_s);
 
     // Restore the field centricity
     m_drivetrain->SetFieldCentricity(m_fieldCentricity);

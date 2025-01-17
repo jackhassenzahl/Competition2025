@@ -1,43 +1,60 @@
 #pragma once
 
+#include <numbers>
+
 #include <rev/SparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-struct WheelVector
-{
-    double Drive = 0.0;
-    double Angle = 0.0;
-};
+#include <units/angular_velocity.h>
+#include <units/time.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
+
+#include <frc/controller/PIDController.h>
+#include <frc/controller/ProfiledPIDController.h>
+#include <frc/controller/SimpleMotorFeedforward.h>
+#include <frc/kinematics/SwerveModulePosition.h>
+#include <frc/kinematics/SwerveModuleState.h>
+#include <frc/motorcontrol/PWMSparkMax.h>
+
+#include "Constants.h"
 
 class SwerveModule
 {
     public:
 
-        explicit     SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
+        explicit                  SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
 
-        void         SetState(WheelVector wheelVector);
+        void                      SetState(frc::SwerveModuleState &state);
 
-        WheelVector* GetWheelVector();
+        frc::SwerveModuleState    GetState()    const;
+        frc::SwerveModulePosition GetPosition() const;
 
     private:
 
-        // Private methods
-        void   ConfigureDriveMotor(int driveMotorCANid);
-        void   ConfigureAngleMotor(int angleMotorCANid, int angleEncoderCANid);
+        void            ConfigureDriveMotor(int driveMotorCANid);
+        void            ConfigureAngleMotor(int angleMotorCANid, int angleEncoderCANid);
 
-        void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
-        double ConvertAngleToTargetRange(WheelVector wheelVector);
+        double          GetDriveEncoderRate();
 
-        // Swerve vector struture (Drive and Angle)
-        WheelVector                            m_wheelVector;
+        units::radian_t GetAngleEncoderDistance();
+
+        static constexpr auto kModuleMaxAngularVelocity     = std::numbers::pi * 1_rad_per_s;       // radians per second
+        static constexpr auto kModuleMaxAngularAcceleration = std::numbers::pi * 2_rad_per_s / 1_s; // radians per second^2
 
         // Swerve drive motor
-        ctre::phoenix6::hardware::TalonFX     *m_driveMotor;
+        // Note: Encoder is built in the TalonFX
+        ctre::phoenix6::hardware::TalonFX          *m_driveMotor;
         
         // Swerve angle motor, encoder and PID controller
-        rev::spark::SparkMax                  *m_angleMotor;
-        rev::spark::SparkClosedLoopController *m_pidController;
-        rev::spark::SparkRelativeEncoder      *m_angleEncoder;
-        ctre::phoenix6::hardware::CANcoder    *m_angleAbsoluteEncoder;
+        rev::spark::SparkMax                       *m_angleMotor;
+        rev::spark::SparkRelativeEncoder           *m_angleEncoder;
+        ctre::phoenix6::hardware::CANcoder         *m_angleAbsoluteEncoder;
+        
+        frc::PIDController                          m_drivePIDController{1.0, 0, 0};
+        frc::ProfiledPIDController<units::radians>  m_turningPIDController{1.0, 0.0, 0.0, {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
+
+        frc::SimpleMotorFeedforward<units::meters>  m_driveFeedforward{1_V, 3_V / 1_mps};
+        frc::SimpleMotorFeedforward<units::radians> m_turnFeedforward{1_V, 0.5_V / 1_rad_per_s};
 };

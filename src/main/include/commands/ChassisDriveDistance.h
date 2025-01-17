@@ -9,7 +9,7 @@ class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDr
 {
     public:
 
-        explicit ChassisDriveDistance(double distance, double speed, Drivetrain *drivetrain);
+        explicit ChassisDriveDistance(units::meter_t distance, units::meters_per_second_t speed, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -18,9 +18,9 @@ class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDr
 
     private:
 
-        bool        m_fieldCentricity;
-        double      m_distance;
-        double      m_speed;
+        bool                       m_fieldCentricity;
+        units::meter_t             m_distance;
+        units::meters_per_second_t m_speed;
 
         Drivetrain *m_drivetrain;
 };

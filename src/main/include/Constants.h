@@ -1,8 +1,10 @@
 #pragma once
 
 #include <units/current.h>
-
-#include <string>
+#include <units/angular_velocity.h>
+#include <units/time.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
 
 //#define ROBOT  // Enable code to run on the robot
 
@@ -120,4 +122,10 @@ namespace LedConstants
     constexpr double kBrightness            = 0.5;
     constexpr int    kRainbowRate           =   3;
     constexpr int    kMillisecondsToSeconds =  35;
+}
+
+namespace SwerveModuleConstants
+{
+    constexpr double kWheelRadius                  = 0.0508;
+    constexpr int    kEncoderResolution            = 4096;
 }

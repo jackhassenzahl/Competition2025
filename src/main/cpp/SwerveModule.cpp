@@ -1,10 +1,10 @@
 #include <cmath>
 
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <ctre/phoenix6/configs/Configs.hpp>
-#include <rev/SparkMax.h>
+#include <frc/geometry/Rotation2d.h>
 
-#include "Constants.h"
+#include <rev/SparkMax.h>
+#include <ctre/phoenix6/configs/Configs.hpp>
+
 #include "SwerveModule.h"
 
 /// @brief Class constructor for the SwerveModule class.
@@ -13,10 +13,6 @@
 /// @param angleEncoderCanId The CAN ID for the swerve module angle encoder.
 SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId)
 {
-    // Initialize the angle and drive to zero
-    m_wheelVector.Angle = 0.0;
-    m_wheelVector.Drive = 0.0;
- 
     // Configure the drive and angle motors
     ConfigureDriveMotor(driveMotorCanId);
     ConfigureAngleMotor(angleMotorCanId, angleEncoderCanId);
@@ -33,20 +29,13 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
     // Configure the drive motors 
     ctre::phoenix6::configs::TalonFXConfiguration swerve_motor_configuration{};
 
-    ctre::phoenix6::configs::Slot0Configs slot0Configs = swerve_motor_configuration.Slot0;
-    slot0Configs.kP = ChassisConstants::kSwerveP;  // An error of 0.5 rotations results in 12 V output
-    slot0Configs.kI = ChassisConstants::kSwerveI;  // no output for integrated error
-    slot0Configs.kD = ChassisConstants::kSwerveD;  // A velocity of 1 rps results in 0.1 V output
-
-    m_driveMotor->GetConfigurator().Apply(swerve_motor_configuration);
-    
     // Set the current limit
     ctre::phoenix6::configs::CurrentLimitsConfigs currentLimitsConfigs{};
     currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::kSwerveDriveMaxAmperage;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
     m_driveMotor->GetConfigurator().Apply(currentLimitsConfigs);
 }
-
+    
 /// @brief Method to configure the angle motor and encoder.
 /// @param angleMotorCanId The angle motor CAN identification.
 /// @param angleEncoderCanId The angle encoder CAN identification.
@@ -62,6 +51,9 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     ctre::phoenix6::hardware::CANcoder angleAbsoluteEncoder = ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::kCanBus);
     m_angleAbsoluteEncoder = &angleAbsoluteEncoder;
 
+    // Limit the PID Controller's input range between -pi and pi and set the input to be continuous.
+    m_turningPIDController.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
+
     // Set the absolute out range
     // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees
     ctre::phoenix6::configs::CANcoderConfiguration toApply{};
@@ -74,120 +66,60 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     config.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     config.SecondaryCurrentLimit(ChassisConstants::kSwerveAngleMaxAmperage);
     config.encoder.PositionConversionFactor(1000).VelocityConversionFactor(1000);
-    config.closedLoop.SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-                     .Pid(ChassisConstants::kSwerveP, ChassisConstants::kSwerveI, ChassisConstants::kSwerveD);
- 
+
     m_angleMotor->Configure(config, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 
 /// @brief Set the swerve module angle and motor power.
 /// @param vector The wheel vector (angle and drive).
-void SwerveModule::SetState(WheelVector vector)
+void SwerveModule::SetState(frc::SwerveModuleState &referenceState)
 {
-    // Do not change the angle if the wheel is not driven
-    if (vector.Drive > 0.0)
-    {
-        // Optimize the serve module vector to minimize wheel rotation on change of diretion
-       OptimizeWheelAngle(vector, &m_wheelVector);
+    frc::Rotation2d encoderRotation{units::radian_t{m_angleEncoder->GetPosition()}};
 
-#if defined(ROBOT)
-        // Set the Drive motor power
-        m_driveMotor->Set(m_wheelVector.Drive);
+    // Optimize the reference state to avoid spinning further than 90 degrees
+    referenceState.Optimize(encoderRotation);
 
-        // Set the angle motor PID set angle
-       m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::CANSparkMax::ControlType::kPosition);
-#endif    
-    }
-    else
-    {
-        // Ensure the drive motor is disabled
-        m_wheelVector.Drive = 0.0;
+    // Scale speed by cosine of angle error. This scales down movement perpendicular to the desired direction of travel that can occur when
+    // modules change directions. This results in smoother driving.
+    referenceState.CosineScale(encoderRotation);
 
-#if defined(ROBOT)
-        // Set the Drive motor power to zero
-        m_driveMotor->Set(m_wheelVector.Drive);
-#endif  
-    }
+    // Calculate the drive output from the drive PID controller.
+    const auto driveOutput      = m_drivePIDController.Calculate(GetDriveEncoderRate(), referenceState.speed.value());
+    const auto driveFeedforward = m_driveFeedforward.Calculate(referenceState.speed);
+
+    // Calculate the turning motor output from the turning PID controller.
+    const auto turnOutput      = m_turningPIDController.Calculate(GetAngleEncoderDistance(), referenceState.angle.Radians());
+    const auto turnFeedforward = m_turnFeedforward.Calculate(m_turningPIDController.GetSetpoint().velocity);
+
+    // Set the motor outputs.
+    m_driveMotor->SetVoltage(units::volt_t{driveOutput} + driveFeedforward);
+    m_angleMotor->SetVoltage(units::volt_t{turnOutput} + turnFeedforward);
 }
 
-/// @brief Method to determine the optimal swerve module wheel angle given the desired wheel vector.
-/// @brief Note: The swerve module angle is not restricted to -180 to 180 degrees, but is the actual module angle.
-/// @param wheelVector The target swerve module wheel drive power and angle.
-void SwerveModule::OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector)
+double SwerveModule::GetDriveEncoderRate()
 {
-    double driveDirection = 1.0;  // Forward direction
-
-    // Convert the present wheel angle to the same hemi-sphere as the target wheel angle
-    double workingAngle = ConvertAngleToTargetRange(*wheelVector);
-                                                                               
-    // Determine the angle between the past and desired swerve angle
-    double angleDifference = targetWheelVector.Angle - workingAngle;
-
-    // Determine if the angle is greater that obtuse (greater that 180 degrees)
-    if (angleDifference > 180.0)
-    {
-        // Get the accute angle and change wheel correction direction
-        angleDifference = angleDifference - 180.0;
-        driveDirection *= -1.0;
-    }
-    else if (angleDifference < -180.0)
-    {
-        // Get the accute angle and change wheel correction direction
-        angleDifference = angleDifference + 180.0;
-        driveDirection *= -1.0;
-    }
-
-    // Minimize the wheel rotation
-    if (angleDifference > 90.0)
-    {
-        // Get the minimized wheel angle and change wheel correction direction
-        angleDifference = angleDifference - 180.0;
-
-        // Reverse the drive direction
-        driveDirection *= -1.0;
-    }
-    else if (angleDifference < -90.0)
-    {
-        // Get the minimized wheel angle and change wheel correction direction
-        angleDifference = angleDifference + 180.0;
-
-        // Reverse the drive direction
-        driveDirection *= -1.0;
-    }
-
-    // Set the wheel vector to the target
-    wheelVector->Angle += angleDifference;
-    wheelVector->Drive  = targetWheelVector.Drive * driveDirection;
+    // m_driveEncoder.GetRate()
+    return 0.0;
 }
 
-/// <summary>
-/// Convert any angle to the range -180 to 180 degrees.
-/// </summary>
-/// <param name="angle">The angle to convert.</param>
-/// <returns>The angle represented from -180 to 180 degrees.</returns>
-double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector)
+units::radian_t SwerveModule::GetAngleEncoderDistance()
 {
-    // Get the angle between -360 and 360
-    double angle = remainder(wheelVector.Angle, 360.0);
-                  
-    // Convert large negative angles
-    if (angle <= -180.0)
-        angle += 360.0;
-
-    // Convert large postive angles
-    if (angle > 180.0)
-        angle -= 360.0;
-
-    // Return the swerve angle in the proper hemisphere (-180 to 180 degrees)
-    return angle;
+    // units::radian_t{m_turningEncoder.GetDistance()}
+    return 0_rad;
 }
 
-/// <summary>
-/// Method to get the swerve module wheel vector.
-/// </summary>
-/// <param name="wheelVector">Variable to return the swerve module wheel vector.</param>
-WheelVector* SwerveModule::GetWheelVector()
+
+frc::SwerveModuleState SwerveModule::GetState() const
 {
-    // Return the wheel vector
-    return &m_wheelVector;
+    return {units::meters_per_second_t{0}, units::radian_t{0}};
+
+    //return {units::meters_per_second_t{m_driveMotor->GetRotorVelocity()}, units::radian_t{m_angleEncoder->GetPosition()}};
 }
+
+frc::SwerveModulePosition SwerveModule::GetPosition() const
+{
+    return {units::meter_t{0}, units::radian_t{0}};
+
+   //return {units::meter_t{m_driveEncoder.GetDistance()}, units::radian_t{m_angleEncoder->GetPosition()}};
+}
+

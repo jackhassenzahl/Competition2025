@@ -1,6 +1,6 @@
 #include "commands/ChassisTurnAngle.h"
 
-ChassisTurnAngle::ChassisTurnAngle(units::angle::degrees angle, double speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) : 
+ChassisTurnAngle::ChassisTurnAngle(units::angle::degrees angle, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) : 
                                    m_angle(angle), m_timeoutTime(timeoutTime), m_speed(speed), m_drivetrain(drivetrain)
 {
     // Set the command name
@@ -40,5 +40,5 @@ bool ChassisTurnAngle::IsFinished()
 void ChassisTurnAngle::End(bool interrupted) 
 {
     // Stop the move
-    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, true, 0_s);
 }

@@ -34,20 +34,20 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("SetLeds: ShootingAnimation", new SetLeds(LedMode::ShootingAnimation, &m_leds));
     frc::SmartDashboard::PutData("SetLeds: Rainbow",           new SetLeds(LedMode::Rainbow,           &m_leds));
 
-    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new ChassisDriveDistance(0, 0.0,               &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: OneFoot",     new ChassisDriveDistance(1, 0.5,               &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: TwoFeet",     new ChassisDriveDistance(2, 0.5,               &m_drivetrain));
+    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new ChassisDriveDistance(0_m, 0_mps,  &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: OneMeter",    new ChassisDriveDistance(1_m, 0.5_mps,  &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: TwoMeters",   new ChassisDriveDistance(2_m, 0.5_mps,  &m_drivetrain));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
     // Configure the autonomous command chooser
-    m_autonomousChooser.SetDefaultOption("Do Nothing",     new AutonomousDoNothing());
-    m_autonomousChooser.AddOption("Drive Forward OneFoot", new ChassisDriveDistance(1, 0.5, &m_drivetrain));
-    m_autonomousChooser.AddOption("Drive Forward TwoFeet", new ChassisDriveDistance(2, 0.5, &m_drivetrain));
-    m_autonomousChooser.AddOption("Led Autonomous",        new AutonomousLed(&m_leds));
-    m_autonomousChooser.AddOption("Parallel Test",         new AutonomousParallel(&m_leds, &m_drivetrain));
-    m_autonomousChooser.AddOption("Complex Test",          new AutonomousComplex(&m_leds, &m_drivetrain));
+    m_autonomousChooser.SetDefaultOption("Do Nothing",       new AutonomousDoNothing());
+    m_autonomousChooser.AddOption("Drive Forward OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, &m_drivetrain));
+    m_autonomousChooser.AddOption("Led Autonomous",          new AutonomousLed(&m_leds));
+    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds, &m_drivetrain));
+    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds, &m_drivetrain));
 
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);
@@ -57,7 +57,6 @@ RobotContainer::RobotContainer()
         [this] { return Forward(); },
         [this] { return Strife();  },
         [this] { return Angle();   }, 
-        [this] { return Gyro();    },
         &m_drivetrain));
 
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
@@ -98,40 +97,37 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 }
 
 /// @brief Method to return the forward joystick value.
-/// @return The forward joystick value.
-double RobotContainer::Forward()
+/// @return The forward joystick meters per second value.
+units::meters_per_second_t RobotContainer::Forward()
 {
+    // Get the forward joystick setting
     double joystickForward = -GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
 
-    return GetExponentialValue(joystickForward, JoystickConstants::kExponentForward);
+    // Use expoendial function to calculate the forward value for better slow speed control
+    return GetExponentialValue(joystickForward, JoystickConstants::kExponentForward) * Drivetrain::kMaxSpeed;
 }
 
+
 /// @brief Method to return the strife joystick value.
-/// @return The strife joystick value.
-double RobotContainer::Strife()
+/// @return The strife joystick meters per second value.
+units::meters_per_second_t RobotContainer::Strife()
 {
+    // Get the strife joystick setting
     double joystickStrife = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickStrifeIndex);
 
-    return GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife);
+    // Use expoendial function to calculate the forward value for better slow speed control
+    return GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife) * Drivetrain::kMaxSpeed;
 }
 
 /// @brief Method to return the angle joystick value.
 /// @return The angle joystick value.
-double RobotContainer::Angle()
+units::radians_per_second_t RobotContainer::Angle()
 {
+    // Get the angle joystick setting    
     double joystickAngle = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickAngleIndex);
 
-    return GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle);
-}
-
-/// @brief 
-/// @return 
-double RobotContainer::Gyro()
-{
-    // Test using joystick
-    double joystickGyro = GetJoystickDriver()->GetRawAxis(5);
-
-    return GetExponentialValue(joystickGyro, JoystickConstants::kExponentAngle);
+    // Use expoendial function to calculate the forward value for better slow speed control
+    return GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle)* Drivetrain::kMaxAngularSpeed;
 }
 
 /// <summary>

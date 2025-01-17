@@ -11,7 +11,7 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 {
     public:
 
-        explicit ChassisDriveTime(units::second_t time, double speed, Drivetrain *drivetrain);
+        explicit ChassisDriveTime(units::second_t time, units::meters_per_second_t speed, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -20,11 +20,11 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 
     private:
 
-        bool            m_fieldCentricity;
-        double          m_speed;
+        bool                       m_fieldCentricity;
 
-        units::second_t m_time;           // The length of time that the chass will drive
-        units::second_t m_startTime;      // The start of the drive time
+        units::meters_per_second_t m_speed;
+        units::second_t            m_time;           // The length of time that the chass will drive
+        units::second_t            m_startTime;      // The start of the drive time
 
-        Drivetrain     *m_drivetrain;
+        Drivetrain                *m_drivetrain;
 };

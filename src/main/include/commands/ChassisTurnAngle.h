@@ -12,7 +12,7 @@ class ChassisTurnAngle : public frc2::CommandHelper<frc2::Command, ChassisTurnAn
 {
     public:
 
-        explicit ChassisTurnAngle(units::angle::degrees angle, double speed, units::time::second_t timeoutTime, Drivetrain *drivetrain);
+        explicit ChassisTurnAngle(units::angle::degrees angle, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -21,10 +21,10 @@ class ChassisTurnAngle : public frc2::CommandHelper<frc2::Command, ChassisTurnAn
 
     private:
 
-        double                m_speed;
-        units::time::second_t m_timeoutTime;
-        units::time::second_t m_startTime;
-        units::angle::degrees m_angle;
+        units::meters_per_second_t  m_speed;
+        units::time::second_t       m_timeoutTime;
+        units::time::second_t       m_startTime;
+        units::angle::degrees       m_angle;
 
-        Drivetrain           *m_drivetrain;        
+        Drivetrain                 *m_drivetrain;        
 };

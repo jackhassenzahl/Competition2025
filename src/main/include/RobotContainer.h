@@ -26,24 +26,23 @@ class RobotContainer
     public:
 
         // Method that returns a pointer to the singleton instance of the RobotContainer class
-        static RobotContainer *GetInstance();
+        static RobotContainer      *GetInstance();
 
         // Method to get a pointer to the selected autonomous command
-        frc2::Command         *GetAutonomousCommand();
+        frc2::Command              *GetAutonomousCommand();
 
         // Methods to get a reference to the robot joysticks
-        frc::Joystick         *GetJoystickDriver();
-        frc::Joystick         *GetJoystickOperator();
+        frc::Joystick              *GetJoystickDriver();
+        frc::Joystick              *GetJoystickOperator();
 
-        double                 Forward();
-        double                 Strife();
-        double                 Angle();
-        double                 Gyro();
+        units::meters_per_second_t  Forward();
+        units::meters_per_second_t  Strife();
+        units::radians_per_second_t Angle();
 
         // Instantiate the robot subsystems
-        AprilTags              m_aprilTags;
-        Drivetrain             m_drivetrain;
-        Leds                   m_leds;
+        AprilTags  m_aprilTags;
+        Drivetrain m_drivetrain;
+        Leds       m_leds;
 
     private:
 
@@ -51,7 +50,7 @@ class RobotContainer
         RobotContainer();
 
         // Method to bind the joystick controls to the robot commands
-        void ConfigureButtonBindings();
+        void   ConfigureButtonBindings();
         
         double GetExponentialValue(double joystickValue, double exponent);
         

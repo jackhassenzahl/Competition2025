@@ -1,6 +1,6 @@
 #include "commands/ChassisDriveTime.h"
 
-ChassisDriveTime::ChassisDriveTime(units::second_t time, double speed, Drivetrain *drivetrain) : m_time(time), m_speed(speed), m_drivetrain(drivetrain)
+ChassisDriveTime::ChassisDriveTime(units::second_t time, units::meters_per_second_t speed, Drivetrain *drivetrain) : m_time(time), m_speed(speed), m_drivetrain(drivetrain)
 {
     // Set the command name
     SetName("ChassisDriveTime");
@@ -26,7 +26,7 @@ void ChassisDriveTime::Initialize()
 void ChassisDriveTime::Execute()
 {
     // Start driving
-    m_drivetrain->Drive(m_speed, 0.0, 0.0, 0.0);
+    // m_drivetrain->Drive(m_speed, 0.0, 0.0, 0.0);
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
@@ -46,7 +46,7 @@ bool ChassisDriveTime::IsFinished()
 void ChassisDriveTime::End(bool interrupted)
 {
     // Stop the move
-    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, true, 0_s);
 
     // Restore the field centricity
     m_drivetrain->SetFieldCentricity(m_fieldCentricity);
