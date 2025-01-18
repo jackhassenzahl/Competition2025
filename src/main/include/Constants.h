@@ -4,7 +4,7 @@
 
 #include <string>
 
-//#define ROBOT  // Enable code to run on the robot
+#define ROBOT  // Enable code to run on the robot
 
 //************************************************************************
 // ***** Robio RIO Wiring Connections *****
@@ -41,26 +41,26 @@ namespace CanConstants
 {
     const std::string kCanBus = "rio";
 
-    constexpr int kSwerveFrontRightDriveMotorCanId   = 1;
+    constexpr int kSwerveFrontRightDriveMotorCanId   = 3;
     constexpr int kSwerveFrontRightAngleMotorCanId   = 2;   
-    constexpr int kSwerveFrontRightAngleEncoderCanId = 3;  
+    constexpr int kSwerveFrontRightAngleEncoderCanId = 12;  
 
-    constexpr int kSwerveFrontLeftDriveMotorCanId    = 4;
+    constexpr int kSwerveFrontLeftDriveMotorCanId    = 6;
     constexpr int kSwerveFrontLeftAngleMotorCanId    = 5;   
-    constexpr int kSwerveFrontLeftAngleEncoderCanId  = 6; 
+    constexpr int kSwerveFrontLeftAngleEncoderCanId  = 4; 
 
-    constexpr int kSwerveRearLeftDriveMotorCanId     = 7;
+    constexpr int kSwerveRearLeftDriveMotorCanId     = 9;
     constexpr int kSwerveRearLeftAngleMotorCanId     = 8;   
-    constexpr int kSwerveRearLeftAngleEncoderCanId   = 9; 
+    constexpr int kSwerveRearLeftAngleEncoderCanId   = 7; 
 
-    constexpr int kSwerveRearRightDriveMotorCanId    = 0;
-    constexpr int kSwerveRearRightAngleMotorCanId    = 1;   
-    constexpr int kSwerveRearRightAngleEncoderCanId  = 2;  
+    constexpr int kSwerveRearRightDriveMotorCanId    = 11;
+    constexpr int kSwerveRearRightAngleMotorCanId    = 10;   
+    constexpr int kSwerveRearRightAngleEncoderCanId  = 13;  
 }
 
 namespace ChassisConstants
 {
-    constexpr int                      kNumberOfSwerveModules           =     4;
+    constexpr int                      kNumberOfSwerveModules           =     1;
 
     constexpr int                      kChassisLength                   =   100;
     constexpr int                      kChassisWidth                    =   100;

@@ -1,5 +1,6 @@
 #include "commands/ChassisDrive.h"
 #include "subsystems/Drivetrain.h"
+#include <iostream>
 
 /// @brief The operator chassis drive command.
 /// @param Left 
@@ -23,6 +24,7 @@ ChassisDrive::ChassisDrive(std::function<double()> forward,
                            m_gyro{std::move(gyro)},
                            m_drivetrain(drivetrain)
 {
+    //std::cout << "Chassis Constructor" << std::endl;
     // Set the command name
     SetName("ChassisDrive");
 
@@ -41,4 +43,9 @@ void ChassisDrive::Execute()
 {
     // Perform the chassis drive
     m_drivetrain->Drive(m_forward(), m_strafe(), m_angle(), m_gyro());
+}
+
+bool ChassisDrive::IsFinished()
+{
+    return false;
 }

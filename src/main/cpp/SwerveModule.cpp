@@ -38,13 +38,13 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
     slot0Configs.kI = ChassisConstants::kSwerveI;  // no output for integrated error
     slot0Configs.kD = ChassisConstants::kSwerveD;  // A velocity of 1 rps results in 0.1 V output
 
-    m_driveMotor->GetConfigurator().Apply(swerve_motor_configuration);
+    //m_driveMotor->GetConfigurator().Apply(swerve_motor_configuration);
     
     // Set the current limit
     ctre::phoenix6::configs::CurrentLimitsConfigs currentLimitsConfigs{};
     currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::kSwerveDriveMaxAmperage;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
-    m_driveMotor->GetConfigurator().Apply(currentLimitsConfigs);
+    //m_driveMotor->GetConfigurator().Apply(currentLimitsConfigs);
 }
 
 /// @brief Method to configure the angle motor and encoder.
@@ -66,7 +66,7 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees
     ctre::phoenix6::configs::CANcoderConfiguration toApply{};
     toApply.MagnetSensor.AbsoluteSensorDiscontinuityPoint = -180_deg;
-    m_angleAbsoluteEncoder->GetConfigurator().Apply(toApply);
+    //m_angleAbsoluteEncoder->GetConfigurator().Apply(toApply);
 
     // Configure the angle motor
     rev::spark::SparkBaseConfig config{};
@@ -95,7 +95,7 @@ void SwerveModule::SetState(WheelVector vector)
         m_driveMotor->Set(m_wheelVector.Drive);
 
         // Set the angle motor PID set angle
-       m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::CANSparkMax::ControlType::kPosition);
+       m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::kSwerveWheelCountsPerRevoplution, rev::spark::SparkMax::ControlType::kPosition);
 #endif    
     }
     else

@@ -1,5 +1,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/ParallelRaceGroup.h>
+#include <frc/Watchdog.h>
 
 #include "Constants.h"
 #include "RobotContainer.h"
@@ -61,6 +62,7 @@ RobotContainer::RobotContainer()
         &m_drivetrain));
 
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
+
 }
 
 /// @brief Method to bind the joystick controls to the robot commands.

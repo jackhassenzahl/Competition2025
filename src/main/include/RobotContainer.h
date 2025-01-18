@@ -41,7 +41,7 @@ class RobotContainer
         double                 Gyro();
 
         // Instantiate the robot subsystems
-        AprilTags              m_aprilTags;
+        //AprilTags              m_aprilTags;
         Drivetrain             m_drivetrain;
         Leds                   m_leds;
 

@@ -14,6 +14,7 @@ class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>
 
         void     Initialize() override;
         void     Execute()    override;
+        bool     IsFinished() override;
 
     private:
 

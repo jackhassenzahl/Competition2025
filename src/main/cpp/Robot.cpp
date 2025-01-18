@@ -1,6 +1,7 @@
 #include <hal/FRCUsageReporting.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
+#include <frc/Watchdog.h>
 
 #include "Robot.h"
 
