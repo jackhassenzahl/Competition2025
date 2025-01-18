@@ -1,5 +1,3 @@
-#include <frc/smartdashboard/SmartDashboard.h>
-
 #include "commands/SetLeds.h"
 
 /// @brief Command to set the LED mode.

@@ -1,5 +1,4 @@
 #include "commands/ChassisDrive.h"
-#include "subsystems/Drivetrain.h"
 
 /// @brief The operator  chassis drive command.
 /// @param forward The forward driver input.
@@ -26,5 +25,5 @@ ChassisDrive::ChassisDrive(std::function<units::meters_per_second_t()>  forward,
 void ChassisDrive::Execute()
 {
     // Perform the chassis drive
-    m_drivetrain->Drive(m_forward(), m_strafe(), m_angle(), true, 0.02_s);
+    m_drivetrain->Drive(m_forward(), m_strafe(), m_angle(), RobotContainer::GetInstance()->GetPeriod());
 }

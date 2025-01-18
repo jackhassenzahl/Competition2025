@@ -1,9 +1,4 @@
-#include "commands/SetLeds.h"
-#include "commands/ChassisDriveTime.h"
-
 #include "commands/AutonomousComplex.h"
-#include "commands/AutonomousLed.h"
-#include "commands/AutonomousParallel.h"
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:

@@ -1,7 +1,11 @@
 #pragma once
 
-#include <units/current.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
+#include <units/angle.h>
 #include <units/angular_velocity.h>
+#include <units/current.h>
+#include <units/length.h>
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
@@ -87,7 +91,7 @@ namespace JoystickConstants
     constexpr int    kJoystickStrifeIndex     = 0;
     constexpr int    kJoystickAngleIndex      = 2;  // 4 for xbox controller
 
-    constexpr double kJoystickDeadZone        = 0.1;
+    constexpr double kJoystickDeadZone        = 0.02;
 
     constexpr double kExponentForward         = 2.0;
     constexpr double kExponentStrife          = 2.0;

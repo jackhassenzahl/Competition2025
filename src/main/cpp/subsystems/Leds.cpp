@@ -1,8 +1,3 @@
-#include <iostream>
-
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/LEDPattern.h>
-
 #include "subsystems/Leds.h"
 
 using namespace std;

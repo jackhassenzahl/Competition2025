@@ -1,5 +1,4 @@
 #include "commands/AutonomousLed.h"
-#include "commands/SetLeds.h"
 
 AutonomousLed::AutonomousLed(Leds *leds)
 {

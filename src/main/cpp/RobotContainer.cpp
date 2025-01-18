@@ -1,7 +1,3 @@
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc2/command/ParallelRaceGroup.h>
-
-#include "Constants.h"
 #include "RobotContainer.h"
 
 // Reference to the RobotContainer singleton class
@@ -101,12 +97,14 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 units::meters_per_second_t RobotContainer::Forward()
 {
     // Get the forward joystick setting
-    double joystickForward = -GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
+    double joystickForward = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
-    return GetExponentialValue(joystickForward, JoystickConstants::kExponentForward) * Drivetrain::kMaxSpeed;
+    // Get the x speed. We are inverting this because Xbox controllers return negative values when we push forward.
+    joystickForward = GetExponentialValue(joystickForward, JoystickConstants::kExponentForward);
+
+    // Return the x speed
+    return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, JoystickConstants::kJoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
-
 
 /// @brief Method to return the strife joystick value.
 /// @return The strife joystick meters per second value.
@@ -116,7 +114,10 @@ units::meters_per_second_t RobotContainer::Strife()
     double joystickStrife = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickStrifeIndex);
 
     // Use expoendial function to calculate the forward value for better slow speed control
-    return GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife) * Drivetrain::kMaxSpeed;
+    joystickStrife = GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife);
+
+    // Return the y speed
+    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrife, JoystickConstants::kJoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
 
 /// @brief Method to return the angle joystick value.
@@ -127,7 +128,10 @@ units::radians_per_second_t RobotContainer::Angle()
     double joystickAngle = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickAngleIndex);
 
     // Use expoendial function to calculate the forward value for better slow speed control
-    return GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle)* Drivetrain::kMaxAngularSpeed;
+    joystickAngle = GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle);
+    
+    // Return the rotation speed
+    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, JoystickConstants::kJoystickDeadZone)) * Drivetrain::kMaxAngularSpeed;
 }
 
 /// <summary>
@@ -138,10 +142,6 @@ units::radians_per_second_t RobotContainer::Angle()
 double RobotContainer::GetExponentialValue(double joystickValue, double exponent)
 {
     double output = 0.0;
-
-    // Ignore joystick input if it's too small
-    if (abs(joystickValue) < JoystickConstants::kJoystickDeadZone)
-        return 0.0;
 
     // Direction is either 1 or -1, based on joystick value
     int direction = abs(joystickValue) / joystickValue;
@@ -155,4 +155,20 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 
     // Return the calculated value
     return output;
+}
+
+/// @brief Method to set the timed robot period.
+/// @param period The period to set.
+void RobotContainer::SetPeriod(units::second_t period)
+{
+    // Set the period
+    m_period = period;
+}
+
+/// @brief Method to get the timed robot period.
+/// @return The timed robot period.
+units::second_t RobotContainer::GetPeriod()
+{
+    // Return the timed robot period
+    return m_period;
 }

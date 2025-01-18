@@ -1,9 +1,9 @@
 #include <cmath>
 
-#include <frc/geometry/Rotation2d.h>
-
 #include <rev/SparkMax.h>
 #include <ctre/phoenix6/configs/Configs.hpp>
+
+#include <frc/geometry/Rotation2d.h>
 
 #include "SwerveModule.h"
 
@@ -13,9 +13,11 @@
 /// @param angleEncoderCanId The CAN ID for the swerve module angle encoder.
 SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId)
 {
+#if defined(ROBOT)
     // Configure the drive and angle motors
     ConfigureDriveMotor(driveMotorCanId);
     ConfigureAngleMotor(angleMotorCanId, angleEncoderCanId);
+#endif
 }
 
 /// @brief Method to configure the drive motor.
@@ -74,7 +76,11 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
 /// @param vector The wheel vector (angle and drive).
 void SwerveModule::SetState(frc::SwerveModuleState &referenceState)
 {
+#if defined(ROBOT)    
     frc::Rotation2d encoderRotation{units::radian_t{m_angleEncoder->GetPosition()}};
+#else
+    frc::Rotation2d encoderRotation{units::radian_t{0}};
+#endif
 
     // Optimize the reference state to avoid spinning further than 90 degrees
     referenceState.Optimize(encoderRotation);
@@ -84,42 +90,67 @@ void SwerveModule::SetState(frc::SwerveModuleState &referenceState)
     referenceState.CosineScale(encoderRotation);
 
     // Calculate the drive output from the drive PID controller.
-    const auto driveOutput      = m_drivePIDController.Calculate(GetDriveEncoderRate(), referenceState.speed.value());
+    const auto driveOutput      = m_drivePIDController.Calculate(GetDriveEncoderRate().value(), referenceState.speed.value());
     const auto driveFeedforward = m_driveFeedforward.Calculate(referenceState.speed);
 
     // Calculate the turning motor output from the turning PID controller.
     const auto turnOutput      = m_turningPIDController.Calculate(GetAngleEncoderDistance(), referenceState.angle.Radians());
     const auto turnFeedforward = m_turnFeedforward.Calculate(m_turningPIDController.GetSetpoint().velocity);
 
+#if defined(ROBOT)
     // Set the motor outputs.
     m_driveMotor->SetVoltage(units::volt_t{driveOutput} + driveFeedforward);
-    m_angleMotor->SetVoltage(units::volt_t{turnOutput} + turnFeedforward);
+    m_angleMotor->SetVoltage(units::volt_t{turnOutput}  + turnFeedforward);
+#endif
 }
 
-double SwerveModule::GetDriveEncoderRate()
+/// @brief Method to retrieve the drive encoder rate (velocity in meters/s).
+/// @return The wheel drive encoder rate.
+units::meters_per_second_t SwerveModule::GetDriveEncoderRate()
 {
-    // m_driveEncoder.GetRate()
-    return 0.0;
+#if defined(ROBOT)
+    // Get the motor velocity
+    double rotationsPerSecond = (double) m_driveMotor->GetVelocity().GetValue();
+
+    // Return the wheel drive encoder rate
+    return (units::meters_per_second_t) rotationsPerSecond;
+#else
+    return (units::meters_per_second_t) 0;
+#endif
 }
 
+/// @brief Method to retrieve the angle encoder distance (in radians).
 units::radian_t SwerveModule::GetAngleEncoderDistance()
 {
-    // units::radian_t{m_turningEncoder.GetDistance()}
-    return 0_rad;
+#if defined(ROBOT)
+    // Return the angle encoder distance (position in radians)
+    return (units::radian_t) m_angleEncoder->GetPosition();
+#else
+    return (units::radian_t) 0;
+#endif
 }
 
-
-frc::SwerveModuleState SwerveModule::GetState() const
+/// @brief  Method to retrieve the swerve module state.
+/// @return The swerve module speed and angle state.
+frc::SwerveModuleState SwerveModule::GetState()
 {
+#if defined(ROBOT)
+    return {GetDriveEncoderRate(), units::radian_t{m_angleEncoder->GetPosition()}};
+#else
     return {units::meters_per_second_t{0}, units::radian_t{0}};
-
-    //return {units::meters_per_second_t{m_driveMotor->GetRotorVelocity()}, units::radian_t{m_angleEncoder->GetPosition()}};
+#endif
 }
 
-frc::SwerveModulePosition SwerveModule::GetPosition() const
+/// @brief Method to retrieve the swerve module position.
+frc::SwerveModulePosition SwerveModule::GetPosition()
 {
+#if defined(ROBOT)
+    // Get the drive position
+    double drivePosition = (double) m_driveMotor->GetPosition().GetValue();
+    
+    // Return the swerve module position
+    return {units::meter_t{drivePosition}, units::radian_t{m_angleEncoder->GetPosition()}};
+#else
     return {units::meter_t{0}, units::radian_t{0}};
-
-   //return {units::meter_t{m_driveEncoder.GetDistance()}, units::radian_t{m_angleEncoder->GetPosition()}};
+#endif
 }
-
