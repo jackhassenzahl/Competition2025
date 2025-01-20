@@ -1,6 +1,5 @@
 #pragma once
 
-//#include <cmath>
 #include <numbers>
 
 #include <frc/AnalogGyro.h>
@@ -54,25 +53,25 @@ class Drivetrain : public frc2::SubsystemBase
         ///       +---------+ ---
         ///       |         |
         ///       |< Width >|
-        SwerveModule       m_frontLeft {CanConstants::kSwerveFrontRightDriveMotorCanId, 
-                                        CanConstants::kSwerveFrontRightAngleMotorCanId, 
-                                        CanConstants::kSwerveFrontRightAngleEncoderCanId};
-        SwerveModule       m_frontRight{CanConstants::kSwerveFrontLeftDriveMotorCanId, 
-                                        CanConstants::kSwerveFrontLeftAngleMotorCanId, 
-                                        CanConstants::kSwerveFrontLeftAngleEncoderCanId};
-        SwerveModule       m_backLeft  {CanConstants::kSwerveRearLeftDriveMotorCanId, 
-                                        CanConstants::kSwerveRearLeftAngleMotorCanId, 
-                                        CanConstants::kSwerveRearLeftAngleEncoderCanId};
-        SwerveModule       m_backRight {CanConstants::kSwerveRearRightDriveMotorCanId, 
-                                        CanConstants::kSwerveRearRightAngleMotorCanId, 
-                                        CanConstants::kSwerveRearRightAngleEncoderCanId};
+        SwerveModule       m_frontLeft {CanConstants::SwerveFrontRightDriveMotorCanId, 
+                                        CanConstants::SwerveFrontRightAngleMotorCanId, 
+                                        CanConstants::SwerveFrontRightAngleEncoderCanId};
+        SwerveModule       m_frontRight{CanConstants::SwerveFrontLeftDriveMotorCanId, 
+                                        CanConstants::SwerveFrontLeftAngleMotorCanId, 
+                                        CanConstants::SwerveFrontLeftAngleEncoderCanId};
+        SwerveModule       m_backLeft  {CanConstants::SwerveRearLeftDriveMotorCanId, 
+                                        CanConstants::SwerveRearLeftAngleMotorCanId, 
+                                        CanConstants::SwerveRearLeftAngleEncoderCanId};
+        SwerveModule       m_backRight {CanConstants::SwerveRearRightDriveMotorCanId, 
+                                        CanConstants::SwerveRearRightAngleMotorCanId, 
+                                        CanConstants::SwerveRearRightAngleEncoderCanId};
     
         frc::AnalogGyro    m_gyro{0};
     
-        frc::SwerveDriveKinematics<ChassisConstants::kNumberOfSwerveModules> m_kinematics{m_frontLeftLocation, m_frontRightLocation,
-                                                                                          m_backLeftLocation, m_backRightLocation};
+        frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{m_frontLeftLocation, m_frontRightLocation,
+                                                                                         m_backLeftLocation, m_backRightLocation};
     
-        frc::SwerveDriveOdometry<ChassisConstants::kNumberOfSwerveModules>   m_odometry{m_kinematics, m_gyro.GetRotation2d(), 
-                                                                                       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
-                                                                                        m_backLeft.GetPosition(),  m_backRight.GetPosition()}};
+        frc::SwerveDriveOdometry<ChassisConstants::NumberOfSwerveModules>   m_odometry{m_kinematics, m_gyro.GetRotation2d(), 
+                                                                                      {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+                                                                                       m_backLeft.GetPosition(),  m_backRight.GetPosition()}};
 };

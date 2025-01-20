@@ -1,4 +1,3 @@
-
 #include "subsystems/AprilTags.h"
 
 #if defined(__linux__) || defined(_WIN32)
@@ -86,7 +85,7 @@ static void VisionThread()
         {
             // Send the output the error.
             outputStream.NotifyError(cvSink.GetError());
-            std::cout << "ERROR: Not able to send stream" << std::endl;
+            //std::cout << "***** ERROR: Not able to send stream" << std::endl;
 
             // If we don't have a frame from the camera, continueing the while loop would be pointless
            continue;

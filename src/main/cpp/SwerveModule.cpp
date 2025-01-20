@@ -1,10 +1,3 @@
-#include <cmath>
-
-#include <rev/SparkMax.h>
-#include <ctre/phoenix6/configs/Configs.hpp>
-
-#include <frc/geometry/Rotation2d.h>
-
 #include "SwerveModule.h"
 
 /// @brief Class constructor for the SwerveModule class.
@@ -25,7 +18,7 @@ SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEn
 void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 {
     // Instantiate the drive motor
-    ctre::phoenix6::hardware::TalonFX driveMotor = ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::kCanBus};
+    ctre::phoenix6::hardware::TalonFX driveMotor = ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
     m_driveMotor = &driveMotor;
 
     // Configure the drive motors 
@@ -33,7 +26,7 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 
     // Set the current limit
     ctre::phoenix6::configs::CurrentLimitsConfigs currentLimitsConfigs{};
-    currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::kSwerveDriveMaxAmperage;
+    currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::SwerveDriveMaxAmperage;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
     m_driveMotor->GetConfigurator().Apply(currentLimitsConfigs);
 }
@@ -50,7 +43,7 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     // Create the angle encoder based initialized with the present angle motor encoder value
     m_angleEncoder = new rev::spark::SparkRelativeEncoder(m_angleMotor->GetEncoder());
 
-    ctre::phoenix6::hardware::CANcoder angleAbsoluteEncoder = ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::kCanBus);
+    ctre::phoenix6::hardware::CANcoder angleAbsoluteEncoder = ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::CanBus);
     m_angleAbsoluteEncoder = &angleAbsoluteEncoder;
 
     // Limit the PID Controller's input range between -pi and pi and set the input to be continuous.
@@ -66,7 +59,7 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     rev::spark::SparkBaseConfig config{};
 
     config.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-    config.SecondaryCurrentLimit(ChassisConstants::kSwerveAngleMaxAmperage);
+    config.SecondaryCurrentLimit(ChassisConstants::SwerveAngleMaxAmperage);
     config.encoder.PositionConversionFactor(1000).VelocityConversionFactor(1000);
 
     m_angleMotor->Configure(config, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);

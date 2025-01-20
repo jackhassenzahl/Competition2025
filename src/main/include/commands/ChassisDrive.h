@@ -21,6 +21,5 @@ class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>
         std::function<units::meters_per_second_t()>  m_forward;
         std::function<units::meters_per_second_t()>  m_strafe;
         std::function<units::radians_per_second_t()> m_angle;
-
-        Drivetrain *m_drivetrain;
+        Drivetrain                                  *m_drivetrain;
 };

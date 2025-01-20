@@ -47,23 +47,14 @@ void SetLeds::Initialize()
 /// @return True is the command has completed.
 bool SetLeds::IsFinished()
 {
-    frc::SmartDashboard::PutNumber("Led Timer", (double) (frc::GetTime() - m_startTime));
-
     // Determine if a timed LED sequence
     if (m_timed == false)
-    {
-        // frc::SmartDashboard::PutBoolean("Finished", true);
         return false;
-    }
 
     // Determine if the LED sequence is complete
     if (frc::GetTime() - m_startTime > m_time)
-    {
-        frc::SmartDashboard::PutBoolean("Finished", true);
         return true;
-    }
 
-    frc::SmartDashboard::PutBoolean("Finished", false);
     return false;
 }
 

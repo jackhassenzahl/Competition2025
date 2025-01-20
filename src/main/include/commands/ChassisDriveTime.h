@@ -22,11 +22,11 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 
     private:
 
-        bool                       m_fieldCentricity;
 
-        units::meters_per_second_t m_speed;
-        units::second_t            m_time;           // The length of time that the chass will drive
-        units::second_t            m_startTime;      // The start of the drive time
+        units::second_t            m_time;             // The length of time that the chass will drive
+        units::meters_per_second_t m_speed;            // The speed that the chassis will drive
+        Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
-        Drivetrain                *m_drivetrain;
+        bool                       m_fieldCentricity;  // The field centricity flag
+        units::second_t            m_startTime;        // The start of the drive time
 };

@@ -22,10 +22,10 @@ class ChassisTurnAngle : public frc2::CommandHelper<frc2::Command, ChassisTurnAn
 
     private:
 
-        units::meters_per_second_t  m_speed;
-        units::time::second_t       m_timeoutTime;
-        units::time::second_t       m_startTime;
-        units::angle::degrees       m_angle;
+        units::angle::degrees       m_angle;        // The angle that the chassis will turn
+        units::meters_per_second_t  m_speed;        // The speed that the chassis will turn
+        units::time::second_t       m_timeoutTime;  // The time that the chassis will turn
+        Drivetrain                 *m_drivetrain;   // The drivetrain subsystem
 
-        Drivetrain                 *m_drivetrain;        
+        units::time::second_t       m_startTime;    // The start of the turn time  
 };

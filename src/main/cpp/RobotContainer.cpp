@@ -21,15 +21,6 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    // SmartDashboard Buttons
-    frc::SmartDashboard::PutData("SetLeds: Off",               new SetLeds(LedMode::Off,               &m_leds));
-    frc::SmartDashboard::PutData("SetLeds: SolidGreen",        new SetLeds(LedMode::SolidGreen,        &m_leds));
-    frc::SmartDashboard::PutData("SetLeds: SolidRed",          new SetLeds(LedMode::SolidRed,          &m_leds));
-    frc::SmartDashboard::PutData("SetLeds: HvaColors",         new SetLeds(LedMode::HvaColors,         &m_leds));
-    frc::SmartDashboard::PutData("SetLeds: Strobe",            new SetLeds(LedMode::Strobe,            &m_leds));
-    frc::SmartDashboard::PutData("SetLeds: ShootingAnimation", new SetLeds(LedMode::ShootingAnimation, &m_leds));
-    frc::SmartDashboard::PutData("SetLeds: Rainbow",           new SetLeds(LedMode::Rainbow,           &m_leds));
-
     frc::SmartDashboard::PutData("ChassisDrive: Stop",         new ChassisDriveDistance(0_m, 0_mps,  &m_drivetrain));
     frc::SmartDashboard::PutData("DriveDistance: OneMeter",    new ChassisDriveDistance(1_m, 0.5_mps,  &m_drivetrain));
     frc::SmartDashboard::PutData("DriveDistance: TwoMeters",   new ChassisDriveDistance(2_m, 0.5_mps,  &m_drivetrain));
@@ -61,27 +52,43 @@ RobotContainer::RobotContainer()
 /// @brief Method to bind the joystick controls to the robot commands.
 void RobotContainer::ConfigureButtonBindings()
 {
-    frc2::JoystickButton m_setLEDsOff{&m_joystickDriver, 1};
-    frc2::JoystickButton m_setLEDsRainbow{&m_joystickDriver, 2};
+    // Bind the driver controller buttons to the drivetrain commands
+    frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
+    setLedsOff.OnTrue(SetLeds(LedMode::Off, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
-    m_setLEDsOff.OnTrue(SetLeds(0, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-    m_setLEDsRainbow.OnTrue(SetLeds(1, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    frc2::JoystickButton setLedsStrobe(&m_operatorController, XBoxConstants::RightStickButton);
+    setLedsStrobe.OnTrue(SetLeds(LedMode::Strobe, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton setLedsShootingAnimation{&m_operatorController, XBoxConstants::A};
+    setLedsShootingAnimation.OnTrue(SetLeds(LedMode::ShootingAnimation, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::POVButton setLedsSolidGreen{&m_operatorController, XBoxConstants::Pov_0};
+    setLedsSolidGreen.OnTrue(SetLeds(LedMode::SolidGreen, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::POVButton setLedsSolidRed{&m_operatorController, XBoxConstants::Pov_90};
+    setLedsSolidRed.OnTrue(SetLeds(LedMode::SolidRed, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::POVButton setLedsHvaColors{&m_operatorController, XBoxConstants::Pov_180};
+    setLedsHvaColors.OnTrue(SetLeds(LedMode::HvaColors, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::POVButton setLedsRainbow{&m_operatorController, XBoxConstants::Pov_270};
+    setLedsRainbow.OnTrue(SetLeds(LedMode::Rainbow, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 }
 
 /// @brief Method to return a pointer to the driver joystick.
 /// @return Pointer to the driver joystick.
-frc::Joystick *RobotContainer::GetJoystickDriver()
+frc::Joystick *RobotContainer::GetDriverController()
 {
     // Return the pointer to the driver joystick
-    return &m_joystickDriver;
+    return &m_driverController;
 }
 
 /// @brief Method to return a pointer to the controller joystick.
 /// @return Pointer to the controller joystick.
-frc::Joystick *RobotContainer::GetJoystickOperator()
+frc::XboxController *RobotContainer::GetOperatorController()
 {
     // Return the pointer to the operator joystick
-    return &m_joystickOperator;
+    return &m_operatorController;
 }
 
 /// @brief Method to return a pointer to the autonomous command.
@@ -97,13 +104,13 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 units::meters_per_second_t RobotContainer::Forward()
 {
     // Get the forward joystick setting
-    double joystickForward = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickForwardIndex);
+    double joystickForward = GetDriverController()->GetRawAxis(ControllerConstants::JoystickForwardIndex);
 
     // Get the x speed. We are inverting this because Xbox controllers return negative values when we push forward.
-    joystickForward = GetExponentialValue(joystickForward, JoystickConstants::kExponentForward);
+    joystickForward = GetExponentialValue(joystickForward, ControllerConstants::ExponentForward);
 
     // Return the x speed
-    return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, JoystickConstants::kJoystickDeadZone)) * Drivetrain::kMaxSpeed;
+    return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
 
 /// @brief Method to return the strife joystick value.
@@ -111,13 +118,13 @@ units::meters_per_second_t RobotContainer::Forward()
 units::meters_per_second_t RobotContainer::Strife()
 {
     // Get the strife joystick setting
-    double joystickStrife = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickStrifeIndex);
+    double joystickStrife = GetDriverController()->GetRawAxis(ControllerConstants::JoystickStrifeIndex);
 
     // Use expoendial function to calculate the forward value for better slow speed control
-    joystickStrife = GetExponentialValue(joystickStrife, JoystickConstants::kExponentStrife);
+    joystickStrife = GetExponentialValue(joystickStrife, ControllerConstants::ExponentStrife);
 
     // Return the y speed
-    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrife, JoystickConstants::kJoystickDeadZone)) * Drivetrain::kMaxSpeed;
+    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrife, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
 
 /// @brief Method to return the angle joystick value.
@@ -125,29 +132,38 @@ units::meters_per_second_t RobotContainer::Strife()
 units::radians_per_second_t RobotContainer::Angle()
 {
     // Get the angle joystick setting    
-    double joystickAngle = GetJoystickDriver()->GetRawAxis(JoystickConstants::kJoystickAngleIndex);
+    double joystickAngle = GetDriverController()->GetRawAxis(ControllerConstants::JoystickAngleIndex);
 
     // Use expoendial function to calculate the forward value for better slow speed control
-    joystickAngle = GetExponentialValue(joystickAngle, JoystickConstants::kExponentAngle);
+    joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
     
     // Return the rotation speed
-    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, JoystickConstants::kJoystickDeadZone)) * Drivetrain::kMaxAngularSpeed;
+    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxAngularSpeed;
 }
 
-/// <summary>
-/// Method to convert a joystick value from -1.0 to 1.0 to exponential mode.
-/// </summary>
-/// <param name="joystickValue">The raw joystick value.</param>
-/// <returns>The resultant exponential value.</returns>
+/// @brief Method to convert a joystick value from -1.0 to 1.0 to exponential mode.
+/// @param joystickValue The raw joystick value.
+/// @param exponent The exponential value.
+/// @return The resultant exponential value.
 double RobotContainer::GetExponentialValue(double joystickValue, double exponent)
 {
-    double output = 0.0;
+    int    direction = 1;
+    double output    = 0.0;
+
+    // Ignore joystick input if it's too small
+    if (joystickValue > -ControllerConstants::JoystickDeadZone && joystickValue < ControllerConstants::JoystickDeadZone)
+        return 0.0;
 
     // Direction is either 1 or -1, based on joystick value
-    int direction = abs(joystickValue) / joystickValue;
+    if (joystickValue < 0.0)
+    {
+        // Reverse the direction and make the joystick value positive
+        direction      = -1;
+        joystickValue *= -1.0;
+    }
 
     // Plug joystick value into exponential function
-    output = direction * pow(abs(joystickValue), exponent);
+    output = direction * pow(joystickValue, exponent);
     
     // Ensure the range of the output
     if (output < -1.0)  output = -1.0;

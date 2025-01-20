@@ -1,18 +1,19 @@
 #pragma once
 
 #include <frc/MathUtil.h>
-#include <frc/Joystick.h>
-#include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <frc2/command/button/POVButton.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/ParallelRaceGroup.h>
-#include <frc/MathUtil.h>
+#include <frc/Joystick.h>
+#include <frc/smartdashboard/SendableChooser.h>
+#include <frc/XboxController.h>
 #include <frc/filter/SlewRateLimiter.h>
 
 // Subsystems
+#include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Leds.h"
-#include "subsystems/AprilTags.h"
 
 // Commands
 #include "commands/AutonomousDoNothing.h"
@@ -23,6 +24,8 @@
 #include "commands/ChassisDriveDistance.h"
 #include "commands/ChassisDriveTime.h"
 #include "commands/SetLeds.h"
+
+#include "Constants.h"
 
 /// @brief Class to instantiate the robot subsystems and commands along with the operator controls
 class RobotContainer
@@ -36,8 +39,8 @@ class RobotContainer
         frc2::Command              *GetAutonomousCommand();
 
         // Methods to get a reference to the robot joysticks
-        frc::Joystick              *GetJoystickDriver();
-        frc::Joystick              *GetJoystickOperator();
+        frc::Joystick              *GetDriverController();
+        frc::XboxController        *GetOperatorController();
 
         units::meters_per_second_t  Forward();
         units::meters_per_second_t  Strife();
@@ -57,18 +60,18 @@ class RobotContainer
         RobotContainer();
 
         // Method to bind the joystick controls to the robot commands
-        void   ConfigureButtonBindings();
+        void ConfigureButtonBindings();
         
         double GetExponentialValue(double joystickValue, double exponent);
         
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;
 
-        units::second_t m_period;
+        units::second_t                       m_period;
 
         // Joysticks
-        frc::Joystick                         m_joystickDriver{JoystickConstants::kJoystickDriverUsbPort};
-        frc::Joystick                         m_joystickOperator{JoystickConstants::kJoystickOperatorUsbPort};
+        frc::Joystick                         m_driverController{ControllerConstants::DriverControllerUsbPort};
+        frc::XboxController                   m_operatorController{ControllerConstants::JoystickOperatorUsbPort};
 
         // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
         frc::SlewRateLimiter<units::scalar>   m_xspeedLimiter{3 / 1_s};

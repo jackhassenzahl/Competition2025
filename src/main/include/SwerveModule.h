@@ -13,18 +13,26 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/motorcontrol/PWMSparkMax.h>
 
+#include <cmath>
+
+#include <rev/SparkMax.h>
+#include <ctre/phoenix6/configs/Configs.hpp>
+
+#include <frc/geometry/Rotation2d.h>
+
+
 #include "Constants.h"
 
 class SwerveModule
 {
     public:
 
-        explicit                  SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
+        explicit                   SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
 
-        void                      SetState(frc::SwerveModuleState &state);
+        void                       SetState(frc::SwerveModuleState &state);
 
-        frc::SwerveModuleState    GetState();
-        frc::SwerveModulePosition GetPosition();
+        frc::SwerveModuleState     GetState();
+        frc::SwerveModulePosition  GetPosition();
 
     private:
 
