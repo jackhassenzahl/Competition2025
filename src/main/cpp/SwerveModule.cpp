@@ -6,20 +6,23 @@
 /// @param angleEncoderCanId The CAN ID for the swerve module angle encoder.
 SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId)
 {
-#if defined(ROBOT)
+    std::cout << "***** Swerve Module Constructor" << std::endl;
+    std::cout << "   driveMotorCanId: " << driveMotorCanId << std::endl;
+    std::cout << "   angleMotorCanId: " << angleMotorCanId << std::endl;
+
     // Configure the drive and angle motors
     ConfigureDriveMotor(driveMotorCanId);
     ConfigureAngleMotor(angleMotorCanId, angleEncoderCanId);
-#endif
 }
 
 /// @brief Method to configure the drive motor.
 /// @param driveMotorCanId The drive motor CAN identification.
 void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 {
+    std::cout << "***** Configure Drive Motor: " << driveMotorCanId << std::endl;
+
     // Instantiate the drive motor
-    ctre::phoenix6::hardware::TalonFX driveMotor = ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
-    m_driveMotor = &driveMotor;
+    m_driveMotor = new ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
 
     // Configure the drive motors 
     ctre::phoenix6::configs::TalonFXConfiguration swerve_motor_configuration{};
@@ -29,13 +32,18 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
     currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::SwerveDriveMaxAmperage;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
     m_driveMotor->GetConfigurator().Apply(currentLimitsConfigs);
+
+    std::cout << "***** GetDescription: " << m_driveMotor->GetDescription() << std::endl;
+    std::cout << "** " << m_driveMotor << std::endl;
 }
-    
+
 /// @brief Method to configure the angle motor and encoder.
 /// @param angleMotorCanId The angle motor CAN identification.
 /// @param angleEncoderCanId The angle encoder CAN identification.
 void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanId)
 {
+    std::cout << "***** Configure Angle Motor: " << angleMotorCanId << std::endl;
+
     // Instantiate the angle motor
     rev::spark::SparkMax angleMotor = rev::spark::SparkMax{angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless};
     m_angleMotor = &angleMotor;
@@ -91,7 +99,7 @@ void SwerveModule::SetState(frc::SwerveModuleState &referenceState)
     const auto turnFeedforward = m_turnFeedforward.Calculate(m_turningPIDController.GetSetpoint().velocity);
 
 #if defined(ROBOT)
-    // Set the motor outputs.
+        // Set the Drive motor power to zero
     m_driveMotor->SetVoltage(units::volt_t{driveOutput} + driveFeedforward);
     m_angleMotor->SetVoltage(units::volt_t{turnOutput}  + turnFeedforward);
 #endif

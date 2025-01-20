@@ -18,17 +18,17 @@ void Drivetrain::Drive(units::meters_per_second_t xSpeed,
 
     auto [frontLeft, frontRight, rearLeft, rearRight] = states;
 
-    frc::SmartDashboard::PutNumber("Front Right Angle", frontRight.angle.Degrees().to<double>());
     frc::SmartDashboard::PutNumber("Front Right Drive", frontRight.speed.value());
+    frc::SmartDashboard::PutNumber("Front Right Angle", frontRight.angle.Degrees().to<double>());
 
-    frc::SmartDashboard::PutNumber("Front Left Angle",  frontLeft.angle.Degrees().to<double>());
     frc::SmartDashboard::PutNumber("Front Left Drive",  frontLeft.speed.value());
+    frc::SmartDashboard::PutNumber("Front Left Angle",  frontLeft.angle.Degrees().to<double>());
 
-    frc::SmartDashboard::PutNumber("Rear Right Angle",  rearLeft.angle.Degrees().to<double>());
     frc::SmartDashboard::PutNumber("Rear Right Drive",  rearLeft.speed.value());
+    frc::SmartDashboard::PutNumber("Rear Right Angle",  rearLeft.angle.Degrees().to<double>());
 
-    frc::SmartDashboard::PutNumber("Rear Left Angle",   rearRight.angle.Degrees().to<double>());
     frc::SmartDashboard::PutNumber("Rear Left Drive",   rearRight.speed.value());
+    frc::SmartDashboard::PutNumber("Rear Left Angle",   rearRight.angle.Degrees().to<double>());
 
     m_frontLeft.SetState(frontLeft);
     m_frontRight.SetState(frontRight);

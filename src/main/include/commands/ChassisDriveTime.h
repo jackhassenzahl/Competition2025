@@ -24,7 +24,7 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 
 
         units::second_t            m_time;             // The length of time that the chass will drive
-        units::meters_per_second_t m_speed;            // The speed that the chassis will drive
+        units::meters_per_second_t m_speed;            // The speed of the chassis
         Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
         bool                       m_fieldCentricity;  // The field centricity flag

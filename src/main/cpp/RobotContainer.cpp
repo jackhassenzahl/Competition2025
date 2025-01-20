@@ -21,9 +21,9 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("ChassisDrive: Stop",         new ChassisDriveDistance(0_m, 0_mps,  &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: OneMeter",    new ChassisDriveDistance(1_m, 0.5_mps,  &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: TwoMeters",   new ChassisDriveDistance(2_m, 0.5_mps,  &m_drivetrain));
+    frc::SmartDashboard::PutData("ChassisDrive: Stop",       new ChassisDriveDistance(0_m, 0_mps,   &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, &m_drivetrain));
+    frc::SmartDashboard::PutData("DriveDistance: TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, &m_drivetrain));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
@@ -33,8 +33,8 @@ RobotContainer::RobotContainer()
     m_autonomousChooser.AddOption("Drive Forward OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, &m_drivetrain));
     m_autonomousChooser.AddOption("Drive Forward TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, &m_drivetrain));
     m_autonomousChooser.AddOption("Led Autonomous",          new AutonomousLed(&m_leds));
-    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds, &m_drivetrain));
-    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds, &m_drivetrain));
+    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds,        &m_drivetrain));
+    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,         &m_drivetrain));
 
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);
@@ -106,7 +106,7 @@ units::meters_per_second_t RobotContainer::Forward()
     // Get the forward joystick setting
     double joystickForward = GetDriverController()->GetRawAxis(ControllerConstants::JoystickForwardIndex);
 
-    // Get the x speed. We are inverting this because Xbox controllers return negative values when we push forward.
+    // Use expoendial function to calculate the forward value for better slow speed control
     joystickForward = GetExponentialValue(joystickForward, ControllerConstants::ExponentForward);
 
     // Return the x speed
@@ -136,7 +136,7 @@ units::radians_per_second_t RobotContainer::Angle()
 
     // Use expoendial function to calculate the forward value for better slow speed control
     joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
-    
+
     // Return the rotation speed
     return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxAngularSpeed;
 }
