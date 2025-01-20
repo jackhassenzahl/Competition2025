@@ -1,11 +1,4 @@
 #include "commands/ChassisDrive.h"
-#include "subsystems/Drivetrain.h"
-#include <iostream>
-
-/// @brief The operator chassis drive command.
-/// @param Left 
-/// @param strafe
-/// @param m_drivetrain
 
 /// @brief The operator  chassis drive command.
 /// @param forward The forward driver input.
@@ -24,7 +17,8 @@ ChassisDrive::ChassisDrive(std::function<double()> forward,
                            m_gyro{std::move(gyro)},
                            m_drivetrain(drivetrain)
 {
-    //std::cout << "Chassis Constructor" << std::endl;
+    std::cout << "***** ChassisDrive Constructor" << std::endl;
+
     // Set the command name
     SetName("ChassisDrive");
 
@@ -32,20 +26,9 @@ ChassisDrive::ChassisDrive(std::function<double()> forward,
     AddRequirements(drivetrain);
 }
 
-/// @brief Called just before this Command runs the first time.
-void ChassisDrive::Initialize()
-{
-
-}
-
 /// @brief Called repeatedly when this Command is scheduled to run.
 void ChassisDrive::Execute()
 {
     // Perform the chassis drive
     m_drivetrain->Drive(m_forward(), m_strafe(), m_angle(), m_gyro());
-}
-
-bool ChassisDrive::IsFinished()
-{
-    return false;
 }

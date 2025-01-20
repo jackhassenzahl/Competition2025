@@ -1,8 +1,17 @@
 #pragma once
 
-#include <units/current.h>
-
+#include <iostream>
 #include <string>
+
+#include <frc/smartdashboard/SmartDashboard.h>
+
+#include <units/angle.h>
+#include <units/angular_velocity.h>
+#include <units/current.h>
+#include <units/length.h>
+#include <units/time.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
 
 #define ROBOT  // Enable code to run on the robot
 
@@ -39,57 +48,57 @@
 
 namespace CanConstants
 {
-    const std::string kCanBus = "rio";
+    const std::string CanBus                        = "rio";
 
-    constexpr int kSwerveFrontRightDriveMotorCanId   = 3;
-    constexpr int kSwerveFrontRightAngleMotorCanId   = 2;   
-    constexpr int kSwerveFrontRightAngleEncoderCanId = 12;  
+    constexpr int SwerveFrontRightDriveMotorCanId   = 3;
+    constexpr int SwerveFrontRightAngleMotorCanId   = 2;   
+    constexpr int SwerveFrontRightAngleEncoderCanId = 12;  
 
-    constexpr int kSwerveFrontLeftDriveMotorCanId    = 6;
-    constexpr int kSwerveFrontLeftAngleMotorCanId    = 5;   
-    constexpr int kSwerveFrontLeftAngleEncoderCanId  = 4; 
+    constexpr int SwerveFrontLeftDriveMotorCanId    = 6;
+    constexpr int SwerveFrontLeftAngleMotorCanId    = 5;   
+    constexpr int SwerveFrontLeftAngleEncoderCanId  = 4; 
 
-    constexpr int kSwerveRearLeftDriveMotorCanId     = 9;
-    constexpr int kSwerveRearLeftAngleMotorCanId     = 8;   
-    constexpr int kSwerveRearLeftAngleEncoderCanId   = 7; 
+    constexpr int SwerveRearLeftDriveMotorCanId     = 9;
+    constexpr int SwerveRearLeftAngleMotorCanId     = 8;   
+    constexpr int SwerveRearLeftAngleEncoderCanId   = 7; 
 
-    constexpr int kSwerveRearRightDriveMotorCanId    = 11;
-    constexpr int kSwerveRearRightAngleMotorCanId    = 10;   
-    constexpr int kSwerveRearRightAngleEncoderCanId  = 13;  
+    constexpr int SwerveRearRightDriveMotorCanId    = 11;
+    constexpr int SwerveRearRightAngleMotorCanId    = 10;   
+    constexpr int SwerveRearRightAngleEncoderCanId  = 13;  
 }
 
 namespace ChassisConstants
 {
-    constexpr int                      kNumberOfSwerveModules           =     1;
+    constexpr int                      NumberOfSwerveModules           =     1;
 
-    constexpr int                      kChassisLength                   =   100;
-    constexpr int                      kChassisWidth                    =   100;
+    constexpr int                      ChassisLength                   =   100;
+    constexpr int                      ChassisWidth                    =   100;
 
-    constexpr units::current::ampere_t kSwerveDriveMaxAmperage          =  30_A;
+    constexpr units::current::ampere_t SwerveDriveMaxAmperage          =  30_A;
 
-    constexpr int                      kSwerveAngleMaxAmperage          =    30;
+    constexpr int                      SwerveAngleMaxAmperage          =    30;
 
-    constexpr int                      kSwerveWheelCountsPerRevoplution =    21;
+    constexpr int                      SwerveWheelCountsPerRevoplution =    21;
 
-    constexpr double                   kSwerveP                         = 0.700;      
-    constexpr double                   kSwerveI                         = 0.000;   
-    constexpr double                   kSwerveD                         = 0.001;
+    constexpr double                   SwerveP                         = 0.700;      
+    constexpr double                   SwerveI                         = 0.000;   
+    constexpr double                   SwerveD                         = 0.001;
 }
 
-namespace JoystickConstants
+namespace ControllerConstants
 {
-    constexpr int    kJoystickDriverUsbPort   = 0;
-    constexpr int    kJoystickOperatorUsbPort = 1;
+    constexpr int    DriverControllerUsbPort = 0;
+    constexpr int    JoystickOperatorUsbPort = 1;
 
-    constexpr int    kJoystickForwardIndex    = 1;
-    constexpr int    kJoystickStrifeIndex     = 0;
-    constexpr int    kJoystickAngleIndex      = 2;  // 4 for xbox controller
+    constexpr int    JoystickForwardIndex    = 1;
+    constexpr int    JoystickStrifeIndex     = 0;
+    constexpr int    JoystickAngleIndex      = 2;  // 4 for xbox controller
 
-    constexpr double kJoystickDeadZone        = 0.1;
+    constexpr double JoystickDeadZone        = 0.1;
 
-    constexpr double kExponentForward         = 2.0;
-    constexpr double kExponentStrife          = 2.0;
-    constexpr double kExponentAngle           = 2.0;
+    constexpr double ExponentForward         = 2.0;
+    constexpr double ExponentStrife          = 2.0;
+    constexpr double ExponentAngle           = 2.0;
 }
 
 namespace ApriltagConstants
@@ -111,13 +120,39 @@ namespace ApriltagConstants
     constexpr double LengthOfTagsInches      = 6.5;   
 }
 
+namespace XBoxConstants
+{
+    constexpr int    A                =  1;
+    constexpr int    B                =  2;
+    constexpr int    X                =  3;
+    constexpr int    Y                =  4;
+    constexpr int    LeftBumper       =  5;
+    constexpr int    RightBumper      =  6;
+    constexpr int    Back             =  7;
+    constexpr int    Start            =  8;
+    constexpr int    LeftStickButton  =  9;
+    constexpr int    RightStickButton = 10;
+
+    constexpr int    Pov_0             = 0;
+    constexpr int    Pov_45            = 45;
+    constexpr int    Pov_90            = 90;
+    constexpr int    Pov_135           = 135;
+    constexpr int    Pov_180           = 180;
+    constexpr int    Pov_225           = 225;
+    constexpr int    Pov_270           = 270;
+    constexpr int    Pov_315           = 315;
+}
+
 namespace LedConstants
 {
-    constexpr int    kLength                =  40;  // The length of the LED string
+    constexpr int    Length      =  40;  // The length of the LED string
+    constexpr int    PwmPort     =   5;
+    constexpr double Brightness  = 0.5;
 
-    constexpr int    kPwmPort               =   5;
+    constexpr int    Red         = 255;
+    constexpr int    Green       = 255;
+    constexpr int    Blue        = 255;
 
-    constexpr double kBrightness            = 0.5;
-    constexpr int    kRainbowRate           =   3;
-    constexpr int    kMillisecondsToSeconds =  35;
+    constexpr int    StrobeDelay =  20;  // The delay between strobe flashes
+    constexpr int    HvaDelay    =  20;  // The delay between HVA color changes
 }

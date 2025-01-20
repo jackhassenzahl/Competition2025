@@ -1,7 +1,7 @@
 #include "commands/ChassisTurnAngle.h"
 
 ChassisTurnAngle::ChassisTurnAngle(units::angle::degrees angle, double speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) : 
-                                   m_angle(angle), m_timeoutTime(timeoutTime), m_speed(speed), m_drivetrain(drivetrain)
+                                   m_angle(angle), m_speed(speed), m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
     // Set the command name
     SetName("ChassisTurnAngle");

@@ -1,8 +1,11 @@
 #pragma once
 
-#include <rev/SparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/configs/Configs.hpp>
+#include <rev/SparkMax.h>
+
+#include "Constants.h"
 
 struct WheelVector
 {

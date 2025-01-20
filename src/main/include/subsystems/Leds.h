@@ -2,10 +2,10 @@
 
 #include <array>
 
+#include <frc2/command/SubsystemBase.h>
 #include <frc/AddressableLED.h>
 #include <frc/LEDPattern.h>
-#include <frc2/command/SubsystemBase.h>
-#include <units/length.h>
+#include <frc/LEDPattern.h>
 
 #include "Constants.h"
 
@@ -39,14 +39,10 @@ class Leds : public frc2::SubsystemBase
         void Strobe();
         void ShootingAnimation();
         
-        LedMode m_ledMode;                         // The LED mode
+        LedMode m_ledMode;            // The LED mode
 
-        int     m_firstPixelHue = 0;               // Store the hue of the first pixel for rainbow mode
-        int     m_cycleCounter  = 0;               // Counter for dynamic LED modes
-        int     m_liveCounter   = 0;               // Counter to indicate that the periodic method is being called
-
-        // // Our LED strip has a density of 120 LEDs per meter
-        // units::meter_t kLedSpacing{1 / 120.0};
+        int     m_firstPixelHue = 0;  // Store the hue of the first pixel for rainbow mode
+        int     m_cycleCounter  = 0;  // Counter for dynamic LED modes
 
         // Create an LED pattern that will display a rainbow across all hues at maximum saturation and half brightness and
         // that scrolls the rainbow pattern across the LED strip, moving at a speed of 1 meter per second.
@@ -57,7 +53,7 @@ class Leds : public frc2::SubsystemBase
         frc::LEDPattern     m_shooting = frc::LEDPattern::Gradient(frc::LEDPattern::kDiscontinuous, std::array<frc::Color, 2>{frc::Color::kRed, frc::Color::kBlack}).
                                                           ScrollAtAbsoluteSpeed(0.5_mps, units::meter_t{1 / 120.0});
 
-        frc::AddressableLED m_led{LedConstants::kPwmPort};
+        frc::AddressableLED m_led{LedConstants::PwmPort};
         
-        std::array<frc::AddressableLED::LEDData, LedConstants::kLength> m_ledBuffer;  // Instatntiate the LED data buffer
+        std::array<frc::AddressableLED::LEDData, LedConstants::Length> m_ledBuffer;  // Instatntiate the LED data buffer
 };

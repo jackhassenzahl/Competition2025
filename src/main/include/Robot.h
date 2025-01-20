@@ -1,9 +1,13 @@
 #pragma once
 
+#include <hal/FRCUsageReporting.h>
 #include <frc/TimedRobot.h>
 #include <frc2/command/Command.h>
+#include <frc2/command/CommandScheduler.h>
 
 #include "RobotContainer.h"
+
+#include "Constants.h"
 
 class Robot : public frc::TimedRobot
 {

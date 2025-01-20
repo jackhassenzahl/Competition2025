@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cmath>
+#include <numbers>
 
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
@@ -30,8 +30,8 @@ class Drivetrain : public frc2::SubsystemBase
 
         bool   m_fieldCentricity = false;
 
-        double R = sqrt((ChassisConstants::kChassisLength * ChassisConstants::kChassisLength) + 
-                        (ChassisConstants::kChassisWidth  * ChassisConstants::kChassisWidth));
+        double R = sqrt((ChassisConstants::ChassisLength * ChassisConstants::ChassisLength) + 
+                        (ChassisConstants::ChassisWidth  * ChassisConstants::ChassisWidth));
 
-        SwerveModule *m_swerveModule[ChassisConstants::kNumberOfSwerveModules];  // Pointers to the four swerve modules
+        SwerveModule *m_swerveModule[ChassisConstants::NumberOfSwerveModules];  // Pointers to the four swerve modules
 };

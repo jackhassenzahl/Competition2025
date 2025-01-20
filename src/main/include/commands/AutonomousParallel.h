@@ -7,6 +7,9 @@
 #include "subsystems/Leds.h"
 #include "subsystems/Drivetrain.h"
 
+#include "commands/SetLeds.h"
+#include "commands/ChassisDriveTime.h"
+
 class AutonomousParallel : public frc2::CommandHelper<frc2::ParallelCommandGroup, AutonomousParallel>
 {
     public:
