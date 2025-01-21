@@ -75,7 +75,7 @@ namespace CanConstants
 #pragma region ChassisConstants
 namespace ChassisConstants
 {
-    constexpr int                      NumberOfSwerveModules           =     1;
+    constexpr int                      NumberOfSwerveModules           =     4;
 
     constexpr int                      ChassisLength                   =   100;
     constexpr int                      ChassisWidth                    =   100;

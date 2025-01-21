@@ -17,11 +17,15 @@ class SwerveModule
 {
     public:
 
-        explicit     SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
+        explicit               SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
 
-        void         SetState(WheelVector wheelVector);
+        void                   SetState(WheelVector wheelVector);
 
-        WheelVector* GetWheelVector();
+        void                   SetSwerveWheelAnglesToZero();
+
+        units::angle::degree_t GetAbsoluteAngle();
+
+        WheelVector*           GetWheelVector();
 
     private:
 

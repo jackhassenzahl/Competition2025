@@ -23,6 +23,7 @@
 #include "commands/ChassisDriveDistance.h"
 #include "commands/ChassisDriveTime.h"
 #include "commands/ChassisSetFieldCentricity.h"
+#include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"
@@ -37,6 +38,8 @@ class RobotContainer
 
         // Method to get a pointer to the selected autonomous command
         frc2::Command         *GetAutonomousCommand();
+
+        void                   SetSwerveWheelAnglesToZero();
 
         // Methods to get a reference to the robot joysticks
         frc::Joystick         *GetDriverController();
@@ -58,7 +61,7 @@ class RobotContainer
         RobotContainer();
 
         // Method to bind the joystick controls to the robot commands
-        void ConfigureButtonBindings();
+        void   ConfigureButtonBindings();
 
         double GetExponentialValue(double joystickValue, double exponent);
 

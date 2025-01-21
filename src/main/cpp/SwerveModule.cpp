@@ -83,14 +83,32 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     sparkBaseConfig.encoder.PositionConversionFactor(1000).VelocityConversionFactor(1000);
     sparkBaseConfig.closedLoop.SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
                      .Pid(ChassisConstants::SwerveP, ChassisConstants::SwerveI, ChassisConstants::SwerveD);
-
     m_angleMotor->Configure(sparkBaseConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 
     // Set the CAN coder absolute out range
-    // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees
+    // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees  TODO: Check angle values
     ctre::phoenix6::configs::CANcoderConfiguration canCoderConfiguration{};
     canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = -180_deg;
     m_angleAbsoluteEncoder->GetConfigurator().Apply(canCoderConfiguration);
+}
+#pragma endregion
+
+#pragma region SetSwerveWheelAnglesToZero
+/// @brief Method to set the swerve wheel to the specified angle.
+/// @param angle The angle to set the wheel.
+void SwerveModule::SetSwerveWheelAnglesToZero()
+{
+    // Get the wheel absolute angle
+    units::angle::degree_t absoluteAngle = GetAbsoluteAngle();
+
+    // Move the wheel to absolute encoder value
+    // Note: The reference angle is -1 to 1 so divide the degrees by 180
+    m_pidController->SetReference(absoluteAngle.value() / 180.0, rev::spark::SparkMax::ControlType::kPosition);
+
+    // TODO: May need to wait for the wheel to reach the zero angle position
+
+    // Set the angle encoder position to zero
+    m_angleEncoder->SetPosition(0.0);
 }
 #pragma endregion
 
@@ -107,7 +125,7 @@ void SwerveModule::SetState(WheelVector vector)
 
 #if defined(ROBOT)
         // Set the angle motor PID set angle
-        //m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::SwerveWheelCountsPerRevoplution, rev::spark::SparkMax::ControlType::kPosition);
+        m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::SwerveWheelCountsPerRevoplution, rev::spark::SparkMax::ControlType::kPosition);
 #endif
     }
     else
@@ -194,6 +212,19 @@ double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector)
 
     // Return the swerve angle in the proper hemisphere (-180 to 180 degrees)
     return angle;
+}
+#pragma endregion
+
+#pragma region GetAbsoluteAngle
+/// @brief Method to read the absolute encode in Degrees.
+/// @return The absolute angle value in degrees.
+units::angle::degree_t SwerveModule::GetAbsoluteAngle()
+{
+    // The GetAbsolutePosition() method returns a value from -1 to 1
+    double encoderValue = (double) m_angleAbsoluteEncoder->GetAbsolutePosition().GetValue();
+
+    // To convert to degrees (-180 to 180) -> multiply to 180 degrees
+    return encoderValue * 180_deg;
 }
 #pragma endregion
 

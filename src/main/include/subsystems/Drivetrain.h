@@ -1,13 +1,9 @@
 #pragma once
 
-#include <numbers>
-
 #include "studica/AHRS.h"
 
-#include <frc/ADXRS450_Gyro.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
-
 
 #include "SwerveModule.h"
 
@@ -42,11 +38,9 @@ class Drivetrain : public frc2::SubsystemBase
         double R = sqrt((ChassisConstants::ChassisLength * ChassisConstants::ChassisLength) +
                         (ChassisConstants::ChassisWidth  * ChassisConstants::ChassisWidth));
 
-        SwerveModule      *m_swerveModule[ChassisConstants::NumberOfSwerveModules];  // Pointers to the four swerve modules
+        SwerveModule *m_swerveModule[ChassisConstants::NumberOfSwerveModules];  // Pointers to the four swerve modules
 
-        bool               m_fieldCentricity = false;                                // Field centricity flag
+        bool          m_fieldCentricity = false;                                // Field centricity flag
 
-        frc::ADXRS450_Gyro m_gyro;                                                   // Creates an ADXRS450_Gyro object on the onboard SPI port
-
-        studica::AHRS m_navx{studica::AHRS::NavXComType::kMXP_SPI};                  // navX MXP using SPI
+        studica::AHRS m_navx{studica::AHRS::NavXComType::kMXP_SPI};             // navX MXP using SPI
 };

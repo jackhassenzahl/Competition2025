@@ -118,6 +118,18 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 }
 #pragma endregion
 
+#pragma region SetSwerveWheelAnglesToZero
+ /// @brief Method to set the swerve wheel angles to zero.
+ void RobotContainer::SetSwerveWheelAnglesToZero()
+ {
+    // Create a ChassisSetSwerveWheelAnglesToZero command
+    auto command = new ChassisSetSwerveWheelAnglesToZero(&m_drivetrain);
+
+    // Execute the command
+    command->Execute();
+ }
+#pragma endregion
+
 #pragma region Forward
 /// @brief Method to return the forward joystick value.
 /// @return The forward joystick value.

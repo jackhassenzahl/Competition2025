@@ -41,6 +41,9 @@ void Robot::DisabledPeriodic()
 /// @brief Method is called when switching to teleoperated mode.
 void Robot::TeleopInit()
 {
+    // Set the swerve wheels to zero
+    m_container->SetSwerveWheelAnglesToZero();
+
     // This makes sure that the autonomous stops running when teleop starts running.
     if (m_autonomousCommand != nullptr)
     {
@@ -63,6 +66,9 @@ void Robot::TeleopPeriodic()
 /// @brief Method is called when switching to autonomous mode.
 void Robot::AutonomousInit()
 {
+    // Set the swerve wheels to zero
+    m_container->SetSwerveWheelAnglesToZero();
+
     // Get the selected autonomous command
     m_autonomousCommand = m_container->GetAutonomousCommand();
 

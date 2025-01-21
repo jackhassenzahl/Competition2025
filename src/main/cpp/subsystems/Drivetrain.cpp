@@ -20,15 +20,15 @@ Drivetrain::Drivetrain()
     m_swerveModule[0] = new SwerveModule(CanConstants::SwerveFrontRightDriveMotorCanId,
                                          CanConstants::SwerveFrontRightAngleMotorCanId,
                                          CanConstants::SwerveFrontRightAngleEncoderCanId);
-    // m_swerveModule[1] = new SwerveModule(CanConstants::SwerveFrontLeftDriveMotorCanId,
-    //                                      CanConstants::SwerveFrontLeftAngleMotorCanId,
-    //                                      CanConstants::SwerveFrontLeftAngleEncoderCanId);
-    // m_swerveModule[2] = new SwerveModule(CanConstants::SwerveRearLeftDriveMotorCanId,
-    //                                      CanConstants::SwerveRearLeftAngleMotorCanId,
-    //                                      CanConstants::SwerveRearLeftAngleEncoderCanId);
-    // m_swerveModule[3] = new SwerveModule(CanConstants::SwerveRearRightDriveMotorCanId,
-    //                                      CanConstants::SwerveRearRightAngleMotorCanId,
-    //                                      CanConstants::SwerveRearRightAngleEncoderCanId);
+    m_swerveModule[1] = new SwerveModule(CanConstants::SwerveFrontLeftDriveMotorCanId,
+                                         CanConstants::SwerveFrontLeftAngleMotorCanId,
+                                         CanConstants::SwerveFrontLeftAngleEncoderCanId);
+    m_swerveModule[2] = new SwerveModule(CanConstants::SwerveRearLeftDriveMotorCanId,
+                                         CanConstants::SwerveRearLeftAngleMotorCanId,
+                                         CanConstants::SwerveRearLeftAngleEncoderCanId);
+    m_swerveModule[3] = new SwerveModule(CanConstants::SwerveRearRightDriveMotorCanId,
+                                         CanConstants::SwerveRearRightAngleMotorCanId,
+                                         CanConstants::SwerveRearRightAngleEncoderCanId);
 }
 #pragma endregion
 
@@ -37,7 +37,6 @@ Drivetrain::Drivetrain()
 void Drivetrain::Periodic()
 {
     frc::SmartDashboard::PutNumber("Gyro Angle",        GetHeading().value());
-    frc::SmartDashboard::PutNumber("NavX Angle",        m_navx.GetAngle());
     frc::SmartDashboard::PutBoolean("Field Centricity", m_fieldCentricity);
 }
 #pragma endregion
@@ -61,7 +60,7 @@ void Drivetrain::Drive(double forward, double strafe, double angle)
     WheelVector wheelVector[ChassisConstants::NumberOfSwerveModules];
 
     // Calcualte the drive paramters
-    //CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
+    CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
 
     ///          Front
     ///       +---------+ ---
@@ -76,30 +75,26 @@ void Drivetrain::Drive(double forward, double strafe, double angle)
 
     frc::SmartDashboard::PutNumber("Front Right Drive", wheelVector[0].Drive);
     frc::SmartDashboard::PutNumber("Front Right Angle", wheelVector[0].Angle);
-    // frc::SmartDashboard::PutNumber("Front Left Drive",  wheelVector[1].Drive);
-    // frc::SmartDashboard::PutNumber("Front Left Angle",  wheelVector[1].Angle);
-    // frc::SmartDashboard::PutNumber("Rear Left Drive",   wheelVector[2].Drive);
-    // frc::SmartDashboard::PutNumber("Rear Left Angle",   wheelVector[2].Angle);
-    // frc::SmartDashboard::PutNumber("Rear Right Drive",  wheelVector[3].Drive);
-    // frc::SmartDashboard::PutNumber("Rear Right Angle",  wheelVector[3].Angle);
+    frc::SmartDashboard::PutNumber("Front Left Drive",  wheelVector[1].Drive);
+    frc::SmartDashboard::PutNumber("Front Left Angle",  wheelVector[1].Angle);
+    frc::SmartDashboard::PutNumber("Rear Left Drive",   wheelVector[2].Drive);
+    frc::SmartDashboard::PutNumber("Rear Left Angle",   wheelVector[2].Angle);
+    frc::SmartDashboard::PutNumber("Rear Right Drive",  wheelVector[3].Drive);
+    frc::SmartDashboard::PutNumber("Rear Right Angle",  wheelVector[3].Angle);
 
     // Update the swerve module
-    // for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
-    //     m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
-
-    wheelVector[0].Drive = forward;
-    wheelVector[0].Angle = angle;
-    m_swerveModule[0]->SetState(wheelVector[0]);
+    for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
+        m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
 
     // Read the swerve module angles and drive
     frc::SmartDashboard::PutNumber("Vector Front Right Drive", m_swerveModule[0]->GetWheelVector()->Drive);
     frc::SmartDashboard::PutNumber("Vector Front Right Angle", m_swerveModule[0]->GetWheelVector()->Angle);
-    // frc::SmartDashboard::PutNumber("Vector Front Left Drive",  m_swerveModule[1]->GetWheelVector()->Drive);
-    // frc::SmartDashboard::PutNumber("Vector Front Left Angle",  m_swerveModule[1]->GetWheelVector()->Angle);
-    // frc::SmartDashboard::PutNumber("Vector Rear Left Drive",   m_swerveModule[2]->GetWheelVector()->Drive);
-    // frc::SmartDashboard::PutNumber("Vector Rear Left Angle",   m_swerveModule[2]->GetWheelVector()->Angle);
-    // frc::SmartDashboard::PutNumber("Vector Rear Right Drive",  m_swerveModule[3]->GetWheelVector()->Drive);
-    // frc::SmartDashboard::PutNumber("Vector Rear Right Angle",  m_swerveModule[3]->GetWheelVector()->Angle);
+    frc::SmartDashboard::PutNumber("Vector Front Left Drive",  m_swerveModule[1]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Front Left Angle",  m_swerveModule[1]->GetWheelVector()->Angle);
+    frc::SmartDashboard::PutNumber("Vector Rear Left Drive",   m_swerveModule[2]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Rear Left Angle",   m_swerveModule[2]->GetWheelVector()->Angle);
+    frc::SmartDashboard::PutNumber("Vector Rear Right Drive",  m_swerveModule[3]->GetWheelVector()->Drive);
+    frc::SmartDashboard::PutNumber("Vector Rear Right Angle",  m_swerveModule[3]->GetWheelVector()->Angle);
 }
 #pragma endregion
 
@@ -229,14 +224,12 @@ void Drivetrain::NormalizeSpeed(WheelVector wheelVector[])
 #pragma endregion
 
 #pragma region SetSwerveWheelAnglesToZero
-/// @brief Method to set the swerve wheel angles to zero.
+/// @brief Method to set the swerve wheel to the absoulute encoder angle then zero the PID controller angle.
 void Drivetrain::SetSwerveWheelAnglesToZero()
 {
     // Set the swerve wheel angles to zero
     for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
-    {
-
-    }
+        m_swerveModule[swerveModuleIndex]->SetSwerveWheelAnglesToZero();
 }
 #pragma endregion
 
@@ -246,6 +239,6 @@ void Drivetrain::SetSwerveWheelAnglesToZero()
 units::degree_t Drivetrain::GetHeading()
 {
     // Return the robot heading
-    return m_gyro.GetRotation2d().Degrees();
+    return (units::degree_t) m_navx.GetAngle();
 }
 #pragma endregion
