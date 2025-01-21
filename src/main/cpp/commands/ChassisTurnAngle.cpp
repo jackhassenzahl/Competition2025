@@ -40,5 +40,5 @@ bool ChassisTurnAngle::IsFinished()
 void ChassisTurnAngle::End(bool interrupted) 
 {
     // Stop the move
-    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(0.0, 0.0, 0.0);
 }

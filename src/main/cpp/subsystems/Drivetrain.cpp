@@ -30,17 +30,23 @@ Drivetrain::Drivetrain()
     //                                      CanConstants::SwerveRearRightAngleEncoderCanId);
 }
 
-/// @brief Field centric, so use gyro.
+/// @brief This method will be called once periodically.
+void Drivetrain::Periodic()
+{
+    frc::SmartDashboard::PutNumber("Gyro Angle",        GetHeading().value());
+    frc::SmartDashboard::PutNumber("NavX Angle",        m_navx.GetAngle());
+    frc::SmartDashboard::PutBoolean("Field Centricity", m_fieldCentricity);
+}
+
+/// @brief Method to drive the robot chassis.
 /// @param forward The forward operater input.
 /// @param strafe The strafe operater input.
 /// @param angle The angle operater input.
-/// @param gyro The robot direction in relation to the field.
-void Drivetrain::Drive(double forward, double strafe, double angle, double gyro)
+void Drivetrain::Drive(double forward, double strafe, double angle)
 {
     frc::SmartDashboard::PutNumber("Chassis Forward", forward);
     frc::SmartDashboard::PutNumber("Chassis Strafe",  strafe);
     frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
-    frc::SmartDashboard::PutNumber("Chassis Gyro",    gyro);
 
     // Convert to field centric
     if (m_fieldCentricity)
@@ -99,8 +105,8 @@ void Drivetrain::SetFieldCentricity(bool fieldCentric)
     m_fieldCentricity = fieldCentric;
 }
 
-/// @brief  
-/// @return 
+/// @brief Method to set the field centricity.
+/// @return The field centricity setting.
 bool Drivetrain::GetFieldCentricity()
 {
     // Return the field centricity setting
@@ -188,10 +194,8 @@ void Drivetrain::CalculateSwerveModuleDriveAndAngle(double forward, double straf
     NormalizeSpeed(wheelVector);
 }
 
-/// <summary>
-/// Method to normalize the Drive values for a Swerve Module
-/// </summary>
-/// <param name="swerveModule">Structure for returning the swerve module normalization for the drive motors.</param>
+/// @brief Method to normalize the Drive values for a Swerve Module.
+/// @param wheelVector Structure for returning the swerve module normalization for the drive motors.
 void Drivetrain::NormalizeSpeed(WheelVector wheelVector[])
 {
     // Determine the maximum speed
@@ -204,4 +208,12 @@ void Drivetrain::NormalizeSpeed(WheelVector wheelVector[])
     if (maxSpeed > 1)
         for (auto wheelVectorIndex = 0; wheelVectorIndex < ChassisConstants::NumberOfSwerveModules; wheelVectorIndex++)
             wheelVector[wheelVectorIndex].Drive /= maxSpeed;
+}
+
+/// @brief Method to get the robot heading.
+/// @return The robot heading.  
+units::degree_t Drivetrain::GetHeading() 
+{
+    // Return the robot heading
+    return m_gyro.GetRotation2d().Degrees();
 }

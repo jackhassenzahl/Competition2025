@@ -44,7 +44,6 @@ RobotContainer::RobotContainer()
         [this] { return Forward(); },
         [this] { return Strife();  },
         [this] { return Angle();   }, 
-        [this] { return Gyro();    },
         &m_drivetrain));
 
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
@@ -53,7 +52,14 @@ RobotContainer::RobotContainer()
 /// @brief Method to bind the joystick controls to the robot commands.
 void RobotContainer::ConfigureButtonBindings()
 {
-    // Bind the driver controller buttons to the drivetrain commands
+    // Bind the driver controller buttons to the robot commands
+    frc2::JoystickButton fieldCentricOn(&m_driverController, Extreme3DContants::HandleLowerLeft);
+    fieldCentricOn.OnTrue(ChassisSetFieldCentricity(true, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton fieldCentricOff(&m_driverController, Extreme3DContants::HandleLowerRight);
+    fieldCentricOff.OnTrue(ChassisSetFieldCentricity(false, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    // Bind the operator controller buttons to the robot commands
     frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
     setLedsOff.OnTrue(SetLeds(LedMode::Off, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
@@ -140,13 +146,6 @@ double RobotContainer::Angle()
 
     // Return the rotation speed
 	return -joystickAngle;
-}
-
-/// @brief Method to return the gyro value.
-/// @return The gyro value.
-double RobotContainer::Gyro()
-{
-    return 0.0;
 }
 
 /// @brief Method to convert a joystick value from -1.0 to 1.0 to exponential mode.

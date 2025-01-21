@@ -21,6 +21,7 @@
 #include "commands/ChassisDrive.h"
 #include "commands/ChassisDriveDistance.h"
 #include "commands/ChassisDriveTime.h"
+#include "commands/ChassisSetFieldCentricity.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"
@@ -43,7 +44,6 @@ class RobotContainer
         double                 Forward();
         double                 Strife();
         double                 Angle();
-        double                 Gyro();
 
         // Instantiate the robot subsystems
         AprilTags              m_aprilTags;
@@ -64,8 +64,8 @@ class RobotContainer
         static RobotContainer                *m_robotContainer;
 
         // Joysticks
-        frc::Joystick                        m_driverController{ControllerConstants::DriverControllerUsbPort};
-        frc::XboxController                  m_operatorController{ControllerConstants::JoystickOperatorUsbPort};
+        frc::Joystick                         m_driverController{ControllerConstants::DriverControllerUsbPort};
+        frc::XboxController                   m_operatorController{ControllerConstants::JoystickOperatorUsbPort};
 
         // Autonomous command chooser
         frc::SendableChooser<frc2::Command *> m_autonomousChooser;

@@ -23,7 +23,7 @@ void ChassisDriveDistance::Initialize()
 void ChassisDriveDistance::Execute()
 {
     // Start driving
-    m_drivetrain->Drive(m_speed, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(m_speed, 0.0, 0.0);
 }
 
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
@@ -39,7 +39,7 @@ bool ChassisDriveDistance::IsFinished()
 void ChassisDriveDistance::End(bool interrupted)
 {
     // Stop the move
-    m_drivetrain->Drive(0.0, 0.0, 0.0, 0.0);
+    m_drivetrain->Drive(0.0, 0.0, 0.0);
 
     // Restore the field centricity
     m_drivetrain->SetFieldCentricity(m_fieldCentricity);

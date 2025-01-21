@@ -11,8 +11,6 @@ SetLeds::SetLeds(int Mode, Leds *leds) : m_mode(Mode), m_leds(leds)
     // Declare subsystem dependencies
     AddRequirements({m_leds});
 
-    // Remember the LED mode
-    m_mode = Mode;
 }
 
 /// @brief Command to set the LED mode.
@@ -37,7 +35,7 @@ SetLeds::SetLeds(int Mode, units::second_t time, Leds *leds) : m_mode(Mode), m_t
 void SetLeds::Initialize()
 {
     // Set the LED mode
-    m_leds->SetMode((LedMode)m_mode);
+    m_leds->SetMode((LedMode) m_mode);
 
     // Get the LED sequence start time
     m_startTime = frc::GetTime();

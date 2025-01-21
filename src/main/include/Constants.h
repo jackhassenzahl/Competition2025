@@ -5,6 +5,7 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <frc/geometry/Translation2d.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/current.h>
@@ -118,6 +119,12 @@ namespace ApriltagConstants
     constexpr int    NumberOfBitsCorrected   =   1; 
  
     constexpr double LengthOfTagsInches      = 6.5;   
+}
+
+namespace Extreme3DContants
+{
+    constexpr int HandleLowerLeft  = 3;
+    constexpr int HandleLowerRight = 4;
 }
 
 namespace XBoxConstants
