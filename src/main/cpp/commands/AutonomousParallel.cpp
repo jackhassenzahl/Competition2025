@@ -1,8 +1,9 @@
-#include "commands/SetLeds.h"
-#include "commands/ChassisDriveTime.h"
-
 #include "commands/AutonomousParallel.h"
 
+#pragma region AutonomousParallel (constructor)
+/// @brief Comand to test running commands in parallel .
+/// @param leds The LED subsystem.
+/// @param drivetrain The Drivetrain subsystem.
 AutonomousParallel::AutonomousParallel(Leds *leds, Drivetrain *drivetrain)
 {
     // Set the command name
@@ -10,3 +11,4 @@ AutonomousParallel::AutonomousParallel(Leds *leds, Drivetrain *drivetrain)
 
     AddCommands(ChassisDriveTime(2_s, 0.5, drivetrain), SetLeds(LedMode::Rainbow, 5_s, leds));
 }
+#pragma endregion

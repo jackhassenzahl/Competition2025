@@ -18,9 +18,9 @@ class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDr
 
     private:
 
-        bool        m_fieldCentricity;
-        double      m_distance;
-        double      m_speed;
+        double      m_distance;         // The distance to drive
+        double      m_speed;            // The speed of the chassis
+        Drivetrain *m_drivetrain;       // The drivetrain subsystem;
 
-        Drivetrain *m_drivetrain;
+        bool        m_fieldCentricity;  // The field centricity setting (true = field centric, false = robot centric)
 };

@@ -1,25 +1,36 @@
 #pragma once
 
-#include <cmath>
+#include <numbers>
 
+#include "studica/AHRS.h"
+
+#include <frc/ADXRS450_Gyro.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
 
-#include "Constants.h"
+
 #include "SwerveModule.h"
+
+#include "Constants.h"
 
 class Drivetrain : public frc2::SubsystemBase
 {
     public:
 
-        explicit     Drivetrain();
+        explicit        Drivetrain();
 
-        void         Drive(double forward, double strafe, double angle, double gyro);
+        void            Periodic() override;
 
-        void         SetFieldCentricity(bool fieldCentric);
-        bool         GetFieldCentricity();
-        
-        WheelVector* GetSwerveModuleWheelVector(int swerveModuleIndex);
+        void            Drive(double forward, double strafe, double angle);
+
+        void            SetFieldCentricity(bool fieldCentric);
+        bool            GetFieldCentricity();
+
+        void            SetSwerveWheelAnglesToZero();
+
+        units::degree_t GetHeading();
+
+        WheelVector*    GetSwerveModuleWheelVector(int swerveModuleIndex);
 
     private:
 
@@ -28,10 +39,14 @@ class Drivetrain : public frc2::SubsystemBase
         void CalculateSwerveModuleDriveAndAngle(double forward, double strafe, double rotate, WheelVector wheelVector[]);
         void NormalizeSpeed(WheelVector wheelVector[]);
 
-        bool   m_fieldCentricity = false;
+        double R = sqrt((ChassisConstants::ChassisLength * ChassisConstants::ChassisLength) +
+                        (ChassisConstants::ChassisWidth  * ChassisConstants::ChassisWidth));
 
-        double R = sqrt((ChassisConstants::kChassisLength * ChassisConstants::kChassisLength) + 
-                        (ChassisConstants::kChassisWidth  * ChassisConstants::kChassisWidth));
+        SwerveModule      *m_swerveModule[ChassisConstants::NumberOfSwerveModules];  // Pointers to the four swerve modules
 
-        SwerveModule *m_swerveModule[ChassisConstants::kNumberOfSwerveModules];  // Pointers to the four swerve modules
+        bool               m_fieldCentricity = false;                                // Field centricity flag
+
+        frc::ADXRS450_Gyro m_gyro;                                                   // Creates an ADXRS450_Gyro object on the onboard SPI port
+
+        studica::AHRS m_navx{studica::AHRS::NavXComType::kMXP_SPI};                  // navX MXP using SPI
 };
