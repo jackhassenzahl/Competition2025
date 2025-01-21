@@ -1,15 +1,15 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="ChassisDrive: Stop" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="150"/>
+	</widget>
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="358" y="257"/>
 		<width>113</width>
 		<height>20</height>
 	</widget>
-	<widget field="NavX Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="355" y="281"/>
-	</widget>
 	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="355" y="307"/>
+		<location x="355" y="285"/>
 	</widget>
 	<widget field="DriveDistance: TwoMeters" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="10" y="116"/>
@@ -71,13 +71,13 @@
 		<location x="250" y="439"/>
 	</widget>
 	<widget field="Chassis Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="56" y="352"/>
+		<location x="55" y="392"/>
 	</widget>
 	<widget field="Chassis Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="54" y="324"/>
+		<location x="52" y="365"/>
 	</widget>
 	<widget field="Chassis Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="46" y="297"/>
+		<location x="41" y="337"/>
 	</widget>
 	<widget field="pose_0" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="589" y="450"/>
@@ -111,26 +111,5 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="SetLeds: HvaColors"/>
-	<hidden field="Finished"/>
-	<hidden field="SetLeds: SolidRed"/>
-	<hidden field="Chassis Forward: "/>
-	<hidden field="SetLeds: SolidGreen"/>
-	<hidden field="Gyro"/>
-	<hidden field="SetLeds: Off"/>
-	<hidden field="Chassis Strafe: "/>
-	<hidden field="Led Timer"/>
-	<hidden field="DriveDistance: OneFoot"/>
-	<hidden field="LED Counter"/>
-	<hidden field="Angle"/>
-	<hidden field="Strafe"/>
-	<hidden field="DriveDistance: TwoFeet"/>
-	<hidden field="SetLeds: Rainbow"/>
-	<hidden field="ChassisDrive: Stop"/>
-	<hidden field="Chassis Gyro"/>
-	<hidden field="Forward"/>
-	<hidden field="SetLeds: ShootingAnimation"/>
-	<hidden field="ChassisDrive"/>
-	<hidden field="SetLeds: Strobe"/>
-	<hidden field="Chassis Angle: "/>
+	<hidden field="NavX Angle"/>
 </xml>
