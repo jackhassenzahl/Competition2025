@@ -9,13 +9,13 @@ class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>
 {
     public:
 
-        explicit ChassisDrive(std::function<double()> forward, std::function<double()> strafe, 
+        explicit ChassisDrive(std::function<double()> forward, std::function<double()> strafe,
                               std::function<double()> angle, Drivetrain *drivetrain);
 
         void     Execute() override;
 
         void     SetFieldCentricity(bool fieldCentric);
-        
+
     private:
 
         std::function<double()> m_forward;     // The forward speed

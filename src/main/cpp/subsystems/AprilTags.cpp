@@ -4,7 +4,8 @@
 
 static void VisionThread();
 
-AprilTags::AprilTags() 
+#pragma region AprilTags (constructor)
+AprilTags::AprilTags()
 {
     SetName("AprilTags");
 
@@ -20,14 +21,18 @@ AprilTags::AprilTags()
     std::fflush(stderr);
 #endif
 }
+#pragma endregion
 
+#pragma region Periodic
 // This method will be called once per scheduler run
 void AprilTags::Periodic()
 {
 
 }
+#pragma endregion
 
-/// @brief 
+#pragma region VisionThread
+/// @brief
 static void VisionThread()
 {
     // Declaring AprilTagDetector:
@@ -38,14 +43,14 @@ static void VisionThread()
 
     // Set up Pose Estimator - parameters are for a Microsoft Lifecam HD-3000
     // Source of magic numbers: (https://www.chiefdelphi.com/t/wpilib-apriltagdetector-sample-code/421411/21)
-    frc::AprilTagPoseEstimator::Config poseEstConfig = 
+    frc::AprilTagPoseEstimator::Config poseEstConfig =
     {
         .tagSize = units::length::inch_t(ApriltagConstants::LengthOfTagsInches),
         .fx = ApriltagConstants::CameraWidthInPixels,     // The width of the camera in pixels
         .fy = ApriltagConstants::CameraHeightInPixels,    // The Hight of the camera in pixels
         .cx = ApriltagConstants::CameraCenterXInPixels,   // The center focus point of the camera x pos
         .cy = ApriltagConstants::CameraCenterXInPixels    // The center focus point of the camera y pos
-    };  
+    };
 
     // Making estimator to estimate the tag's possition wich somehow makes it more accurate.
     frc::AprilTagPoseEstimator estimator = frc::AprilTagPoseEstimator(poseEstConfig);
@@ -79,8 +84,8 @@ static void VisionThread()
 
     while (true)
     {
-        // Tell the CvSink to grab a frame from the camera and put it in the source mat.  
-        // If there is an error notify the output. 
+        // Tell the CvSink to grab a frame from the camera and put it in the source mat.
+        // If there is an error notify the output.
         if (cvSink.GrabFrame(mat) == 0) // If GrabFrame returns 0 then it couldn't get a frame from the camera.
         {
             // Send the output the error.
@@ -188,3 +193,4 @@ static void VisionThread()
     }
 }
 #endif
+#pragma endregion

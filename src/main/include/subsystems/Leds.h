@@ -38,7 +38,7 @@ class Leds : public frc2::SubsystemBase
         void HvaColors();
         void Strobe();
         void ShootingAnimation();
-        
+
         LedMode m_ledMode;            // The LED mode
 
         int     m_firstPixelHue = 0;  // Store the hue of the first pixel for rainbow mode
@@ -54,6 +54,6 @@ class Leds : public frc2::SubsystemBase
                                                           ScrollAtAbsoluteSpeed(0.5_mps, units::meter_t{1 / 120.0});
 
         frc::AddressableLED m_led{LedConstants::PwmPort};
-        
+
         std::array<frc::AddressableLED::LEDData, LedConstants::Length> m_ledBuffer;  // Instatntiate the LED data buffer
 };

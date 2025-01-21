@@ -1,5 +1,6 @@
 #include "Robot.h"
 
+#pragma region RobotInit
 /// @brief Method called when the robot class is instantiated.
 void Robot::RobotInit()
 {
@@ -9,26 +10,34 @@ void Robot::RobotInit()
     // Report the robot framework usage
     HAL_Report(HALUsageReporting::kResourceType_Framework, HALUsageReporting::kFramework_RobotBuilder);
 }
+#pragma endregion
 
-/// @brief Method is called every robot packet, no matter the mode. 
+#pragma region RobotPeriodic
+/// @brief Method is called every robot packet, no matter the mode.
 void Robot::RobotPeriodic()
 {
     // Run the command scheduler
     frc2::CommandScheduler::GetInstance().Run();
 }
+#pragma endregion
 
+#pragma region DisabledInit
 /// @brief Method is called once each time the robot enters Disabled mode.
 void Robot::DisabledInit()
 {
 
 }
+#pragma endregion
 
+#pragma region DisabledPeriodic
 /// @brief Method is called periodically when the robot is disabled.
 void Robot::DisabledPeriodic()
 {
 
 }
+#pragma endregion
 
+#pragma region TeleopInit
 /// @brief Method is called when switching to teleoperated mode.
 void Robot::TeleopInit()
 {
@@ -40,13 +49,17 @@ void Robot::TeleopInit()
         m_autonomousCommand = nullptr;
     }
 }
+#pragma endregion
 
+#pragma region TeleopPeriodic
 /// @brief Method is called periodically when the robot is in tleloperated mode.
 void Robot::TeleopPeriodic()
 {
-  
-}
 
+}
+#pragma endregion
+
+#pragma region AutonomousInit
 /// @brief Method is called when switching to autonomous mode.
 void Robot::AutonomousInit()
 {
@@ -60,36 +73,47 @@ void Robot::AutonomousInit()
         m_autonomousCommand->Schedule();
     }
 }
+#pragma endregion
 
+#pragma region AutonomousPeriodic
 /// @brief Method is called periodically when the robot is in autonomous mode.
 void Robot::AutonomousPeriodic()
 {
 
 }
+#pragma endregion
 
+#pragma region TestInit
 /// @brief Method is called when switching to test mode.
 void Robot::TestInit()
 {
 
 }
+#pragma endregion
 
+#pragma region TestPeriodic
 // This function is called periodically during test mode.
 void Robot::TestPeriodic()
 {
-  
-}
 
+}
+#pragma endregion
+
+#pragma region SimulationInit
 /// @brief Method is called when starting in simulation mode.
 void Robot::SimulationInit()
 {
-  
-}
 
+}
+#pragma endregion
+
+#pragma region SimulationPeriodic
 /// @brief Method is called periodically when in simulation mode.
 void Robot::SimulationPeriodic()
 {
-  
+
 }
+#pragma endregion
 
 #ifndef RUNNING_FRC_TESTS
 int main()

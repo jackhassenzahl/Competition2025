@@ -37,7 +37,8 @@ class SwerveModule
 
         // Swerve drive motor
         ctre::phoenix6::hardware::TalonFX     *m_driveMotor;
-        
+        ctre::phoenix6::controls::VoltageOut   m_voltageOut{0_V};  // Controller mode is VoltageOut
+
         // Swerve angle motor, encoder and PID controller
         rev::spark::SparkMax                  *m_angleMotor;
         rev::spark::SparkClosedLoopController *m_pidController;

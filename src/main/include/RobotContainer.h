@@ -11,6 +11,7 @@
 // Subsystems
 #include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
+#include "subsystems/Elevator.h"
 #include "subsystems/Leds.h"
 
 // Commands
@@ -42,12 +43,13 @@ class RobotContainer
         frc::XboxController   *GetOperatorController();
 
         double                 Forward();
-        double                 Strife();
+        double                 Strafe();
         double                 Angle();
 
         // Instantiate the robot subsystems
         AprilTags              m_aprilTags;
         Drivetrain             m_drivetrain;
+        Elevator               m_elevator;
         Leds                   m_leds;
 
     private:
@@ -57,9 +59,9 @@ class RobotContainer
 
         // Method to bind the joystick controls to the robot commands
         void ConfigureButtonBindings();
-        
+
         double GetExponentialValue(double joystickValue, double exponent);
-        
+
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;
 
