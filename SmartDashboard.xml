@@ -1,7 +1,5 @@
 <xml version="1.0">
 <dashboard>
-<<<<<<< HEAD
-=======
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
 		<location x="358" y="257"/>
 		<width>113</width>
@@ -19,7 +17,6 @@
 	<widget field="DriveDistance: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="14" y="82"/>
 	</widget>
->>>>>>> tmp
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="228" y="24"/>
 	</widget>
@@ -73,12 +70,6 @@
 	<widget field="Front Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="250" y="439"/>
 	</widget>
-<<<<<<< HEAD
-	<widget field="Chassis Gyro" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="60" y="380"/>
-	</widget>
-=======
->>>>>>> tmp
 	<widget field="Chassis Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="56" y="352"/>
 	</widget>
@@ -88,42 +79,6 @@
 	<widget field="Chassis Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="46" y="297"/>
 	</widget>
-<<<<<<< HEAD
-	<widget field="ChassisDrive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="240" y="382"/>
-	</widget>
-	<widget field="Chassis Angle: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="371" y="301"/>
-	</widget>
-	<widget field="Chassis Strafe: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="368" y="275"/>
-	</widget>
-	<widget field="Chassis Forward: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="358" y="250"/>
-	</widget>
-	<widget field="LED Counter" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="445" y="139"/>
-	</widget>
-	<widget field="Gyro" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="429" y="414"/>
-	</widget>
-	<widget field="Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="426" y="389"/>
-	</widget>
-	<widget field="Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="421" y="364"/>
-	</widget>
-	<widget field="Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="412" y="339"/>
-	</widget>
-	<widget field="Finished" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="466" y="192"/>
-	</widget>
-	<widget field="Led Timer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="458" y="166"/>
-	</widget>
-=======
->>>>>>> tmp
 	<widget field="pose_0" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="589" y="450"/>
 		<width>494</width>
@@ -137,24 +92,6 @@
 	<widget field="April Tag X: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="586" y="479"/>
 	</widget>
-<<<<<<< HEAD
-	<widget field="SetLeds: ShootingAnimation" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="12" y="223"/>
-	</widget>
-	<widget field="SetLeds: Strobe" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="69" y="191"/>
-	</widget>
-	<widget field="SetLeds: HvaColors" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="52" y="159"/>
-	</widget>
-	<widget field="SetLeds: SolidRed" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="60" y="127"/>
-	</widget>
-	<widget field="SetLeds: SolidGreen" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="50" y="95"/>
-	</widget>
-=======
->>>>>>> tmp
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
 		<location x="614" y="10"/>
 		<width>515</width>
@@ -165,24 +102,6 @@
 		<location x="31" y="16"/>
 		<width>193</width>
 	</static-widget>
-<<<<<<< HEAD
-	<widget field="DriveDistance: TwoFeet" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="398" y="89"/>
-	</widget>
-	<widget field="DriveDistance: OneFoot" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="399" y="57"/>
-	</widget>
-	<widget field="ChassisDrive: Stop" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="425" y="23"/>
-	</widget>
-	<widget field="SetLeds: Rainbow" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="60" y="255"/>
-	</widget>
-	<widget field="SetLeds: Off" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="85" y="63"/>
-	</widget>
-=======
->>>>>>> tmp
 	<widget field="tags" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="748" y="424"/>
 	</widget>
@@ -192,8 +111,6 @@
 </dashboard>
 <live-window>
 </live-window>
-<<<<<<< HEAD
-=======
 	<hidden field="SetLeds: HvaColors"/>
 	<hidden field="Finished"/>
 	<hidden field="SetLeds: SolidRed"/>
@@ -216,5 +133,4 @@
 	<hidden field="ChassisDrive"/>
 	<hidden field="SetLeds: Strobe"/>
 	<hidden field="Chassis Angle: "/>
->>>>>>> tmp
 </xml>
