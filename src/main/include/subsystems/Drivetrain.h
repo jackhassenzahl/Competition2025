@@ -17,17 +17,23 @@ class Drivetrain : public frc2::SubsystemBase
 {
     public:
 
-        explicit Drivetrain() { m_gyro.Reset(); }
+        explicit        Drivetrain() { m_gyro.Reset(); }
 
-        void     Drive(units::meters_per_second_t  xSpeed,
-                       units::meters_per_second_t  ySpeed,
-                       units::radians_per_second_t rotation,
-                       units::second_t             period);
+        void            Periodic() override;
 
-        void     UpdateOdometry();
+        void            Drive(units::meters_per_second_t  xSpeed,
+                              units::meters_per_second_t  ySpeed,
+                              units::radians_per_second_t rotation,
+                              units::second_t             period);
 
-        void     SetFieldCentricity(bool fieldCentric);
-        bool     GetFieldCentricity();
+        void            UpdateOdometry();
+
+        void            SetFieldCentricity(bool fieldCentric);
+        bool            GetFieldCentricity();
+
+        void            SetSwerveWheelAnglesToZero();
+
+        units::degree_t GetHeading();
 
         static constexpr units::meters_per_second_t  kMaxSpeed{3.0_mps};                 // 3 meters per second
         static constexpr units::radians_per_second_t kMaxAngularSpeed{std::numbers::pi}; // 1/2 rotation per second
@@ -53,25 +59,25 @@ class Drivetrain : public frc2::SubsystemBase
         ///       +---------+ ---
         ///       |         |
         ///       |< Width >|
-        SwerveModule       m_frontLeft {CanConstants::SwerveFrontRightDriveMotorCanId, 
-                                        CanConstants::SwerveFrontRightAngleMotorCanId, 
+        SwerveModule       m_frontLeft {CanConstants::SwerveFrontRightDriveMotorCanId,
+                                        CanConstants::SwerveFrontRightAngleMotorCanId,
                                         CanConstants::SwerveFrontRightAngleEncoderCanId};
-        SwerveModule       m_frontRight{CanConstants::SwerveFrontLeftDriveMotorCanId, 
-                                        CanConstants::SwerveFrontLeftAngleMotorCanId, 
+        SwerveModule       m_frontRight{CanConstants::SwerveFrontLeftDriveMotorCanId,
+                                        CanConstants::SwerveFrontLeftAngleMotorCanId,
                                         CanConstants::SwerveFrontLeftAngleEncoderCanId};
-        SwerveModule       m_backLeft  {CanConstants::SwerveRearLeftDriveMotorCanId, 
-                                        CanConstants::SwerveRearLeftAngleMotorCanId, 
+        SwerveModule       m_backLeft  {CanConstants::SwerveRearLeftDriveMotorCanId,
+                                        CanConstants::SwerveRearLeftAngleMotorCanId,
                                         CanConstants::SwerveRearLeftAngleEncoderCanId};
-        SwerveModule       m_backRight {CanConstants::SwerveRearRightDriveMotorCanId, 
-                                        CanConstants::SwerveRearRightAngleMotorCanId, 
+        SwerveModule       m_backRight {CanConstants::SwerveRearRightDriveMotorCanId,
+                                        CanConstants::SwerveRearRightAngleMotorCanId,
                                         CanConstants::SwerveRearRightAngleEncoderCanId};
-    
+
         frc::AnalogGyro    m_gyro{0};
-    
+
         frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{m_frontLeftLocation, m_frontRightLocation,
                                                                                          m_backLeftLocation, m_backRightLocation};
-    
-        frc::SwerveDriveOdometry<ChassisConstants::NumberOfSwerveModules>   m_odometry{m_kinematics, m_gyro.GetRotation2d(), 
+
+        frc::SwerveDriveOdometry<ChassisConstants::NumberOfSwerveModules>   m_odometry{m_kinematics, m_gyro.GetRotation2d(),
                                                                                       {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                                                                                        m_backLeft.GetPosition(),  m_backRight.GetPosition()}};
 };

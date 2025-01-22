@@ -1,6 +1,16 @@
 #include "subsystems/DriveTrain.h"
 
-/// @brief Field centric, so use gyro.
+#pragma region Periodic
+/// @brief This method will be called once periodically.
+void Drivetrain::Periodic()
+{
+    frc::SmartDashboard::PutNumber("Gyro Angle",        GetHeading().value());
+    frc::SmartDashboard::PutBoolean("Field Centricity", m_fieldCentricity);
+}
+#pragma endregion
+
+#pragma region Drive
+/// @brief Method to drive the robot chassis.
 /// @param forward The forward operater input.
 /// @param strafe The strafe operater input.
 /// @param rotation The rotation angle operater input.
@@ -15,6 +25,17 @@ void Drivetrain::Drive(units::meters_per_second_t xSpeed,
                                xSpeed, ySpeed, rotation, m_gyro.GetRotation2d()) : frc::ChassisSpeeds{xSpeed, ySpeed, rotation}, period));
 
     m_kinematics.DesaturateWheelSpeeds(&states, kMaxSpeed);
+
+    ///          Front
+    ///       +---------+ ---
+    ///       |[1]   [0]|  ^       0   Front Right
+    ///       |         |  |       1   Front Left
+    ///       |         | Length   2   Rear Left
+    ///       |         |  |       3   Rear Right
+    ///       |[2]   [3]|  v
+    ///       +---------+ ---
+    ///       |         |
+    ///       |< Width >|
 
     auto [frontLeft, frontRight, rearLeft, rearRight] = states;
 
@@ -40,7 +61,9 @@ void Drivetrain::UpdateOdometry()
 {
     m_odometry.Update(m_gyro.GetRotation2d(), {m_frontLeft.GetPosition(), m_frontRight.GetPosition(), m_backLeft.GetPosition(), m_backRight.GetPosition()});
 }
+#pragma endregion
 
+#pragma region SetFieldCentricity
 /// @brief Method to set the robot control field centricity.
 /// @param fieldCentric Boolean to indicate if the robor control should be field centric.
 void Drivetrain::SetFieldCentricity(bool fieldCentric)
@@ -48,11 +71,35 @@ void Drivetrain::SetFieldCentricity(bool fieldCentric)
     // Set the field centric member variable
     m_fieldCentricity = fieldCentric;
 }
+#pragma endregion
 
-/// @brief  
-/// @return 
+#pragma region GetFieldCentricity
+/// @brief Method to set the field centricity.
+/// @return The field centricity setting.
 bool Drivetrain::GetFieldCentricity()
 {
     // Return the field centricity setting
     return m_fieldCentricity;
 }
+#pragma endregion
+
+#pragma region SetSwerveWheelAnglesToZero
+/// @brief Method to set the swerve wheel to the absoulute encoder angle then zero the PID controller angle.
+void Drivetrain::SetSwerveWheelAnglesToZero()
+{
+    // Set the swerve wheel angles to zero
+    // for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)  TODO:
+    //     m_swerveModule[swerveModuleIndex]->SetSwerveWheelAnglesToZero();
+}
+#pragma endregion
+
+#pragma region GetHeading
+/// @brief Method to get the robot heading.
+/// @return The robot heading.
+units::degree_t Drivetrain::GetHeading()
+{
+    // Return the robot heading
+    // return (units::degree_t) m_navx.GetAngle();  TODO:
+    return (0_deg);
+}
+#pragma endregion

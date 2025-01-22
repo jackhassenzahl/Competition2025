@@ -27,5 +27,5 @@ class ChassisTurnAngle : public frc2::CommandHelper<frc2::Command, ChassisTurnAn
         units::time::second_t       m_timeoutTime;  // The time to stop the turn
         Drivetrain                 *m_drivetrain;   // The drivetrain subsystem
 
-        units::time::second_t       m_startTime;    // The start of the turn time  
+        units::time::second_t       m_startTime;    // The start of the turn time
 };

@@ -1,5 +1,6 @@
 #include "SwerveModule.h"
 
+#pragma region SwerveModule Contructor
 /// @brief Class constructor for the SwerveModule class.
 /// @param driveMotorCanId The CAN ID for the swerve module drive motor.
 /// @param angleMotorCanId The CAN ID for the swerve module angle motor.
@@ -14,7 +15,9 @@ SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEn
     ConfigureDriveMotor(driveMotorCanId);
     ConfigureAngleMotor(angleMotorCanId, angleEncoderCanId);
 }
+#pragma endregion
 
+#pragma region ConfigureDriveMotor
 /// @brief Method to configure the drive motor.
 /// @param driveMotorCanId The drive motor CAN identification.
 void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
@@ -24,19 +27,39 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
     // Instantiate the drive motor
     m_driveMotor = new ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
 
-    // Configure the drive motors 
-    ctre::phoenix6::configs::TalonFXConfiguration swerve_motor_configuration{};
+    // Create the drive motor configuration
+    ctre::phoenix6::configs::TalonFXConfiguration driveMotorConfiguration{};
 
-    // Set the current limit
-    ctre::phoenix6::configs::CurrentLimitsConfigs currentLimitsConfigs{};
+    // Add the Motor Output section settings
+    ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = driveMotorConfiguration.MotorOutput;
+    motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+
+    // Add the Current Limits section settings
+    ctre::phoenix6::configs::CurrentLimitsConfigs &currentLimitsConfigs = driveMotorConfiguration.CurrentLimits;
     currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::SwerveDriveMaxAmperage;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
-    m_driveMotor->GetConfigurator().Apply(currentLimitsConfigs);
+
+    // Apply the configuration to the drive motor
+    ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
+    for (int attempt = 0; attempt < ChassisConstants::MotorConfigurationAttempts; attempt++)
+    {
+        // Apply the configuration to the drive motor
+        status = m_driveMotor->GetConfigurator().Apply(driveMotorConfiguration);
+
+        // Check if the configuration was successful
+        if (status.IsOK())
+           break;
+    }
+
+    // Determine if the last configuration load was successful
+    if (!status.IsOK())
+        std::cout << "***** ERROR: Could not configure swerve motor. Error: " << status.GetName() << std::endl;
 
     std::cout << "***** GetDescription: " << m_driveMotor->GetDescription() << std::endl;
-    std::cout << "** " << m_driveMotor << std::endl;
 }
+#pragma endregion
 
+#pragma region ConfigureAngleMotor
 /// @brief Method to configure the angle motor and encoder.
 /// @param angleMotorCanId The angle motor CAN identification.
 /// @param angleEncoderCanId The angle encoder CAN identification.
@@ -44,44 +67,57 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
 {
     std::cout << "***** Configure Angle Motor: " << angleMotorCanId << std::endl;
 
-    // Instantiate the angle motor
-    rev::spark::SparkMax angleMotor = rev::spark::SparkMax{angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless};
-    m_angleMotor = &angleMotor;
+    // Instantiate the angle motor, encoder and absolute encode
+    m_angleMotor           = new rev::spark::SparkMax{angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless};
+    m_angleEncoder         = new rev::spark::SparkRelativeEncoder(m_angleMotor->GetEncoder());
+    //m_pidController        = new rev::spark::SparkClosedLoopController(m_angleMotor->GetClosedLoopController());
+    m_angleAbsoluteEncoder = new ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::CanBus);
 
-    // Create the angle encoder based initialized with the present angle motor encoder value
-    m_angleEncoder = new rev::spark::SparkRelativeEncoder(m_angleMotor->GetEncoder());
-
-    ctre::phoenix6::hardware::CANcoder angleAbsoluteEncoder = ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::CanBus);
-    m_angleAbsoluteEncoder = &angleAbsoluteEncoder;
-
-    // Limit the PID Controller's input range between -pi and pi and set the input to be continuous.
+    // Limit the PID Controller's input range between -pi and pi and set the input to be continuous
     m_turningPIDController.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
 
-    // Set the absolute out range
-    // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees
-    ctre::phoenix6::configs::CANcoderConfiguration toApply{};
-    toApply.MagnetSensor.AbsoluteSensorDiscontinuityPoint = -180_deg;
-    m_angleAbsoluteEncoder->GetConfigurator().Apply(toApply);
-
     // Configure the angle motor
-    rev::spark::SparkBaseConfig config{};
+    rev::spark::SparkBaseConfig sparkBaseConfig{};
+    sparkBaseConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+    sparkBaseConfig.SecondaryCurrentLimit(ChassisConstants::SwerveAngleMaxAmperage);
+    sparkBaseConfig.encoder.PositionConversionFactor(1000).VelocityConversionFactor(1000);
+    sparkBaseConfig.closedLoop.SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+                     .Pid(ChassisConstants::SwerveP, ChassisConstants::SwerveI, ChassisConstants::SwerveD);
+    m_angleMotor->Configure(sparkBaseConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 
-    config.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-    config.SecondaryCurrentLimit(ChassisConstants::SwerveAngleMaxAmperage);
-    config.encoder.PositionConversionFactor(1000).VelocityConversionFactor(1000);
-
-    m_angleMotor->Configure(config, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+    // Set the CAN coder absolute out range
+    // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees  TODO: Check angle values
+    ctre::phoenix6::configs::CANcoderConfiguration canCoderConfiguration{};
+    canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = -180_deg;
+    m_angleAbsoluteEncoder->GetConfigurator().Apply(canCoderConfiguration);
 }
+#pragma endregion
 
+#pragma region SetSwerveWheelAnglesToZero
+/// @brief Method to set the swerve wheel to the specified angle.
+/// @param angle The angle to set the wheel.
+void SwerveModule::SetSwerveWheelAnglesToZero()
+{
+    // // Get the wheel absolute angle  TODO:
+    // units::angle::degree_t absoluteAngle = GetAbsoluteAngle();
+
+    // // Move the wheel to absolute encoder value
+    // // Note: The reference angle is -1 to 1 so divide the degrees by 180
+    // m_pidController->SetReference(absoluteAngle.value() / 180.0, rev::spark::SparkMax::ControlType::kPosition);
+
+    // TODO: May need to wait for the wheel to reach the zero angle position
+
+    // Set the angle encoder position to zero
+    m_angleEncoder->SetPosition(0.0);
+}
+#pragma endregion
+
+#pragma region SetState
 /// @brief Set the swerve module angle and motor power.
 /// @param vector The wheel vector (angle and drive).
 void SwerveModule::SetState(frc::SwerveModuleState &referenceState)
 {
-#if defined(ROBOT)    
     frc::Rotation2d encoderRotation{units::radian_t{m_angleEncoder->GetPosition()}};
-#else
-    frc::Rotation2d encoderRotation{units::radian_t{0}};
-#endif
 
     // Optimize the reference state to avoid spinning further than 90 degrees
     referenceState.Optimize(encoderRotation);
@@ -98,11 +134,9 @@ void SwerveModule::SetState(frc::SwerveModuleState &referenceState)
     const auto turnOutput      = m_turningPIDController.Calculate(GetAngleEncoderDistance(), referenceState.angle.Radians());
     const auto turnFeedforward = m_turnFeedforward.Calculate(m_turningPIDController.GetSetpoint().velocity);
 
-#if defined(ROBOT)
         // Set the Drive motor power to zero
     m_driveMotor->SetVoltage(units::volt_t{driveOutput} + driveFeedforward);
     m_angleMotor->SetVoltage(units::volt_t{turnOutput}  + turnFeedforward);
-#endif
 }
 
 /// @brief Method to retrieve the drive encoder rate (velocity in meters/s).
@@ -148,7 +182,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition()
 #if defined(ROBOT)
     // Get the drive position
     double drivePosition = (double) m_driveMotor->GetPosition().GetValue();
-    
+
     // Return the swerve module position
     return {units::meter_t{drivePosition}, units::radian_t{m_angleEncoder->GetPosition()}};
 #else

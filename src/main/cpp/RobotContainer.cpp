@@ -1,8 +1,9 @@
 #include "RobotContainer.h"
 
 // Reference to the RobotContainer singleton class
-RobotContainer *RobotContainer::m_robotContainer = NULL;  
+RobotContainer *RobotContainer::m_robotContainer = NULL;
 
+#pragma region GetInstance
 /// @brief Method to return a pointer to the RobotContainer class.
 /// @return Pointer to the RobotContainer class.
 RobotContainer *RobotContainer::GetInstance()
@@ -17,7 +18,9 @@ RobotContainer *RobotContainer::GetInstance()
     // Return the class pointer
     return m_robotContainer;
 }
+#pragma endregion
 
+#pragma region RobotContainer
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
@@ -42,17 +45,26 @@ RobotContainer::RobotContainer()
     // Set the default commands for the subsystems
     m_drivetrain.SetDefaultCommand(ChassisDrive(
         [this] { return Forward(); },
-        [this] { return Strife();  },
-        [this] { return Angle();   }, 
+        [this] { return Strafe();  },
+        [this] { return Angle();   },
         &m_drivetrain));
 
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
 }
+#pragma endregion
 
+#pragma region ConfigureButtonBindings
 /// @brief Method to bind the joystick controls to the robot commands.
 void RobotContainer::ConfigureButtonBindings()
 {
-    // Bind the driver controller buttons to the drivetrain commands
+    // Bind the driver controller buttons to the robot commands
+    frc2::JoystickButton fieldCentricOn(&m_driverController, Extreme3DContants::HandleLowerLeft);
+    fieldCentricOn.OnTrue(ChassisSetFieldCentricity(true, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton fieldCentricOff(&m_driverController, Extreme3DContants::HandleLowerRight);
+    fieldCentricOff.OnTrue(ChassisSetFieldCentricity(false, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    // Bind the operator controller buttons to the robot commands
     frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
     setLedsOff.OnTrue(SetLeds(LedMode::Off, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
@@ -74,7 +86,9 @@ void RobotContainer::ConfigureButtonBindings()
     frc2::POVButton setLedsRainbow{&m_operatorController, XBoxConstants::Pov_270};
     setLedsRainbow.OnTrue(SetLeds(LedMode::Rainbow, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 }
+#pragma endregion
 
+#pragma region GetDriverController
 /// @brief Method to return a pointer to the driver joystick.
 /// @return Pointer to the driver joystick.
 frc::Joystick *RobotContainer::GetDriverController()
@@ -82,7 +96,9 @@ frc::Joystick *RobotContainer::GetDriverController()
     // Return the pointer to the driver joystick
     return &m_driverController;
 }
+#pragma endregion
 
+#pragma region GetOperatorController
 /// @brief Method to return a pointer to the controller joystick.
 /// @return Pointer to the controller joystick.
 frc::XboxController *RobotContainer::GetOperatorController()
@@ -90,7 +106,9 @@ frc::XboxController *RobotContainer::GetOperatorController()
     // Return the pointer to the operator joystick
     return &m_operatorController;
 }
+#pragma endregion
 
+#pragma region GetAutonomousCommand
 /// @brief Method to return a pointer to the autonomous command.
 /// @return Pointer to the autonomous command
 frc2::Command *RobotContainer::GetAutonomousCommand()
@@ -98,7 +116,21 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
     // The selected command will be run in autonomous
     return m_autonomousChooser.GetSelected();
 }
+#pragma endregion
 
+#pragma region SetSwerveWheelAnglesToZero
+ /// @brief Method to set the swerve wheels to zero degrees based on the absolute encoder.
+ void RobotContainer::SetSwerveWheelAnglesToZero()
+ {
+    // Create a ChassisSetSwerveWheelAnglesToZero command
+    auto command = new ChassisSetSwerveWheelAnglesToZero(&m_drivetrain);
+
+    // Execute the command
+    command->Execute();
+ }
+#pragma endregion
+
+#pragma region Forward
 /// @brief Method to return the forward joystick value.
 /// @return The forward joystick meters per second value.
 units::meters_per_second_t RobotContainer::Forward()
@@ -113,25 +145,28 @@ units::meters_per_second_t RobotContainer::Forward()
     return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
 
-/// @brief Method to return the strife joystick value.
-/// @return The strife joystick meters per second value.
-units::meters_per_second_t RobotContainer::Strife()
+#pragma region Strafe
+/// @brief Method to return the strafe joystick value.
+/// @return The strafe joystick meters per second value.
+units::meters_per_second_t RobotContainer::Strafe()
 {
-    // Get the strife joystick setting
-    double joystickStrife = GetDriverController()->GetRawAxis(ControllerConstants::JoystickStrifeIndex);
+    // Get the strafe joystick setting
+    double joystickStrafe = GetDriverController()->GetRawAxis(ControllerConstants::JoystickStrafeIndex);
 
     // Use expoendial function to calculate the forward value for better slow speed control
-    joystickStrife = GetExponentialValue(joystickStrife, ControllerConstants::ExponentStrife);
+    joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
-    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrife, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
+    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
+#pragma endregion
 
+#pragma region Angle
 /// @brief Method to return the angle joystick value.
 /// @return The angle joystick value.
 units::radians_per_second_t RobotContainer::Angle()
 {
-    // Get the angle joystick setting    
+    // Get the angle joystick setting
     double joystickAngle = GetDriverController()->GetRawAxis(ControllerConstants::JoystickAngleIndex);
 
     // Use expoendial function to calculate the forward value for better slow speed control
@@ -140,7 +175,9 @@ units::radians_per_second_t RobotContainer::Angle()
     // Return the rotation speed
     return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxAngularSpeed;
 }
+#pragma endregion
 
+#pragma region GetExponentialValue
 /// @brief Method to convert a joystick value from -1.0 to 1.0 to exponential mode.
 /// @param joystickValue The raw joystick value.
 /// @param exponent The exponential value.
@@ -164,7 +201,7 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 
     // Plug joystick value into exponential function
     output = direction * pow(joystickValue, exponent);
-    
+
     // Ensure the range of the output
     if (output < -1.0)  output = -1.0;
     if (output >  1.0)  output =  1.0;

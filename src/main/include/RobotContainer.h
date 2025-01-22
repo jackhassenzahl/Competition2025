@@ -13,6 +13,7 @@
 // Subsystems
 #include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
+#include "subsystems/Elevator.h"
 #include "subsystems/Leds.h"
 
 // Commands
@@ -23,6 +24,8 @@
 #include "commands/ChassisDrive.h"
 #include "commands/ChassisDriveDistance.h"
 #include "commands/ChassisDriveTime.h"
+#include "commands/ChassisSetFieldCentricity.h"
+#include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"
@@ -38,12 +41,15 @@ class RobotContainer
         // Method to get a pointer to the selected autonomous command
         frc2::Command              *GetAutonomousCommand();
 
+        // Method to set the swerve wheels to zero degrees based on the absolute encoder
+        void                        SetSwerveWheelAnglesToZero();
+
         // Methods to get a reference to the robot joysticks
         frc::Joystick              *GetDriverController();
         frc::XboxController        *GetOperatorController();
 
         units::meters_per_second_t  Forward();
-        units::meters_per_second_t  Strife();
+        units::meters_per_second_t  Strafe();
         units::radians_per_second_t Angle();
 
         void                        SetPeriod(units::second_t period);
@@ -52,6 +58,7 @@ class RobotContainer
         // Instantiate the robot subsystems
         AprilTags  m_aprilTags;
         Drivetrain m_drivetrain;
+        Elevator   m_elevator;
         Leds       m_leds;
 
     private:
@@ -60,10 +67,10 @@ class RobotContainer
         RobotContainer();
 
         // Method to bind the joystick controls to the robot commands
-        void ConfigureButtonBindings();
-        
+        void   ConfigureButtonBindings();
+
         double GetExponentialValue(double joystickValue, double exponent);
-        
+
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;
 

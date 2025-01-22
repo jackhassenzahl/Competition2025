@@ -31,11 +31,14 @@ class SwerveModule
 
         void                       SetState(frc::SwerveModuleState &state);
 
+        void                       SetSwerveWheelAnglesToZero();
+
         frc::SwerveModuleState     GetState();
         frc::SwerveModulePosition  GetPosition();
 
     private:
 
+        // Private methods
         void                       ConfigureDriveMotor(int driveMotorCANid);
         void                       ConfigureAngleMotor(int angleMotorCANid, int angleEncoderCANid);
 
@@ -48,12 +51,12 @@ class SwerveModule
         // Swerve drive motor
         // Note: Encoder is built in the TalonFX
         ctre::phoenix6::hardware::TalonFX          *m_driveMotor;
-        
+
         // Swerve angle motor, encoder and PID controller
         rev::spark::SparkMax                       *m_angleMotor;
         rev::spark::SparkRelativeEncoder           *m_angleEncoder;
         ctre::phoenix6::hardware::CANcoder         *m_angleAbsoluteEncoder;
-        
+
         frc::PIDController                          m_drivePIDController{1.0, 0, 0};
         frc::ProfiledPIDController<units::radians>  m_turningPIDController{1.0, 0.0, 0.0, {kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration}};
 
