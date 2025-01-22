@@ -39,6 +39,7 @@ class RobotContainer
         // Method to get a pointer to the selected autonomous command
         frc2::Command         *GetAutonomousCommand();
 
+        // Method to set the swerve wheels to zero degrees based on the absolute encoder
         void                   SetSwerveWheelAnglesToZero();
 
         // Methods to get a reference to the robot joysticks

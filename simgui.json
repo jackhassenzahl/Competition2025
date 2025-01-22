@@ -7,6 +7,13 @@
       "window": {
         "visible": true
       }
+    },
+    "Other Devices": {
+      "SPARK MAX [2]": {
+        "header": {
+          "open": true
+        }
+      }
     }
   },
   "NTProvider": {
@@ -17,7 +24,9 @@
       "/SmartDashboard/Autonomous Mode": "String Chooser",
       "/SmartDashboard/ChassisDrive: Stop": "Command",
       "/SmartDashboard/DriveDistance: OneFoot": "Command",
+      "/SmartDashboard/DriveDistance: OneMeter": "Command",
       "/SmartDashboard/DriveDistance: TwoFeet": "Command",
+      "/SmartDashboard/DriveDistance: TwoMeters": "Command",
       "/SmartDashboard/SetLeds: HvaColors": "Command",
       "/SmartDashboard/SetLeds: Off": "Command",
       "/SmartDashboard/SetLeds: Rainbow": "Command",

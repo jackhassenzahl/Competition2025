@@ -119,7 +119,7 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 #pragma endregion
 
 #pragma region SetSwerveWheelAnglesToZero
- /// @brief Method to set the swerve wheel angles to zero.
+ /// @brief Method to set the swerve wheels to zero degrees based on the absolute encoder.
  void RobotContainer::SetSwerveWheelAnglesToZero()
  {
     // Create a ChassisSetSwerveWheelAnglesToZero command

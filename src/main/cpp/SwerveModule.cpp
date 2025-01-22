@@ -74,6 +74,7 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     // Instantiate the angle motor, encoder and absolute encode
     m_angleMotor           = new rev::spark::SparkMax{angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless};
     m_angleEncoder         = new rev::spark::SparkRelativeEncoder(m_angleMotor->GetEncoder());
+    m_pidController        = new rev::spark::SparkClosedLoopController(m_angleMotor->GetClosedLoopController());
     m_angleAbsoluteEncoder = new ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::CanBus);
 
     // Configure the angle motor
@@ -123,10 +124,8 @@ void SwerveModule::SetState(WheelVector vector)
         // Optimize the serve module vector to minimize wheel rotation on change of diretion
         OptimizeWheelAngle(vector, &m_wheelVector);
 
-#if defined(ROBOT)
         // Set the angle motor PID set angle
         m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::SwerveWheelCountsPerRevoplution, rev::spark::SparkMax::ControlType::kPosition);
-#endif
     }
     else
     {

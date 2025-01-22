@@ -14,8 +14,6 @@
 #include <units/velocity.h>
 #include <units/voltage.h>
 
-#define ROBOT  // TODO: Enable code to run on the robot
-
 #pragma region CanConstants
 //************************************************************************
 // ***** Robio RIO Wiring Connections *****
@@ -52,17 +50,17 @@ namespace CanConstants
 {
     const std::string CanBus                        = "rio";
 
-    constexpr int SwerveFrontRightDriveMotorCanId   = 3;
-    constexpr int SwerveFrontRightAngleMotorCanId   = 2;
+    constexpr int SwerveFrontRightDriveMotorCanId   =  3;
+    constexpr int SwerveFrontRightAngleMotorCanId   =  2;
     constexpr int SwerveFrontRightAngleEncoderCanId = 12;
 
-    constexpr int SwerveFrontLeftDriveMotorCanId    = 6;
-    constexpr int SwerveFrontLeftAngleMotorCanId    = 5;
-    constexpr int SwerveFrontLeftAngleEncoderCanId  = 4;
+    constexpr int SwerveFrontLeftDriveMotorCanId    =  6;
+    constexpr int SwerveFrontLeftAngleMotorCanId    =  5;
+    constexpr int SwerveFrontLeftAngleEncoderCanId  =  4;
 
-    constexpr int SwerveRearLeftDriveMotorCanId     = 9;
-    constexpr int SwerveRearLeftAngleMotorCanId     = 8;
-    constexpr int SwerveRearLeftAngleEncoderCanId   = 7;
+    constexpr int SwerveRearLeftDriveMotorCanId     =  9;
+    constexpr int SwerveRearLeftAngleMotorCanId     =  8;
+    constexpr int SwerveRearLeftAngleEncoderCanId   =  7;
 
     constexpr int SwerveRearRightDriveMotorCanId    = 11;
     constexpr int SwerveRearRightAngleMotorCanId    = 10;
@@ -144,20 +142,20 @@ namespace Extreme3DContants
 #pragma region xBoxConstants
 namespace XBoxConstants
 {
-    constexpr int    A                =  1;
-    constexpr int    B                =  2;
-    constexpr int    X                =  3;
-    constexpr int    Y                =  4;
-    constexpr int    LeftBumper       =  5;
-    constexpr int    RightBumper      =  6;
-    constexpr int    Back             =  7;
-    constexpr int    Start            =  8;
-    constexpr int    LeftStickButton  =  9;
-    constexpr int    RightStickButton = 10;
-
-    constexpr int    Pov_0             = 0;
-    constexpr int    Pov_45            = 45;
-    constexpr int    Pov_90            = 90;
+    constexpr int    A                 =   1;
+    constexpr int    B                 =   2;
+    constexpr int    X                 =   3;
+    constexpr int    Y                 =   4;
+    constexpr int    LeftBumper        =   5;
+    constexpr int    RightBumper       =   6;
+    constexpr int    Back              =   7;
+    constexpr int    Start             =   8;
+    constexpr int    LeftStickButton   =   9;
+    constexpr int    RightStickButton  =  10;
+ 
+    constexpr int    Pov_0             =   0;
+    constexpr int    Pov_45            =  45;
+    constexpr int    Pov_90            =  90;
     constexpr int    Pov_135           = 135;
     constexpr int    Pov_180           = 180;
     constexpr int    Pov_225           = 225;
