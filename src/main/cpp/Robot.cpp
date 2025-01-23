@@ -9,6 +9,9 @@ void Robot::RobotInit()
 
     // Report the robot framework usage
     HAL_Report(HALUsageReporting::kResourceType_Framework, HALUsageReporting::kFramework_RobotBuilder);
+
+    // Reset the debug message
+    frc::SmartDashboard::PutString("Debug", "RobotInit");
 }
 #pragma endregion
 
@@ -42,8 +45,8 @@ void Robot::DisabledPeriodic()
 void Robot::TeleopInit()
 {
     // Set the swerve wheels to zero
-    m_container->SetSwerveWheelAnglesToZero();
-
+    //m_container->SetSwerveWheelAnglesToZero();  //TODO: Replaces to test set swerve wheels to zero
+    
     // This makes sure that the autonomous stops running when teleop starts running.
     if (m_autonomousCommand != nullptr)
     {

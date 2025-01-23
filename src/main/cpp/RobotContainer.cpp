@@ -122,7 +122,7 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
  /// @brief Method to set the swerve wheels to zero degrees based on the absolute encoder.
  void RobotContainer::SetSwerveWheelAnglesToZero()
  {
-    // Create a ChassisSetSwerveWheelAnglesToZero command
+    // Create the command to set the swerve wheel angles to zero based on the absolute encoder
     auto command = new ChassisSetSwerveWheelAnglesToZero(&m_drivetrain);
 
     // Execute the command

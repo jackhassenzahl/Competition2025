@@ -21,11 +21,13 @@ class SwerveModule
 
         void                   SetState(WheelVector wheelVector);
 
-        void                   SetSwerveWheelAnglesToZero();
+        void                   SetWheelAngleToZero();
 
         units::angle::degree_t GetAbsoluteAngle();
 
         WheelVector*           GetWheelVector();
+
+        double                 GetSwerveAngle();
 
     private:
 

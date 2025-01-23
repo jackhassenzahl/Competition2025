@@ -94,13 +94,19 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
 }
 #pragma endregion
 
-#pragma region SetSwerveWheelAnglesToZero
+#pragma region SetWheelAngleToZero
 /// @brief Method to set the swerve wheel to the specified angle.
 /// @param angle The angle to set the wheel.
-void SwerveModule::SetSwerveWheelAnglesToZero()
+void SwerveModule::SetWheelAngleToZero()
 {
     // Get the wheel absolute angle
     units::angle::degree_t absoluteAngle = GetAbsoluteAngle();
+
+    //**************************************************************************** 
+    // Test code: TODO: Remove
+    frc::SmartDashboard::PutNumber("Absolute Angle", absoluteAngle.value());
+    frc::SmartDashboard::PutNumber("Set Reference Angle", absoluteAngle.value() / 180.0);
+    //**************************************************************************** 
 
     // Move the wheel to absolute encoder value
     // Note: The reference angle is -1 to 1 so divide the degrees by 180
@@ -121,10 +127,10 @@ void SwerveModule::SetState(WheelVector vector)
     // Do not change the angle if the wheel is not driven
     if (vector.Drive > 0.01 || vector.Drive < -0.01)
     {
-        // // Optimize the serve module vector to minimize wheel rotation on change of diretion
+        // // Optimize the serve module vector to minimize wheel rotation on change of diretion  TODO: Replace
         // OptimizeWheelAngle(vector, &m_wheelVector);
 
-        // // Set the angle motor PID set angle
+        // // Set the angle motor PID set angle  TODO: Replace
         // m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
 
         m_pidController->SetReference(vector.Angle, rev::spark::SparkMax::ControlType::kPosition);
@@ -240,5 +246,15 @@ WheelVector* SwerveModule::GetWheelVector()
 {
     // Return the wheel vector
     return &m_wheelVector;
+}
+#pragma endregion
+
+#pragma region GetSwerveAngle()
+/// @brief Method to get the swerve module angle encoder position.
+/// @return The angle encoder position
+double SwerveModule::GetSwerveAngle()
+{
+    // Get the angle encoder position
+    return m_angleEncoder->GetPosition();
 }
 #pragma endregion

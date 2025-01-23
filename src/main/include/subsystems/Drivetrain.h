@@ -22,7 +22,7 @@ class Drivetrain : public frc2::SubsystemBase
         void            SetFieldCentricity(bool fieldCentric);
         bool            GetFieldCentricity();
 
-        void            SetSwerveWheelAnglesToZero();
+        void            SetWheelAnglesToZero();
 
         units::degree_t GetHeading();
 
