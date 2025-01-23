@@ -11,31 +11,24 @@ void Drivetrain::Periodic()
 
 #pragma region Drive
 /// @brief Method to drive the robot chassis.
-/// @param forward The forward operater input.
-/// @param strafe The strafe operater input.
-/// @param rotation The rotation angle operater input.
-/// @param gyro The robot direction in relation to the field.
-void Drivetrain::Drive(units::meters_per_second_t xSpeed,
-                       units::meters_per_second_t ySpeed,
+/// @param xSpeed The speed in the X dirction.
+/// @param ySpeed The speed in the Y dirction
+/// @param rotation The rate of rotation.
+/// @param period The robot update period.
+void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
+                       units::meters_per_second_t  ySpeed,
                        units::radians_per_second_t rotation,
                        units::second_t period)
 {
+    frc::SmartDashboard::PutNumber("Chassis Forward", (double) xSpeed);
+    frc::SmartDashboard::PutNumber("Chassis Strafe",  (double) ySpeed);
+    frc::SmartDashboard::PutNumber("Chassis Angle",   (double) rotation);
+
     auto states = m_kinematics.ToSwerveModuleStates(frc::ChassisSpeeds::Discretize(
                                m_fieldCentricity ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                                xSpeed, ySpeed, rotation, m_gyro.GetRotation2d()) : frc::ChassisSpeeds{xSpeed, ySpeed, rotation}, period));
 
     m_kinematics.DesaturateWheelSpeeds(&states, kMaxSpeed);
-
-    ///          Front
-    ///       +---------+ ---
-    ///       |[1]   [0]|  ^       0   Front Right
-    ///       |         |  |       1   Front Left
-    ///       |         | Length   2   Rear Left
-    ///       |         |  |       3   Rear Right
-    ///       |[2]   [3]|  v
-    ///       +---------+ ---
-    ///       |         |
-    ///       |< Width >|
 
     auto [frontLeft, frontRight, rearLeft, rearRight] = states;
 
@@ -55,8 +48,21 @@ void Drivetrain::Drive(units::meters_per_second_t xSpeed,
     m_frontRight.SetState(frontRight);
     m_backLeft.SetState(rearLeft);
     m_backRight.SetState(rearRight);
-}
 
+    // Read the swerve module angles and drive
+    // frc::SmartDashboard::PutNumber("Vector Front Right Drive", m_swerveModule[0]->GetWheelVector()->Drive);
+    // frc::SmartDashboard::PutNumber("Vector Front Right Angle", m_swerveModule[0]->GetWheelVector()->Angle);
+    // frc::SmartDashboard::PutNumber("Vector Front Left Drive",  m_swerveModule[1]->GetWheelVector()->Drive);
+    // frc::SmartDashboard::PutNumber("Vector Front Left Angle",  m_swerveModule[1]->GetWheelVector()->Angle);
+    // frc::SmartDashboard::PutNumber("Vector Rear Left Drive",   m_swerveModule[2]->GetWheelVector()->Drive);
+    // frc::SmartDashboard::PutNumber("Vector Rear Left Angle",   m_swerveModule[2]->GetWheelVector()->Angle);
+    // frc::SmartDashboard::PutNumber("Vector Rear Right Drive",  m_swerveModule[3]->GetWheelVector()->Drive);
+    // frc::SmartDashboard::PutNumber("Vector Rear Right Angle",  m_swerveModule[3]->GetWheelVector()->Angle);
+}
+#pragma endregion
+
+#pragma region UpdateOdometry
+/// @brief Method to update the robot odometry.
 void Drivetrain::UpdateOdometry()
 {
     m_odometry.Update(m_gyro.GetRotation2d(), {m_frontLeft.GetPosition(), m_frontRight.GetPosition(), m_backLeft.GetPosition(), m_backRight.GetPosition()});
@@ -99,7 +105,6 @@ void Drivetrain::SetSwerveWheelAnglesToZero()
 units::degree_t Drivetrain::GetHeading()
 {
     // Return the robot heading
-    // return (units::degree_t) m_navx.GetAngle();  TODO:
-    return (0_deg);
+    return (units::degree_t) m_gyro.GetAngle();
 }
 #pragma endregion

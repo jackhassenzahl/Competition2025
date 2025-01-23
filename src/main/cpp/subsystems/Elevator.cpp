@@ -5,7 +5,7 @@
 Elevator::Elevator()
 {
     // Configure the elevator motor
-    //ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);  TODO: Restore when elevator motor is present
+    ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
 }
 #pragma endregion
 
@@ -70,6 +70,6 @@ void Elevator::ConfigureElevatorMotor(int driveMotorCanId)
 void Elevator::SetHeight(units::length::meter_t position)
 {
     // Set the elevator set position
-    //m_elevatorMotor->SetControl(m_motionMagicVoltage.WithPosition(position).WithSlot(0));  TODO: Restore
+    //m_elevatorMotor->SetControl(m_motionMagicVoltage.WithPosition(position).WithSlot(0)); TODO: Fix
 }
 #pragma endregion

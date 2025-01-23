@@ -66,7 +66,7 @@ namespace CanConstants
     constexpr int SwerveRearRightAngleMotorCanId    = 10;
     constexpr int SwerveRearRightAngleEncoderCanId  = 13;
 
-    constexpr int ElevatorMotorCanId                =  2;  // TODO: Sharing with swerve drive motor for testing
+    constexpr int ElevatorMotorCanId                = 20;
 }
 #pragma endregion
 
@@ -84,11 +84,12 @@ namespace ChassisConstants
 
     constexpr int                      SwerveAngleMaxAmperage          =    30;
 
-    constexpr int                      SwerveWheelCountsPerRevoplution =    21;
+    constexpr int                      SwerveMotorRevolutions          =    21;                                 // The number of motor revolutions per wheel revolutions
+    constexpr double                   SwerveDegreesToMotorRevolutions = 180.0 / SwerveMotorRevolutions / 2.0;  // Degrees to motor revolutions
 
-    constexpr double                   SwerveP                         = 0.700;
+    constexpr double                   SwerveP                         = 0.025;
     constexpr double                   SwerveI                         = 0.000;
-    constexpr double                   SwerveD                         = 0.001;
+    constexpr double                   SwerveD                         = 0.010;
 }
 #pragma endregion
 

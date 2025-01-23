@@ -2,6 +2,8 @@
 
 #include <numbers>
 
+#include "studica/AHRS.h"
+
 #include <frc/AnalogGyro.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
@@ -40,7 +42,9 @@ class Drivetrain : public frc2::SubsystemBase
 
     private:
 
-        bool               m_fieldCentricity = false;
+        bool               m_fieldCentricity = false;                                // Field centricity flag
+
+        studica::AHRS      m_gyro{studica::AHRS::NavXComType::kMXP_SPI};             // navX MXP using SPI
 
         frc::Translation2d m_frontLeftLocation {+0.381_m, +0.381_m};
         frc::Translation2d m_frontRightLocation{+0.381_m, -0.381_m};
@@ -71,8 +75,6 @@ class Drivetrain : public frc2::SubsystemBase
         SwerveModule       m_backRight {CanConstants::SwerveRearRightDriveMotorCanId,
                                         CanConstants::SwerveRearRightAngleMotorCanId,
                                         CanConstants::SwerveRearRightAngleEncoderCanId};
-
-        frc::AnalogGyro    m_gyro{0};
 
         frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{m_frontLeftLocation, m_frontRightLocation,
                                                                                          m_backLeftLocation, m_backRightLocation};

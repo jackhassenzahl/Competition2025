@@ -144,6 +144,7 @@ units::meters_per_second_t RobotContainer::Forward()
     // Return the x speed
     return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
 }
+#pragma endregion
 
 #pragma region Strafe
 /// @brief Method to return the strafe joystick value.
@@ -210,6 +211,7 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
     return output;
 }
 
+#pragma region SetPeriod
 /// @brief Method to set the timed robot period.
 /// @param period The period to set.
 void RobotContainer::SetPeriod(units::second_t period)
@@ -217,7 +219,9 @@ void RobotContainer::SetPeriod(units::second_t period)
     // Set the period
     m_period = period;
 }
+#pragma endregion
 
+#pragma region GetPeriod
 /// @brief Method to get the timed robot period.
 /// @return The timed robot period.
 units::second_t RobotContainer::GetPeriod()
@@ -225,3 +229,4 @@ units::second_t RobotContainer::GetPeriod()
     // Return the timed robot period
     return m_period;
 }
+#pragma endregion
