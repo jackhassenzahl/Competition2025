@@ -48,30 +48,27 @@ void Drivetrain::Periodic()
 /// @param angle The angle operater input.
 void Drivetrain::Drive(double forward, double strafe, double angle)
 {
-    frc::SmartDashboard::PutNumber("Chassis Forward", forward);
-    frc::SmartDashboard::PutNumber("Chassis Strafe",  strafe);
-    frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
+    // forward = 0.0;
+    // strafe  = 0.0;
+    // angle   = 0.0;
+
+    forward = frc::SmartDashboard::GetNumber("Chassis Forward", 0.0);
+    strafe  = frc::SmartDashboard::GetNumber("Chassis Strafe",  0.0);
+    angle   = frc::SmartDashboard::GetNumber("Chassis Angle",   0.0);
+
+    // frc::SmartDashboard::PutNumber("Chassis Forward", forward);
+    // frc::SmartDashboard::PutNumber("Chassis Strafe",  strafe);
+    // frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
 
     // Convert to field centric
-    if (m_fieldCentricity)
-        FieldCentricAngleConversion(&forward, &strafe, angle);
+    // if (m_fieldCentricity)
+    //     FieldCentricAngleConversion(&forward, &strafe, angle);
 
     // Create a wheel vector array for wheel vector calculations
     WheelVector wheelVector[ChassisConstants::NumberOfSwerveModules];
 
     // Calcualte the drive paramters
     CalculateSwerveModuleDriveAndAngle(forward, strafe, angle, wheelVector);
-
-    ///          Front
-    ///       +---------+ ---
-    ///       |[1]   [0]|  ^       0   Front Right
-    ///       |         |  |       1   Front Left
-    ///       |         | Length   2   Rear Left
-    ///       |         |  |       3   Rear Right
-    ///       |[2]   [3]|  v
-    ///       +---------+ ---
-    ///       |         |
-    ///       |< Width >|
 
     frc::SmartDashboard::PutNumber("Front Right Drive", wheelVector[0].Drive);
     frc::SmartDashboard::PutNumber("Front Right Angle", wheelVector[0].Angle);

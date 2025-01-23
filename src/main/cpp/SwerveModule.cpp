@@ -81,7 +81,7 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     rev::spark::SparkBaseConfig sparkBaseConfig{};
     sparkBaseConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     sparkBaseConfig.SecondaryCurrentLimit(ChassisConstants::SwerveAngleMaxAmperage);
-    sparkBaseConfig.encoder.PositionConversionFactor(1000).VelocityConversionFactor(1000);
+    sparkBaseConfig.encoder.PositionConversionFactor(ChassisConstants::SwerveDegreesToMotorRevolutions).VelocityConversionFactor(1);
     sparkBaseConfig.closedLoop.SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
                      .Pid(ChassisConstants::SwerveP, ChassisConstants::SwerveI, ChassisConstants::SwerveD);
     m_angleMotor->Configure(sparkBaseConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
@@ -121,11 +121,15 @@ void SwerveModule::SetState(WheelVector vector)
     // Do not change the angle if the wheel is not driven
     if (vector.Drive > 0.01 || vector.Drive < -0.01)
     {
-        // Optimize the serve module vector to minimize wheel rotation on change of diretion
-        OptimizeWheelAngle(vector, &m_wheelVector);
+        // // Optimize the serve module vector to minimize wheel rotation on change of diretion
+        // OptimizeWheelAngle(vector, &m_wheelVector);
 
-        // Set the angle motor PID set angle
-        m_pidController->SetReference(m_wheelVector.Angle * ChassisConstants::SwerveWheelCountsPerRevoplution, rev::spark::SparkMax::ControlType::kPosition);
+        // // Set the angle motor PID set angle
+        // m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
+
+        m_pidController->SetReference(vector.Angle, rev::spark::SparkMax::ControlType::kPosition);
+        m_wheelVector.Angle = vector.Angle;
+        m_wheelVector.Drive = vector.Drive;
     }
     else
     {

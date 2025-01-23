@@ -84,11 +84,12 @@ namespace ChassisConstants
 
     constexpr int                      SwerveAngleMaxAmperage          =    30;
 
-    constexpr int                      SwerveWheelCountsPerRevoplution =    21;
+    constexpr int                      SwerveMotorRevolutions          =    21;                                 // The number of motor revolutions per wheel revolutions
+    constexpr double                   SwerveDegreesToMotorRevolutions = 180.0 / SwerveMotorRevolutions / 2.0;  // Degrees to motor revolutions
 
-    constexpr double                   SwerveP                         = 0.700;
+    constexpr double                   SwerveP                         = 0.025;
     constexpr double                   SwerveI                         = 0.000;
-    constexpr double                   SwerveD                         = 0.001;
+    constexpr double                   SwerveD                         = 0.010;
 }
 #pragma endregion
 
@@ -152,7 +153,7 @@ namespace XBoxConstants
     constexpr int    Start             =   8;
     constexpr int    LeftStickButton   =   9;
     constexpr int    RightStickButton  =  10;
- 
+
     constexpr int    Pov_0             =   0;
     constexpr int    Pov_45            =  45;
     constexpr int    Pov_90            =  90;

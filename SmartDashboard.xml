@@ -1,10 +1,31 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Vector Front Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="217" y="615"/>
+	</widget>
+	<widget field="Vector Front Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="217" y="557"/>
+	</widget>
+	<widget field="Chassis Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="56" y="355"/>
+	</widget>
+	<widget field="Chassis Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="47" y="331"/>
+	</widget>
+	<widget field="Chassis Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="61" y="380"/>
+	</widget>
+	<widget field="Front Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="248" y="492"/>
+	</widget>
+	<widget field="Front Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="251" y="437"/>
+	</widget>
 	<widget field="ChassisDrive: Stop" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="0" y="150"/>
+		<location x="43" y="147"/>
 	</widget>
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="358" y="257"/>
+		<location x="367" y="254"/>
 		<width>113</width>
 		<height>20</height>
 	</widget>
@@ -18,10 +39,10 @@
 		<location x="14" y="82"/>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="228" y="24"/>
+		<location x="249" y="15"/>
 	</widget>
 	<widget field="Vector Rear Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="220" y="635"/>
+		<location x="219" y="639"/>
 	</widget>
 	<widget field="Vector Rear Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="11" y="579"/>
@@ -38,21 +59,14 @@
 	<widget field="Vector Front Left Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="15" y="556"/>
 	</widget>
-	<widget field="Vector Front Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="217" y="612"/>
-		<height>20</height>
-	</widget>
-	<widget field="Vector Front Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="218" y="558"/>
-	</widget>
 	<widget field="Rear Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="42" y="516"/>
+		<location x="250" y="515"/>
 	</widget>
 	<widget field="Rear Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="253" y="461"/>
 	</widget>
 	<widget field="Rear Left Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="256" y="515"/>
+		<location x="49" y="517"/>
 	</widget>
 	<widget field="Rear Left Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="52" y="462"/>
@@ -62,22 +76,6 @@
 	</widget>
 	<widget field="Front Left Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="49" y="441"/>
-	</widget>
-	<widget field="Front Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="248" y="494"/>
-		<height>20</height>
-	</widget>
-	<widget field="Front Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="250" y="439"/>
-	</widget>
-	<widget field="Chassis Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="55" y="392"/>
-	</widget>
-	<widget field="Chassis Strafe" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="52" y="365"/>
-	</widget>
-	<widget field="Chassis Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="41" y="337"/>
 	</widget>
 	<widget field="pose_0" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="589" y="450"/>
@@ -111,5 +109,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="NavX Angle"/>
 </xml>
