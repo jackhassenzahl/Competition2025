@@ -1,5 +1,22 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Set Reference Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="26" y="262"/>
+	</widget>
+	<widget field="Absolute Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="53" y="288"/>
+	</widget>
+	<widget field="Debug" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="94" y="223"/>
+		<width>290</width>
+		<height>21</height>
+	</widget>
+	<widget field="Get Swerve Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="241" y="359"/>
+	</widget>
+	<widget field="Set Swerve Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="244" y="333"/>
+	</widget>
 	<widget field="Vector Front Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="217" y="615"/>
 	</widget>
@@ -25,12 +42,12 @@
 		<location x="43" y="147"/>
 	</widget>
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="367" y="254"/>
+		<location x="451" y="25"/>
 		<width>113</width>
 		<height>20</height>
 	</widget>
 	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="355" y="285"/>
+		<location x="441" y="50"/>
 	</widget>
 	<widget field="DriveDistance: TwoMeters" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="10" y="116"/>
@@ -109,4 +126,5 @@
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="Swerve Angle"/>
 </xml>
