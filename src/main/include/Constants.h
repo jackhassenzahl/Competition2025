@@ -84,8 +84,8 @@ namespace ChassisConstants
 
     constexpr int                      SwerveAngleMaxAmperage          =    30;
 
-    constexpr int                      SwerveMotorRevolutions          =    21;                                 // The number of motor revolutions per wheel revolutions
-    constexpr double                   SwerveDegreesToMotorRevolutions = 180.0 / SwerveMotorRevolutions / 2.0;  // Degrees to motor revolutions
+    constexpr double                   SwerveMotorRevolutions          =    21.5;                                 // The number of motor revolutions per wheel revolutions
+    constexpr double                   SwerveDegreesToMotorRevolutions = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions
 
     constexpr double                   SwerveP                         = 0.025;
     constexpr double                   SwerveI                         = 0.000;

@@ -48,13 +48,13 @@ void Drivetrain::Periodic()
 /// @param angle The angle operater input.
 void Drivetrain::Drive(double forward, double strafe, double angle)
 {
-    forward = frc::SmartDashboard::GetNumber("Chassis Forward", 0.0);
-    strafe  = frc::SmartDashboard::GetNumber("Chassis Strafe",  0.0);
-    angle   = frc::SmartDashboard::GetNumber("Chassis Angle",   0.0);
+    // forward = frc::SmartDashboard::GetNumber("Chassis Forward", 0.0);
+    // strafe  = frc::SmartDashboard::GetNumber("Chassis Strafe",  0.0);
+    // angle   = frc::SmartDashboard::GetNumber("Chassis Angle",   0.0);
 
-    // frc::SmartDashboard::PutNumber("Chassis Forward", forward);
-    // frc::SmartDashboard::PutNumber("Chassis Strafe",  strafe);
-    // frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
+    frc::SmartDashboard::PutNumber("Chassis Forward", forward);
+    frc::SmartDashboard::PutNumber("Chassis Strafe",  strafe);
+    frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
 
     // Convert to field centric
     // if (m_fieldCentricity)
@@ -76,19 +76,19 @@ void Drivetrain::Drive(double forward, double strafe, double angle)
     frc::SmartDashboard::PutNumber("Rear Right Angle",  wheelVector[3].Angle);
 
     // Update the swerve module
-    // for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)  TODO: Replace
-    //     m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
+    for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
+        m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
 
     //**************************************************************************** 
     // Test code: TODO: Remove
 
     // Read the angle to set the swerve module from the smartdashboard
-    auto swerveAngle = frc::SmartDashboard::GetNumber("Set Swerve Angle", 0.0);
-    wheelVector[0].Angle = swerveAngle;
-    wheelVector[0].Drive = 0.0;
+    // auto swerveAngle = frc::SmartDashboard::GetNumber("Set Swerve Angle", 0.0);
+    // wheelVector[0].Angle = swerveAngle;
+    // wheelVector[0].Drive = 0.0;
 
-    // Just update swerve module zero for now
-    m_swerveModule[0]->SetState(wheelVector[0]);
+    // // Just update swerve module zero for now
+    // m_swerveModule[0]->SetState(wheelVector[0]);
 
     frc::SmartDashboard::PutNumber("Get Swerve Angle", m_swerveModule[0]->GetSwerveAngle());
     //****************************************************************************

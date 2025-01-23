@@ -125,8 +125,8 @@ void SwerveModule::SetWheelAngleToZero()
 void SwerveModule::SetState(WheelVector vector)
 {
     // Do not change the angle if the wheel is not driven
-    if (vector.Drive > 0.01 || vector.Drive < -0.01)
-    {
+    // if (vector.Drive > 0.01 || vector.Drive < -0.01)
+    // {
         // // Optimize the serve module vector to minimize wheel rotation on change of diretion  TODO: Replace
         // OptimizeWheelAngle(vector, &m_wheelVector);
 
@@ -136,12 +136,12 @@ void SwerveModule::SetState(WheelVector vector)
         m_pidController->SetReference(vector.Angle, rev::spark::SparkMax::ControlType::kPosition);
         m_wheelVector.Angle = vector.Angle;
         m_wheelVector.Drive = vector.Drive;
-    }
-    else
-    {
-        // Ensure the drive motor is disabled
-        m_wheelVector.Drive = 0.0;
-    }
+    // }
+    // else
+    // {
+    //     // Ensure the drive motor is disabled
+    //     m_wheelVector.Drive = 0.0;
+    // }
 
     // Set the Drive motor voltage
     m_driveMotor->SetControl(m_voltageOut.WithOutput(m_wheelVector.Drive * 12_V));
