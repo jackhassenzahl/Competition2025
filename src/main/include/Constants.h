@@ -54,7 +54,7 @@ namespace CanConstants
     constexpr int SwerveFrontRightAngleMotorCanId   =  2;
     constexpr int SwerveFrontRightAngleEncoderCanId = 12;
 
-    constexpr int SwerveFrontLeftDriveMotorCanId    =  6;
+    constexpr int SwerveFrontLeftDriveMotorCanId    =  15; // TODO: make this 6;
     constexpr int SwerveFrontLeftAngleMotorCanId    =  5;
     constexpr int SwerveFrontLeftAngleEncoderCanId  =  4;
 
@@ -66,7 +66,7 @@ namespace CanConstants
     constexpr int SwerveRearRightAngleMotorCanId    = 10;
     constexpr int SwerveRearRightAngleEncoderCanId  = 13;
 
-    constexpr int ElevatorMotorCanId                =  2;  // TODO: Sharing with swerve drive motor for testing
+    constexpr int ElevatorMotorCanId                =  6;  // TODO: Sharing with swerve drive motor for testing
 }
 #pragma endregion
 

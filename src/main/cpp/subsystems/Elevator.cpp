@@ -5,21 +5,21 @@
 Elevator::Elevator()
 {
     // Configure the elevator motor
-    //ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);  TODO: Restore when elevator motor is present
+    ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
 }
 #pragma endregion
 
 #pragma region ConfigureElevatorMotor
 /// @brief Method to configure the elevator motor using MotionMagic.
-/// @param driveMotorCanId The CAN identifier for the elevator motor.
-void Elevator::ConfigureElevatorMotor(int driveMotorCanId)
+/// @param motorCanId The CAN identifier for the elevator motor.
+void Elevator::ConfigureElevatorMotor(int motorCanId)
 {
-    std::cout << "***** Configure Drive Motor: " << driveMotorCanId << std::endl;
+    std::cout << "***** Configure Drive Motor: " << motorCanId << std::endl;
 
-    // Instantiate the drive motor
-    m_elevatorMotor = new ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
+    // Instantiate the elevator motor
+    m_elevatorMotor = new ctre::phoenix6::hardware::TalonFX{motorCanId, CanConstants::CanBus};
 
-    // Create the drive motor configuration
+    // Create the elevator motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration elevatorMotorConfiguration{};
 
     // Add the Motor Output section settings

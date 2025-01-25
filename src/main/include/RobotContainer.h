@@ -53,7 +53,7 @@ class RobotContainer
         // Instantiate the robot subsystems
         AprilTags              m_aprilTags;
         Drivetrain             m_drivetrain;
-        // Elevator               m_elevator;
+        Elevator               m_elevator;
         Leds                   m_leds;
 
     private:
