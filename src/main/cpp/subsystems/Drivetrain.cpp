@@ -57,8 +57,8 @@ void Drivetrain::Drive(double forward, double strafe, double angle)
     frc::SmartDashboard::PutNumber("Chassis Angle",   angle);
 
     // Convert to field centric
-    // if (m_fieldCentricity)
-    //     FieldCentricAngleConversion(&forward, &strafe, angle);
+    if (m_fieldCentricity)
+        FieldCentricAngleConversion(&forward, &strafe, angle);
 
     // Create a wheel vector array for wheel vector calculations
     WheelVector wheelVector[ChassisConstants::NumberOfSwerveModules];
@@ -238,10 +238,15 @@ void Drivetrain::SetWheelAnglesToZero()
     // for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
     //     m_swerveModule[swerveModuleIndex]->SetWheelAngleToZero();
 
+    m_swerveModule[SwerveConstants::FrontRightIndex]->SetWheelAngleToZero(SwerveConstants::FrontRightDesiredAngle);
+    m_swerveModule[SwerveConstants::FrontLeftIndex]->SetWheelAngleToZero(SwerveConstants::FrontLeftDesiredAngle);
+    m_swerveModule[SwerveConstants::RearRightIndex]->SetWheelAngleToZero(SwerveConstants::RearRightDesiredAngle);
+    m_swerveModule[SwerveConstants::RearLeftIndex]->SetWheelAngleToZero(SwerveConstants::RearLeftDesiredAngle);
+
     //**************************************************************************** 
     // Test code: TODO: Remove
-    frc::SmartDashboard::PutString("Debug", "SetWheelAnglesToZero");
-    m_swerveModule[0]->SetWheelAngleToZero();
+    // frc::SmartDashboard::PutString("Debug", "SetWheelAnglesToZero");
+    // m_swerveModule[0]->SetWheelAngleToZero(SwerveConstants::FrontRightDesiredAngle);
     //**************************************************************************** 
 }
 #pragma endregion

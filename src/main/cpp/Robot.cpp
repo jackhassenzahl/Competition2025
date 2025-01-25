@@ -45,7 +45,7 @@ void Robot::DisabledPeriodic()
 void Robot::TeleopInit()
 {
     // Set the swerve wheels to zero
-    //m_container->SetSwerveWheelAnglesToZero();  //TODO: Replaces to test set swerve wheels to zero
+    m_container->SetSwerveWheelAnglesToZero();  //TODO: Replaces to test set swerve wheels to zero
     
     // This makes sure that the autonomous stops running when teleop starts running.
     if (m_autonomousCommand != nullptr)

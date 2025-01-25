@@ -138,7 +138,7 @@ double RobotContainer::Forward()
     // Get the forward joystick setting
     double joystickForward = GetDriverController()->GetRawAxis(ControllerConstants::JoystickForwardIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
+    // Use exponential function to calculate the forward value for better slow speed control
     joystickForward = GetExponentialValue(joystickForward, ControllerConstants::ExponentForward);
 
     // Return the x speed
@@ -154,7 +154,7 @@ double RobotContainer::Strafe()
     // Get the strafe joystick setting
     double joystickStrafe = GetDriverController()->GetRawAxis(ControllerConstants::JoystickStrafeIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
+    // Use exponential function to calculate the forward value for better slow speed control
     joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
@@ -170,11 +170,11 @@ double RobotContainer::Angle()
     // Get the angle joystick setting
     double joystickAngle = GetDriverController()->GetRawAxis(ControllerConstants::JoystickAngleIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
+    // Use exponential function to calculate the forward value for better slow speed control
     joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
 
     // Return the rotation speed
-	return -joystickAngle;
+	return joystickAngle;
 }
 #pragma endregion
 
@@ -191,6 +191,7 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
     // Ignore joystick input if it's too small
     if (joystickValue > -ControllerConstants::JoystickDeadZone && joystickValue < ControllerConstants::JoystickDeadZone)
         return 0.0;
+    
 
     // Direction is either 1 or -1, based on joystick value
     if (joystickValue < 0.0)

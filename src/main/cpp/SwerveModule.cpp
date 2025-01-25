@@ -83,39 +83,44 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     sparkBaseConfig.SecondaryCurrentLimit(ChassisConstants::SwerveAngleMaxAmperage);
     sparkBaseConfig.encoder.PositionConversionFactor(ChassisConstants::SwerveDegreesToMotorRevolutions).VelocityConversionFactor(1);
     sparkBaseConfig.closedLoop.SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-                     .Pid(ChassisConstants::SwerveP, ChassisConstants::SwerveI, ChassisConstants::SwerveD);
+                     .Pid(SwerveConstants::P, SwerveConstants::I, SwerveConstants::D);
     m_angleMotor->Configure(sparkBaseConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
-
-    // Set the CAN coder absolute out range
-    // Note: This is probably incorrect. Should be 0.5 (for -0.5 to 0.5) and will have to convert to degrees  TODO: Check angle values
-    ctre::phoenix6::configs::CANcoderConfiguration canCoderConfiguration{};
-    canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = -180_deg;
-    m_angleAbsoluteEncoder->GetConfigurator().Apply(canCoderConfiguration);
 }
 #pragma endregion
 
 #pragma region SetWheelAngleToZero
 /// @brief Method to set the swerve wheel to the specified angle.
 /// @param angle The angle to set the wheel.
-void SwerveModule::SetWheelAngleToZero()
+void SwerveModule::SetWheelAngleToZero(units::angle::degree_t desiredAngle)
 {
     // Get the wheel absolute angle
-    units::angle::degree_t absoluteAngle = GetAbsoluteAngle();
+    units::angle::degree_t presentAngle = GetAbsoluteAngle();
 
     //**************************************************************************** 
     // Test code: TODO: Remove
-    frc::SmartDashboard::PutNumber("Absolute Angle", absoluteAngle.value());
-    frc::SmartDashboard::PutNumber("Set Reference Angle", absoluteAngle.value() / 180.0);
+    frc::SmartDashboard::PutNumber("Present Angle", presentAngle.value());
+    frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle.value());
     //**************************************************************************** 
 
-    // Move the wheel to absolute encoder value
-    // Note: The reference angle is -1 to 1 so divide the degrees by 180
-    m_pidController->SetReference(absoluteAngle.value() / 180.0, rev::spark::SparkMax::ControlType::kPosition);
+    // Set the angle encoder position to zero
+    m_angleMotor->GetEncoder().SetPosition(0.0);
 
-    // TODO: May need to wait for the wheel to reach the zero angle position
+    // Move the wheel to absolute encoder value
+    double driveToAngle = desiredAngle.value() - presentAngle.value();
+    m_pidController->SetReference(-driveToAngle, rev::spark::SparkMax::ControlType::kPosition);
+    frc::SmartDashboard::PutNumber("Drive To Angle", driveToAngle);
+    
+    do
+    {
+        frc::SmartDashboard::PutNumber("Updated Present Angle", GetAbsoluteAngle().value());
+    } while (fabs(GetAbsoluteAngle().value() - desiredAngle.value()) >= 1);
+
 
     // Set the angle encoder position to zero
-    m_angleEncoder->SetPosition(0.0);
+    m_angleMotor->GetEncoder().SetPosition(0.0);
+    m_pidController->SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
+
+    frc::SmartDashboard::PutNumber("Final Present Angle", m_angleEncoder->GetPosition());
 }
 #pragma endregion
 
@@ -125,23 +130,23 @@ void SwerveModule::SetWheelAngleToZero()
 void SwerveModule::SetState(WheelVector vector)
 {
     // Do not change the angle if the wheel is not driven
-    // if (vector.Drive > 0.01 || vector.Drive < -0.01)
-    // {
-        // // Optimize the serve module vector to minimize wheel rotation on change of diretion  TODO: Replace
-        // OptimizeWheelAngle(vector, &m_wheelVector);
+    if (vector.Drive > 0.01 || vector.Drive < -0.01)
+    {
+        // Optimize the serve module vector to minimize wheel rotation on change of diretion  TODO: Replace
+        OptimizeWheelAngle(vector, &m_wheelVector);
 
-        // // Set the angle motor PID set angle  TODO: Replace
-        // m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
+        // Set the angle motor PID set angle  TODO: Replace
+        m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
 
-        m_pidController->SetReference(vector.Angle, rev::spark::SparkMax::ControlType::kPosition);
-        m_wheelVector.Angle = vector.Angle;
-        m_wheelVector.Drive = vector.Drive;
-    // }
-    // else
-    // {
-    //     // Ensure the drive motor is disabled
-    //     m_wheelVector.Drive = 0.0;
-    // }
+        // m_pidController->SetReference(vector.Angle, rev::spark::SparkMax::ControlType::kPosition);
+        // m_wheelVector.Angle = vector.Angle;
+        // m_wheelVector.Drive = vector.Drive;
+    }
+    else
+    {
+        // Ensure the drive motor is disabled
+        m_wheelVector.Drive = 0.0;
+    }
 
     // Set the Drive motor voltage
     m_driveMotor->SetControl(m_voltageOut.WithOutput(m_wheelVector.Drive * 12_V));
@@ -232,8 +237,8 @@ units::angle::degree_t SwerveModule::GetAbsoluteAngle()
     // The GetAbsolutePosition() method returns a value from -1 to 1
     double encoderValue = (double) m_angleAbsoluteEncoder->GetAbsolutePosition().GetValue();
 
-    // To convert to degrees (-180 to 180) -> multiply to 180 degrees
-    return encoderValue * 180_deg;
+    // To convert to degrees
+    return encoderValue * 360_deg;
 }
 #pragma endregion
 

@@ -86,10 +86,25 @@ namespace ChassisConstants
 
     constexpr double                   SwerveMotorRevolutions          =    21.5;                                 // The number of motor revolutions per wheel revolutions
     constexpr double                   SwerveDegreesToMotorRevolutions = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions
+}
+#pragma endregion
 
-    constexpr double                   SwerveP                         = 0.025;
-    constexpr double                   SwerveI                         = 0.000;
-    constexpr double                   SwerveD                         = 0.010;
+#pragma region SwerveConstants
+namespace SwerveConstants
+{
+    constexpr double                   P                         = 0.025;
+    constexpr double                   I                         = 0.000;
+    constexpr double                   D                         = 0.010;
+
+    constexpr units::angle::degree_t   FrontRightDesiredAngle    =  0.301 * 360_deg;
+    constexpr units::angle::degree_t   FrontLeftDesiredAngle     = -0.464 * 360_deg;
+    constexpr units::angle::degree_t   RearRightDesiredAngle     = -0.064 * 360_deg;
+    constexpr units::angle::degree_t   RearLeftDesiredAngle      = -0.022 * 360_deg;
+
+    constexpr int                      FrontRightIndex           = 0;
+    constexpr int                      FrontLeftIndex            = 1;
+    constexpr int                      RearRightIndex            = 3;
+    constexpr int                      RearLeftIndex             = 2;
 }
 #pragma endregion
 
@@ -101,7 +116,7 @@ namespace ControllerConstants
 
     constexpr int    JoystickForwardIndex    = 1;
     constexpr int    JoystickStrafeIndex     = 0;
-    constexpr int    JoystickAngleIndex      = 2;  // 4 for xbox controller
+    constexpr int    JoystickAngleIndex      = 4;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
 
     constexpr double JoystickDeadZone        = 0.1;
 
