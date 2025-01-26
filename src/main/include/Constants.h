@@ -1,5 +1,6 @@
 #pragma once
 
+#pragma region Includes
 #include <iostream>
 #include <string>
 
@@ -15,6 +16,7 @@
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
+#pragma endregion
 
 #pragma region CanConstants
 namespace CanConstants
@@ -68,10 +70,10 @@ namespace SwerveConstants
     constexpr auto RearRightIndex         = 3;
     constexpr auto RearLeftIndex          = 2;
 
-    constexpr auto FrontRightDesiredAngle =  0.301 * 360_deg;
-    constexpr auto FrontLeftDesiredAngle  = -0.464 * 360_deg;
-    constexpr auto RearRightDesiredAngle  = -0.064 * 360_deg;
-    constexpr auto RearLeftDesiredAngle   = -0.022 * 360_deg;
+    constexpr auto FrontRightForwardAngle =  0.301 * 360_deg;
+    constexpr auto FrontLeftForwardAngle  = -0.464 * 360_deg;
+    constexpr auto RearRightForwardAngle  = -0.064 * 360_deg;
+    constexpr auto RearLeftForwardAngle   = -0.022 * 360_deg;
 
     constexpr auto P                      = 0.025;
     constexpr auto I                      = 0.000;

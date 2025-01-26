@@ -79,20 +79,6 @@ void Drivetrain::Drive(double forward, double strafe, double angle)
     for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
         m_swerveModule[swerveModuleIndex]->SetState(wheelVector[swerveModuleIndex]);
 
-    //**************************************************************************** 
-    // Test code: TODO: Remove
-
-    // Read the angle to set the swerve module from the smartdashboard
-    // auto swerveAngle = frc::SmartDashboard::GetNumber("Set Swerve Angle", 0.0);
-    // wheelVector[0].Angle = swerveAngle;
-    // wheelVector[0].Drive = 0.0;
-
-    // // Just update swerve module zero for now
-    // m_swerveModule[0]->SetState(wheelVector[0]);
-
-    frc::SmartDashboard::PutNumber("Get Swerve Angle", m_swerveModule[0]->GetSwerveAngle());
-    //****************************************************************************
-
     // Read the swerve module angles and drive
     frc::SmartDashboard::PutNumber("Vector Front Right Drive", m_swerveModule[0]->GetWheelVector()->Drive);
     frc::SmartDashboard::PutNumber("Vector Front Right Angle", m_swerveModule[0]->GetWheelVector()->Angle);
@@ -234,20 +220,11 @@ void Drivetrain::NormalizeSpeed(WheelVector wheelVector[])
 /// @brief Method to set the swerve wheel to the absoulute encoder angle then zero the PID controller angle.
 void Drivetrain::SetWheelAnglesToZero()
 {
-    // Set the swerve wheel angles to zero TODO: Replace
-    // for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)
-    //     m_swerveModule[swerveModuleIndex]->SetWheelAngleToZero();
-
-    m_swerveModule[SwerveConstants::FrontRightIndex]->SetWheelAngleToZero(SwerveConstants::FrontRightDesiredAngle);
-    m_swerveModule[SwerveConstants::FrontLeftIndex]->SetWheelAngleToZero(SwerveConstants::FrontLeftDesiredAngle);
-    m_swerveModule[SwerveConstants::RearRightIndex]->SetWheelAngleToZero(SwerveConstants::RearRightDesiredAngle);
-    m_swerveModule[SwerveConstants::RearLeftIndex]->SetWheelAngleToZero(SwerveConstants::RearLeftDesiredAngle);
-
-    //**************************************************************************** 
-    // Test code: TODO: Remove
-    // frc::SmartDashboard::PutString("Debug", "SetWheelAnglesToZero");
-    // m_swerveModule[0]->SetWheelAngleToZero(SwerveConstants::FrontRightDesiredAngle);
-    //**************************************************************************** 
+    // Set the swerve wheel angles to zero
+    m_swerveModule[SwerveConstants::FrontRightIndex]->SetWheelAngleToForward(SwerveConstants::FrontRightForwardAngle);
+    m_swerveModule[SwerveConstants::FrontLeftIndex]->SetWheelAngleToForward(SwerveConstants::FrontLeftForwardAngle);
+    m_swerveModule[SwerveConstants::RearRightIndex]->SetWheelAngleToForward(SwerveConstants::RearRightForwardAngle);
+    m_swerveModule[SwerveConstants::RearLeftIndex]->SetWheelAngleToForward(SwerveConstants::RearLeftForwardAngle);
 }
 #pragma endregion
 

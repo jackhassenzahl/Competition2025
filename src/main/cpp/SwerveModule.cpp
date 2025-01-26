@@ -78,29 +78,15 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
 }
 #pragma endregion
 
-#pragma region SetWheelAngleToZero
-/// @brief Method to set the swerve wheel to the specified angle.
-/// @param angle The angle to set the wheel.
-void SwerveModule::SetWheelAngleToZero(units::angle::degree_t desiredAngle)
+#pragma region SetWheelAngleToForward
+/// @brief Method to set the swerve wheel encoder to the forward angle.
+/// @param angle The absolute angle for the forward direction.
+void SwerveModule::SetWheelAngleToForward(units::angle::degree_t forwardAngle)
 {
-    // Get the wheel absolute angle
-    units::angle::degree_t presentAngle = GetAbsoluteAngle();
+    // Set the motor angle encoder position to the forward direction
+    m_angleMotor->GetEncoder().SetPosition(GetAbsoluteAngle().value() - forwardAngle.value());
 
-    // Set the angle encoder position to zero
-    m_angleMotor->GetEncoder().SetPosition(0.0);
-
-    // Move the wheel to absolute encoder value
-    double driveToAngle = desiredAngle.value() - presentAngle.value();
-    m_pidController->SetReference(-driveToAngle, rev::spark::SparkMax::ControlType::kPosition);
-    frc::SmartDashboard::PutNumber("Drive To Angle", driveToAngle);
-    
-    do
-    {
-        frc::SmartDashboard::PutNumber("Updated Present Angle", GetAbsoluteAngle().value());
-    } while (fabs(GetAbsoluteAngle().value() - desiredAngle.value()) >= 1);
-
-    // Set the angle encoder position to zero
-    m_angleMotor->GetEncoder().SetPosition(0.0);
+    // Ensure the PID controller set angle is zero (forward)
     m_pidController->SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
 }
 #pragma endregion
@@ -113,10 +99,10 @@ void SwerveModule::SetState(WheelVector vector)
     // Do not change the angle if the wheel is not driven
     if (vector.Drive > 0.01 || vector.Drive < -0.01)
     {
-        // Optimize the serve module vector to minimize wheel rotation on change of diretion  TODO: Replace
+        // Optimize the serve module vector to minimize wheel rotation on change of diretion
         OptimizeWheelAngle(vector, &m_wheelVector);
 
-        // Set the angle motor PID set angle  TODO: Replace
+        // Set the angle motor PID set angle
         m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
     }
     else

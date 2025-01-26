@@ -21,7 +21,7 @@ class SwerveModule
 
         void                   SetState(WheelVector wheelVector);
 
-        void                   SetWheelAngleToZero(units::angle::degree_t desiredAngle);
+        void                   SetWheelAngleToForward(units::angle::degree_t desiredAngle);
 
         units::angle::degree_t GetAbsoluteAngle();
 
