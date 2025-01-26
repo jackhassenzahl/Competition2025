@@ -7,10 +7,6 @@
 /// @param angleEncoderCanId The CAN ID for the swerve module angle encoder.
 SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId)
 {
-    std::cout << "***** Swerve Module Constructor" << std::endl;
-    std::cout << "   driveMotorCanId: " << driveMotorCanId << std::endl;
-    std::cout << "   angleMotorCanId: " << angleMotorCanId << std::endl;
-
     // Initialize the angle and drive to zero
     m_wheelVector.Angle = 0.0;
     m_wheelVector.Drive = 0.0;
@@ -26,8 +22,6 @@ SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEn
 /// @param driveMotorCanId The drive motor CAN identification.
 void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 {
-    std::cout << "***** Configure Drive Motor: " << driveMotorCanId << std::endl;
-
     // Instantiate the drive motor
     m_driveMotor = new ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
 
@@ -58,8 +52,6 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure swerve motor. Error: " << status.GetName() << std::endl;
-
-    std::cout << "***** GetDescription: " << m_driveMotor->GetDescription() << std::endl;
 }
 #pragma endregion
 
@@ -69,8 +61,6 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 /// @param angleEncoderCanId The angle encoder CAN identification.
 void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanId)
 {
-    std::cout << "***** Configure Angle Motor: " << angleMotorCanId << std::endl;
-
     // Instantiate the angle motor, encoder and absolute encode
     m_angleMotor           = new rev::spark::SparkMax{angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless};
     m_angleEncoder         = new rev::spark::SparkRelativeEncoder(m_angleMotor->GetEncoder());
@@ -96,12 +86,6 @@ void SwerveModule::SetWheelAngleToZero(units::angle::degree_t desiredAngle)
     // Get the wheel absolute angle
     units::angle::degree_t presentAngle = GetAbsoluteAngle();
 
-    //**************************************************************************** 
-    // Test code: TODO: Remove
-    frc::SmartDashboard::PutNumber("Present Angle", presentAngle.value());
-    frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle.value());
-    //**************************************************************************** 
-
     // Set the angle encoder position to zero
     m_angleMotor->GetEncoder().SetPosition(0.0);
 
@@ -115,12 +99,9 @@ void SwerveModule::SetWheelAngleToZero(units::angle::degree_t desiredAngle)
         frc::SmartDashboard::PutNumber("Updated Present Angle", GetAbsoluteAngle().value());
     } while (fabs(GetAbsoluteAngle().value() - desiredAngle.value()) >= 1);
 
-
     // Set the angle encoder position to zero
     m_angleMotor->GetEncoder().SetPosition(0.0);
     m_pidController->SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
-
-    frc::SmartDashboard::PutNumber("Final Present Angle", m_angleEncoder->GetPosition());
 }
 #pragma endregion
 
@@ -137,10 +118,6 @@ void SwerveModule::SetState(WheelVector vector)
 
         // Set the angle motor PID set angle  TODO: Replace
         m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
-
-        // m_pidController->SetReference(vector.Angle, rev::spark::SparkMax::ControlType::kPosition);
-        // m_wheelVector.Angle = vector.Angle;
-        // m_wheelVector.Drive = vector.Drive;
     }
     else
     {

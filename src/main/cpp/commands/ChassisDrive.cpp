@@ -15,8 +15,6 @@ ChassisDrive::ChassisDrive(std::function<double()> forward,
                            m_angle{std::move(angle)},
                            m_drivetrain(drivetrain)
 {
-    std::cout << "***** ChassisDrive Constructor" << std::endl;
-
     // Set the command name
     SetName("ChassisDrive");
 

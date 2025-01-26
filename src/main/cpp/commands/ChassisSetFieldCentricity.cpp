@@ -28,7 +28,7 @@ void ChassisSetFieldCentricity::Initialize()
 /// @return True is the command has completed.
 bool ChassisSetFieldCentricity::IsFinished()
 {
-    // The command is complete
+    // Execute only runs once
     return true;
 }
 #pragma endregion
