@@ -191,7 +191,6 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
     // Ignore joystick input if it's too small
     if (joystickValue > -ControllerConstants::JoystickDeadZone && joystickValue < ControllerConstants::JoystickDeadZone)
         return 0.0;
-    
 
     // Direction is either 1 or -1, based on joystick value
     if (joystickValue < 0.0)

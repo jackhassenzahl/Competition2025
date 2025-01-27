@@ -5,12 +5,13 @@
 /// @param driveMotorCanId The CAN ID for the swerve module drive motor.
 /// @param angleMotorCanId The CAN ID for the swerve module angle motor.
 /// @param angleEncoderCanId The CAN ID for the swerve module angle encoder.
-SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId)
+SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId) :
+                           m_driveMotor(driveMotorCanId, CanConstants::CanBus), 
+                           m_angleMotor(angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless),
+                           m_angleAbsoluteEncoder(angleEncoderCanId, CanConstants::CanBus),
+                           m_angleEncoder(m_angleMotor.GetEncoder()),
+                           m_pidController(m_angleMotor.GetClosedLoopController())
 {
-    // Initialize the angle and drive to zero
-    m_wheelVector.Angle = 0.0;
-    m_wheelVector.Drive = 0.0;
-
     // Configure the drive and angle motors
     ConfigureDriveMotor(driveMotorCanId);
     ConfigureAngleMotor(angleMotorCanId, angleEncoderCanId);
@@ -22,9 +23,6 @@ SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEn
 /// @param driveMotorCanId The drive motor CAN identification.
 void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 {
-    // Instantiate the drive motor
-    m_driveMotor = new ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
-
     // Create the drive motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration driveMotorConfiguration{};
 
@@ -42,7 +40,7 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
     for (int attempt = 0; attempt < ChassisConstants::MotorConfigurationAttempts; attempt++)
     {
         // Apply the configuration to the drive motor
-        status = m_driveMotor->GetConfigurator().Apply(driveMotorConfiguration);
+        status = m_driveMotor.GetConfigurator().Apply(driveMotorConfiguration);
 
         // Check if the configuration was successful
         if (status.IsOK())
@@ -61,12 +59,6 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 /// @param angleEncoderCanId The angle encoder CAN identification.
 void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanId)
 {
-    // Instantiate the angle motor, encoder and absolute encode
-    m_angleMotor           = new rev::spark::SparkMax{angleMotorCanId, rev::spark::SparkLowLevel::MotorType::kBrushless};
-    m_angleEncoder         = new rev::spark::SparkRelativeEncoder(m_angleMotor->GetEncoder());
-    m_pidController        = new rev::spark::SparkClosedLoopController(m_angleMotor->GetClosedLoopController());
-    m_angleAbsoluteEncoder = new ctre::phoenix6::hardware::CANcoder(angleEncoderCanId, CanConstants::CanBus);
-
     // Configure the angle motor
     rev::spark::SparkBaseConfig sparkBaseConfig{};
     sparkBaseConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
@@ -74,7 +66,7 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
     sparkBaseConfig.encoder.PositionConversionFactor(ChassisConstants::SwerveDegreesToMotorRevolutions).VelocityConversionFactor(1);
     sparkBaseConfig.closedLoop.SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
                      .Pid(SwerveConstants::P, SwerveConstants::I, SwerveConstants::D);
-    m_angleMotor->Configure(sparkBaseConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+    m_angleMotor.Configure(sparkBaseConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 #pragma endregion
 
@@ -84,10 +76,10 @@ void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanI
 void SwerveModule::SetWheelAngleToForward(units::angle::degree_t forwardAngle)
 {
     // Set the motor angle encoder position to the forward direction
-    m_angleMotor->GetEncoder().SetPosition(GetAbsoluteAngle().value() - forwardAngle.value());
+    m_angleMotor.GetEncoder().SetPosition(GetAbsoluteAngle().value() - forwardAngle.value());
 
     // Ensure the PID controller set angle is zero (forward)
-    m_pidController->SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
+    m_pidController.SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
 }
 #pragma endregion
 
@@ -103,7 +95,7 @@ void SwerveModule::SetState(WheelVector vector)
         OptimizeWheelAngle(vector, &m_wheelVector);
 
         // Set the angle motor PID set angle
-        m_pidController->SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
+        m_pidController.SetReference(m_wheelVector.Angle, rev::spark::SparkMax::ControlType::kPosition);
     }
     else
     {
@@ -112,7 +104,7 @@ void SwerveModule::SetState(WheelVector vector)
     }
 
     // Set the Drive motor voltage
-    m_driveMotor->SetControl(m_voltageOut.WithOutput(m_wheelVector.Drive * 12_V));
+    m_driveMotor.SetControl(m_voltageOut.WithOutput(m_wheelVector.Drive * 12_V));
 }
 #pragma endregion
 
@@ -198,7 +190,7 @@ double SwerveModule::ConvertAngleToTargetRange(WheelVector wheelVector)
 units::angle::degree_t SwerveModule::GetAbsoluteAngle()
 {
     // The GetAbsolutePosition() method returns a value from -1 to 1
-    double encoderValue = (double) m_angleAbsoluteEncoder->GetAbsolutePosition().GetValue();
+    double encoderValue = (double) m_angleAbsoluteEncoder.GetAbsolutePosition().GetValue();
 
     // To convert to degrees
     return encoderValue * 360_deg;
@@ -223,6 +215,6 @@ WheelVector* SwerveModule::GetWheelVector()
 double SwerveModule::GetSwerveAngle()
 {
     // Get the angle encoder position
-    return m_angleEncoder->GetPosition();
+    return m_angleEncoder.GetPosition();
 }
 #pragma endregion

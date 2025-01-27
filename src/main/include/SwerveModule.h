@@ -17,7 +17,7 @@ class SwerveModule
 {
     public:
 
-        explicit               SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCANid);
+        explicit               SwerveModule(int driveMotorCANid, int angleMotorCANid, int angleEncoderCanId);
 
         void                   SetState(WheelVector wheelVector);
 
@@ -39,15 +39,15 @@ class SwerveModule
         double ConvertAngleToTargetRange(WheelVector wheelVector);
 
         // Swerve vector struture (Drive and Angle)
-        WheelVector                            m_wheelVector;
+        WheelVector                           m_wheelVector{0.0, 0.0};
 
         // Swerve drive motor
-        ctre::phoenix6::hardware::TalonFX     *m_driveMotor;
-        ctre::phoenix6::controls::VoltageOut   m_voltageOut{0_V};  // Controller mode is VoltageOut
+        ctre::phoenix6::hardware::TalonFX     m_driveMotor;
+        ctre::phoenix6::controls::VoltageOut  m_voltageOut{0_V};  // Controller mode is VoltageOut
 
         // Swerve angle motor, encoder and PID controller
-        rev::spark::SparkMax                  *m_angleMotor;
-        rev::spark::SparkClosedLoopController *m_pidController;
-        rev::spark::SparkRelativeEncoder      *m_angleEncoder;
-        ctre::phoenix6::hardware::CANcoder    *m_angleAbsoluteEncoder;
+        rev::spark::SparkMax                  m_angleMotor;
+        rev::spark::SparkClosedLoopController m_pidController;
+        rev::spark::SparkRelativeEncoder      m_angleEncoder;
+        ctre::phoenix6::hardware::CANcoder    m_angleAbsoluteEncoder;
 };

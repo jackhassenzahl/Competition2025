@@ -27,7 +27,7 @@ namespace CanConstants
     constexpr auto SwerveFrontRightAngleMotorCanId   =  2;
     constexpr auto SwerveFrontRightAngleEncoderCanId = 12;
 
-    constexpr auto SwerveFrontLeftDriveMotorCanId    =  15; // TODO: make this 6;
+    constexpr auto SwerveFrontLeftDriveMotorCanId    =  6;
     constexpr auto SwerveFrontLeftAngleMotorCanId    =  5;
     constexpr auto SwerveFrontLeftAngleEncoderCanId  =  4;
 
@@ -39,7 +39,7 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleMotorCanId    = 10;
     constexpr auto SwerveRearRightAngleEncoderCanId  = 13;
 
-    constexpr auto ElevatorMotorCanId                =  6;  // TODO: Sharing with swerve drive motor for testing
+    constexpr int ElevatorMotorCanId                 = 20;
 }
 #pragma endregion
 
@@ -109,7 +109,7 @@ namespace ControllerConstants
 
     constexpr auto JoystickForwardIndex    =   1;
     constexpr auto JoystickStrafeIndex     =   0;
-    constexpr auto JoystickAngleIndex      =   4;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
+    constexpr auto JoystickAngleIndex      =   2;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
 
     constexpr auto JoystickDeadZone        = 0.1;
 
