@@ -13,15 +13,14 @@ SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEn
                            m_pidController(m_angleMotor.GetClosedLoopController())
 {
     // Configure the drive and angle motors
-    ConfigureDriveMotor(driveMotorCanId);
-    ConfigureAngleMotor(angleMotorCanId, angleEncoderCanId);
+    ConfigureDriveMotor();
+    ConfigureAngleMotor();
 }
 #pragma endregion
 
 #pragma region ConfigureDriveMotor
 /// @brief Method to configure the drive motor.
-/// @param driveMotorCanId The drive motor CAN identification.
-void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
+void SwerveModule::ConfigureDriveMotor()
 {
     // Create the drive motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration driveMotorConfiguration{};
@@ -55,9 +54,7 @@ void SwerveModule::ConfigureDriveMotor(int driveMotorCanId)
 
 #pragma region ConfigureAngleMotor
 /// @brief Method to configure the angle motor and encoder.
-/// @param angleMotorCanId The angle motor CAN identification.
-/// @param angleEncoderCanId The angle encoder CAN identification.
-void SwerveModule::ConfigureAngleMotor(int angleMotorCanId, int angleEncoderCanId)
+void SwerveModule::ConfigureAngleMotor()
 {
     // Configure the angle motor
     rev::spark::SparkBaseConfig sparkBaseConfig{};

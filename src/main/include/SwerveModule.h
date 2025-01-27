@@ -32,8 +32,8 @@ class SwerveModule
     private:
 
         // Private methods
-        void   ConfigureDriveMotor(int driveMotorCANid);
-        void   ConfigureAngleMotor(int angleMotorCANid, int angleEncoderCANid);
+        void   ConfigureDriveMotor();
+        void   ConfigureAngleMotor();
 
         void   OptimizeWheelAngle(WheelVector targetWheelVector, WheelVector *wheelVector);
         double ConvertAngleToTargetRange(WheelVector wheelVector);
