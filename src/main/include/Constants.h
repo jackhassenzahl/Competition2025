@@ -1,113 +1,174 @@
 #pragma once
 
+#pragma region Includes
 #include <iostream>
+#include <numbers>
 #include <string>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/geometry/Translation2d.h>
+#include <frc/trajectory/TrapezoidProfile.h>
 
+#include <units/acceleration.h>
 #include <units/angle.h>
+#include <units/angular_acceleration.h>
+#include <units/angular_jerk.h>
 #include <units/angular_velocity.h>
 #include <units/current.h>
 #include <units/length.h>
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>
+#pragma endregion
 
 #pragma region CanConstants
-//************************************************************************
-// ***** Robio RIO Wiring Connections *****
-//
-// PWM Connections
-//
-//     PWM | Subsystem
-//    -----+-----------
-//       5 | LEDs
-//
-// CAN Identifications
-//
-//     ID | Subsystem       | Type                      | Type
-//    ----+-----------------+---------------------------+------------------
-//      1 | SwerveModule 0  | Front Right Drive Motor   |
-//      2 | SwerveModule 0  | Front Right Angle Motor   |
-//      3 | SwerveModule 0  | Front Right Angle Encoder |
-//
-//      4 | SwerveModule 1  | Front Left Drive Motor    |
-//      5 | SwerveModule 1  | Front Left Angle Motor    |
-//      6 | SwerveModule 1  | Front Left Angle Encoder  |
-//
-//      7 | SwerveModule 1  | Rear Left Drive Motor     |
-//      8 | SwerveModule 1  | Rear Left Angle Motor     |
-//      9 | SwerveModule 1  | Rear Left Angle Encoder   |
-//
-//     10 | SwerveModule 0  | Rear Right Drive Motor    |
-//     11 | SwerveModule 0  | Rear Right Angle Motor    |
-//     12 | SwerveModule 0  | Rear Right Angle Encoder  |
-//
-//************************************************************************
-
 namespace CanConstants
 {
-    const std::string CanBus                        = "rio";
+    const     auto CanBus                            = "rio";
 
-    constexpr int SwerveFrontRightDriveMotorCanId   =  3;
-    constexpr int SwerveFrontRightAngleMotorCanId   =  2;
-    constexpr int SwerveFrontRightAngleEncoderCanId = 12;
+    constexpr auto SwerveFrontRightDriveMotorCanId   =  3;
+    constexpr auto SwerveFrontRightAngleMotorCanId   =  2;
+    constexpr auto SwerveFrontRightAngleEncoderCanId = 12;
 
-    constexpr int SwerveFrontLeftDriveMotorCanId    =  6;
-    constexpr int SwerveFrontLeftAngleMotorCanId    =  5;
-    constexpr int SwerveFrontLeftAngleEncoderCanId  =  4;
+    constexpr auto SwerveFrontLeftDriveMotorCanId    =  6;
+    constexpr auto SwerveFrontLeftAngleMotorCanId    =  5;
+    constexpr auto SwerveFrontLeftAngleEncoderCanId  =  4;
 
-    constexpr int SwerveRearLeftDriveMotorCanId     =  9;
-    constexpr int SwerveRearLeftAngleMotorCanId     =  8;
-    constexpr int SwerveRearLeftAngleEncoderCanId   =  7;
+    constexpr auto SwerveRearLeftDriveMotorCanId     =  9;
+    constexpr auto SwerveRearLeftAngleMotorCanId     =  8;
+    constexpr auto SwerveRearLeftAngleEncoderCanId   =  7;
 
-    constexpr int SwerveRearRightDriveMotorCanId    = 11;
-    constexpr int SwerveRearRightAngleMotorCanId    = 10;
-    constexpr int SwerveRearRightAngleEncoderCanId  = 13;
+    constexpr auto SwerveRearRightDriveMotorCanId    = 11;
+    constexpr auto SwerveRearRightAngleMotorCanId    = 10;
+    constexpr auto SwerveRearRightAngleEncoderCanId  = 13;
 
-    constexpr int ElevatorMotorCanId                = 20;
+    constexpr int ElevatorMotorCanId                 = 20;
 }
 #pragma endregion
 
 #pragma region ChassisConstants
 namespace ChassisConstants
 {
-    constexpr int                      NumberOfSwerveModules           =     4;
+    constexpr auto NumberOfSwerveModules           =     4;
 
-    constexpr int                      ChassisLength                   =   100;
-    constexpr int                      ChassisWidth                    =   100;
+    constexpr auto ChassisLength                   =   100;  // TODO: Set properly
+    constexpr auto ChassisWidth                    =   100;
 
-    constexpr int                      MotorConfigurationAttempts      =     5;
+    constexpr auto MotorConfigurationAttempts      =     5;
 
-    constexpr units::current::ampere_t SwerveDriveMaxAmperage          =  60_A;
+    constexpr auto SwerveDriveMaxAmperage          =  60_A;
 
-    constexpr int                      SwerveAngleMaxAmperage          =    30;
+    constexpr auto SwerveAngleMaxAmperage          =    30;
 
-    constexpr int                      SwerveMotorRevolutions          =    21;                                 // The number of motor revolutions per wheel revolutions
-    constexpr double                   SwerveDegreesToMotorRevolutions = 180.0 / SwerveMotorRevolutions / 2.0;  // Degrees to motor revolutions
+    constexpr auto SwerveMotorRevolutions          =    21.5;                                 // The number of motor revolutions per wheel revolutions
+    constexpr auto SwerveDegreesToMotorRevolutions = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions
+}
+#pragma endregion
 
-    constexpr double                   SwerveP                         = 0.025;
-    constexpr double                   SwerveI                         = 0.000;
-    constexpr double                   SwerveD                         = 0.010;
+#pragma region SwerveConstants
+namespace SwerveConstants
+{
+    constexpr auto FrontRightIndex        = 0;
+    constexpr auto FrontLeftIndex         = 1;
+    constexpr auto RearRightIndex         = 3;
+    constexpr auto RearLeftIndex          = 2;
+
+    constexpr auto FrontRightForwardAngle =  0.301 * 360_deg;
+    constexpr auto FrontLeftForwardAngle  = -0.464 * 360_deg;
+    constexpr auto RearRightForwardAngle  = -0.064 * 360_deg;
+    constexpr auto RearLeftForwardAngle   = -0.022 * 360_deg;
+
+    constexpr auto P                      = 0.025;
+    constexpr auto I                      = 0.000;
+    constexpr auto D                      = 0.010;    
+}
+#pragma endregion
+
+namespace ModuleConstants 
+{
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
+    // more teeth will result in a robot that drives faster).
+    constexpr int kDrivingMotorPinionTeeth       = 14;
+
+    // Calculations required for driving motor conversion factors and feed forward
+    constexpr double kDrivingMotorFreeSpeedRps   = 5676.0 / 60;  // NEO free speed is 5676 RPM
+    constexpr units::meter_t kWheelDiameter      = 0.0762_m;
+    constexpr units::meter_t kWheelCircumference = kWheelDiameter * std::numbers::pi;
+
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    constexpr double kDrivingMotorReduction      = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+    constexpr double kDriveWheelFreeSpeedRps     = (kDrivingMotorFreeSpeedRps * kWheelCircumference.value()) / kDrivingMotorReduction;
+}
+
+#pragma region ElevatorContants
+namespace ElevatorContants
+{
+    constexpr auto S                               = 0.25;             // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+    constexpr auto P                               = 60.0;             // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               =  0.0;             // Integral:        No output for integrated error
+    constexpr auto D                               =  0.5;             // Differential     A velocity error of 1 rps results in 0.5 V output
+
+    constexpr auto SensorToMechanismRatio          = 12.8;             // 12.8 rotor rotations per mechanism rotation
+
+    constexpr auto MotionMagicCruiseVelocity       = 5_tps;            // 5 (mechanism) rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 10_tr_per_s_sq;   // Take approximately 0.5 seconds to reach max vel
+    constexpr auto MotionMagicJerk                 = 100_tr_per_s_cu;  // Take approximately 0.1 seconds to reach max accel   
+
+    constexpr auto PositionToTurnsConversionFactor = 1.0;
 }
 #pragma endregion
 
 #pragma region ControllerConstants
 namespace ControllerConstants
 {
-    constexpr int    DriverControllerUsbPort = 0;
-    constexpr int    JoystickOperatorUsbPort = 1;
+    constexpr auto DriverControllerUsbPort =   0;
+    constexpr auto JoystickOperatorUsbPort =   1;
 
-    constexpr int    JoystickForwardIndex    = 1;
-    constexpr int    JoystickStrafeIndex     = 0;
-    constexpr int    JoystickAngleIndex      = 2;  // 4 for xbox controller
+    constexpr auto JoystickForwardIndex    =   1;
+    constexpr auto JoystickStrafeIndex     =   0;
+    constexpr auto JoystickAngleIndex      =   2;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
 
-    constexpr double JoystickDeadZone        = 0.1;
+    constexpr auto JoystickDeadZone        = 0.1;
 
-    constexpr double ExponentForward         = 2.0;
-    constexpr double ExponentStrafe          = 2.0;
-    constexpr double ExponentAngle           = 2.0;
+    constexpr auto ExponentForward         = 2.0;
+    constexpr auto ExponentStrafe          = 2.0;
+    constexpr auto ExponentAngle           = 2.0;
+}
+#pragma endregion
+
+#pragma region Extreme3DContants
+namespace Extreme3DContants
+{
+    constexpr auto HandleLowerLeft  = 3;
+    constexpr auto HandleLowerRight = 4;
+}
+#pragma endregion
+
+#pragma region xBoxConstants
+namespace XBoxConstants
+{
+    constexpr auto A                 =   1;
+    constexpr auto B                 =   2;
+    constexpr auto X                 =   3;
+    constexpr auto Y                 =   4;
+    constexpr auto LeftBumper        =   5;
+    constexpr auto RightBumper       =   6;
+    constexpr auto Back              =   7;
+    constexpr auto Start             =   8;
+    constexpr auto LeftStickButton   =   9;
+    constexpr auto RightStickButton  =  10;
+
+    constexpr auto Pov_0             =   0;
+    constexpr auto Pov_45            =  45;
+    constexpr auto Pov_90            =  90;
+    constexpr auto Pov_135           = 135;
+    constexpr auto Pov_180           = 180;
+    constexpr auto Pov_225           = 225;
+    constexpr auto Pov_270           = 270;
+    constexpr auto Pov_315           = 315;
 }
 #pragma endregion
 
@@ -116,73 +177,34 @@ namespace ApriltagConstants
 {
     // Magic camera values:
     // Source: https://www.chiefdelphi.com/t/wpilib-apriltagdetector-sample-code/421411/21
-    constexpr double CameraWidthInPixels     = 699.3778103158814;
-    constexpr double CameraHeightInPixels    = 677.7161226393544;
-    constexpr double CameraCenterXInPixels   = 345.6059345433618;
-    constexpr double CameraCenterYInPixels   = 207.12741326228522;
+    constexpr auto CameraWidthInPixels     = 699.3778103158814;
+    constexpr auto CameraHeightInPixels    = 677.7161226393544;
+    constexpr auto CameraCenterXInPixels   = 345.6059345433618;
+    constexpr auto CameraCenterYInPixels   = 207.12741326228522;
 
-    constexpr int    CameraResolutionWidth   = 640;
-    constexpr int    CameraResolutionHeight  = 480;
+    constexpr auto CameraResolutionWidth   = 640;
+    constexpr auto CameraResolutionHeight  = 480;
 
-    constexpr int    AprilTagLineWitdh       =   2;
-    constexpr int    NumberOfAprilTagCorners =   4;
-    constexpr int    NumberOfBitsCorrected   =   1;
+    constexpr auto AprilTagLineWitdh       =   2;
+    constexpr auto NumberOfAprilTagCorners =   4;
+    constexpr auto NumberOfBitsCorrected   =   1;
 
-    constexpr double LengthOfTagsInches      = 6.5;
-}
-#pragma endregion
-
-#pragma region Extreme3DContants
-namespace Extreme3DContants
-{
-    constexpr int HandleLowerLeft  = 3;
-    constexpr int HandleLowerRight = 4;
-}
-#pragma endregion
-
-#pragma region xBoxConstants
-namespace XBoxConstants
-{
-    constexpr int    A                 =   1;
-    constexpr int    B                 =   2;
-    constexpr int    X                 =   3;
-    constexpr int    Y                 =   4;
-    constexpr int    LeftBumper        =   5;
-    constexpr int    RightBumper       =   6;
-    constexpr int    Back              =   7;
-    constexpr int    Start             =   8;
-    constexpr int    LeftStickButton   =   9;
-    constexpr int    RightStickButton  =  10;
-
-    constexpr int    Pov_0             =   0;
-    constexpr int    Pov_45            =  45;
-    constexpr int    Pov_90            =  90;
-    constexpr int    Pov_135           = 135;
-    constexpr int    Pov_180           = 180;
-    constexpr int    Pov_225           = 225;
-    constexpr int    Pov_270           = 270;
-    constexpr int    Pov_315           = 315;
+    constexpr auto LengthOfTagsInches      = 6.5;
 }
 #pragma endregion
 
 #pragma region LedConstants
 namespace LedConstants
 {
-    constexpr int    Length      =  40;  // The length of the LED string
-    constexpr int    PwmPort     =   5;
-    constexpr double Brightness  = 0.5;
+    constexpr auto Length      =  40;  // The length of the LED string
+    constexpr auto PwmPort     =   5;
+    constexpr auto Brightness  = 0.5;
 
-    constexpr int    Red         = 255;
-    constexpr int    Green       = 255;
-    constexpr int    Blue        = 255;
+    constexpr auto Red         = 255;
+    constexpr auto Green       = 255;
+    constexpr auto Blue        = 255;
 
-    constexpr int    StrobeDelay =  20;  // The delay between strobe flashes
-    constexpr int    HvaDelay    =  20;  // The delay between HVA color changes
+    constexpr auto StrobeDelay =  20;  // The delay between strobe flashes
+    constexpr auto HvaDelay    =  20;  // The delay between HVA color changes
 }
 #pragma endregion
-
-namespace SwerveModuleConstants
-{
-    constexpr double kWheelRadius       = 0.0508;
-    constexpr int    kEncoderResolution = 4096;
-}

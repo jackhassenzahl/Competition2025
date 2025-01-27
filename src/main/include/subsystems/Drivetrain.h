@@ -33,7 +33,7 @@ class Drivetrain : public frc2::SubsystemBase
         void            SetFieldCentricity(bool fieldCentric);
         bool            GetFieldCentricity();
 
-        void            SetSwerveWheelAnglesToZero();
+        void            SetWheelAnglesToZero();
 
         units::degree_t GetHeading();
 
@@ -42,9 +42,9 @@ class Drivetrain : public frc2::SubsystemBase
 
     private:
 
-        bool               m_fieldCentricity = false;                                // Field centricity flag
+        bool               m_fieldCentricity = false;                // Field centricity flag
 
-        studica::AHRS      m_gyro{studica::AHRS::NavXComType::kMXP_SPI};             // navX MXP using SPI
+        studica::AHRS m_gyro{studica::AHRS::NavXComType::kMXP_SPI};  // navX MXP using SPI
 
         frc::Translation2d m_frontLeftLocation {+0.381_m, +0.381_m};
         frc::Translation2d m_frontRightLocation{+0.381_m, -0.381_m};

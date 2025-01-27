@@ -41,7 +41,7 @@ void ChassisDriveDistance::Execute()
 /// @return True is the command has completed.
 bool ChassisDriveDistance::IsFinished()
 {
-    // Determine if the chassis has completed the drive distance
+    // Execute only runs once
     return true;
 }
 #pragma endregion

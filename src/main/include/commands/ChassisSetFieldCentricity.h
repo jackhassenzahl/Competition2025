@@ -13,6 +13,7 @@ class ChassisSetFieldCentricity : public frc2::CommandHelper<frc2::Command, Chas
 
         void Initialize() override;
         bool IsFinished() override;
+        
     private:
 
         bool        m_fieldCentric;  // The field centricity flag

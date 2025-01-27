@@ -18,8 +18,12 @@ void Drivetrain::Periodic()
 void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
                        units::meters_per_second_t  ySpeed,
                        units::radians_per_second_t rotation,
-                       units::second_t period)
+                       units::second_t             period)
 {
+    // forward = frc::SmartDashboard::GetNumber("Chassis Forward", 0.0);
+    // strafe  = frc::SmartDashboard::GetNumber("Chassis Strafe",  0.0);
+    // angle   = frc::SmartDashboard::GetNumber("Chassis Angle",   0.0);
+
     frc::SmartDashboard::PutNumber("Chassis Forward", (double) xSpeed);
     frc::SmartDashboard::PutNumber("Chassis Strafe",  (double) ySpeed);
     frc::SmartDashboard::PutNumber("Chassis Angle",   (double) rotation);
@@ -89,13 +93,15 @@ bool Drivetrain::GetFieldCentricity()
 }
 #pragma endregion
 
-#pragma region SetSwerveWheelAnglesToZero
+#pragma region SetWheelAnglesToZero
 /// @brief Method to set the swerve wheel to the absoulute encoder angle then zero the PID controller angle.
-void Drivetrain::SetSwerveWheelAnglesToZero()
+void Drivetrain::SetWheelAnglesToZero()
 {
     // Set the swerve wheel angles to zero
-    // for (auto swerveModuleIndex = 0; swerveModuleIndex < ChassisConstants::NumberOfSwerveModules; swerveModuleIndex++)  TODO:
-    //     m_swerveModule[swerveModuleIndex]->SetSwerveWheelAnglesToZero();
+    // m_swerveModule[SwerveConstants::FrontRightIndex]->SetWheelAngleToForward(SwerveConstants::FrontRightForwardAngle);
+    // m_swerveModule[SwerveConstants::FrontLeftIndex]->SetWheelAngleToForward(SwerveConstants::FrontLeftForwardAngle);
+    // m_swerveModule[SwerveConstants::RearRightIndex]->SetWheelAngleToForward(SwerveConstants::RearRightForwardAngle);
+    // m_swerveModule[SwerveConstants::RearLeftIndex]->SetWheelAngleToForward(SwerveConstants::RearLeftForwardAngle);
 }
 #pragma endregion
 

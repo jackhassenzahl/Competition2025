@@ -11,15 +11,13 @@ Elevator::Elevator()
 
 #pragma region ConfigureElevatorMotor
 /// @brief Method to configure the elevator motor using MotionMagic.
-/// @param driveMotorCanId The CAN identifier for the elevator motor.
-void Elevator::ConfigureElevatorMotor(int driveMotorCanId)
+/// @param motorCanId The CAN identifier for the elevator motor.
+void Elevator::ConfigureElevatorMotor(int motorCanId)
 {
-    std::cout << "***** Configure Drive Motor: " << driveMotorCanId << std::endl;
+    // Instantiate the elevator motor
+    m_elevatorMotor = new ctre::phoenix6::hardware::TalonFX{motorCanId, CanConstants::CanBus};
 
-    // Instantiate the drive motor
-    m_elevatorMotor = new ctre::phoenix6::hardware::TalonFX{driveMotorCanId, CanConstants::CanBus};
-
-    // Create the drive motor configuration
+    // Create the elevator motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration elevatorMotorConfiguration{};
 
     // Add the Motor Output section settings
@@ -27,22 +25,22 @@ void Elevator::ConfigureElevatorMotor(int driveMotorCanId)
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = elevatorMotorConfiguration.Slot0;
-    slot0Configs.kS = 0.25;  // Add 0.25 V output to overcome static friction
-    slot0Configs.kV = 0.12;  // A velocity target of 1 rps results in 0.12 V output
-    slot0Configs.kA = 0.01;  // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP =   60;  // A position error of 0.2 rotations results in 12 V output
-    slot0Configs.kI =    0;  // No output for integrated error
-    slot0Configs.kD =  0.5;  // A velocity error of 1 rps results in 0.5 V output
+    slot0Configs.kS = ElevatorContants::S;
+    slot0Configs.kV = ElevatorContants::V;
+    slot0Configs.kA = ElevatorContants::A;
+    slot0Configs.kP = ElevatorContants::P;
+    slot0Configs.kI = ElevatorContants::I;
+    slot0Configs.kD = ElevatorContants::D;
 
     // Configure gear ratio
     ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = elevatorMotorConfiguration.Feedback;
-    feedbackConfigs.SensorToMechanismRatio = 12.8; // 12.8 rotor rotations per mechanism rotation
+    feedbackConfigs.SensorToMechanismRatio = ElevatorContants::SensorToMechanismRatio;
 
     // Configure Motion Magic
     ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = elevatorMotorConfiguration.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 5_tps;            // 5 (mechanism) rotations per second cruise
-    motionMagicConfigs.MotionMagicAcceleration   = 10_tr_per_s_sq;   // Take approximately 0.5 seconds to reach max vel
-    motionMagicConfigs.MotionMagicJerk           = 100_tr_per_s_cu;  // Take approximately 0.1 seconds to reach max accel
+    motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorContants::MotionMagicCruiseVelocity;
+    motionMagicConfigs.MotionMagicAcceleration   = ElevatorContants::MotionMagicAcceleration;
+    motionMagicConfigs.MotionMagicJerk           = ElevatorContants::MotionMagicJerk;
 
     // Apply the configuration to the drive motor
     ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -59,8 +57,6 @@ void Elevator::ConfigureElevatorMotor(int driveMotorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure elevator motor. Error: " << status.GetName() << std::endl;
-
-    std::cout << "***** GetDescription: " << m_elevatorMotor->GetDescription() << std::endl;
 }
 #pragma endregion
 
@@ -69,7 +65,10 @@ void Elevator::ConfigureElevatorMotor(int driveMotorCanId)
 /// @param position The setpoint for the elevator height.
 void Elevator::SetHeight(units::length::meter_t position)
 {
+    // Compute the number of turns based on the specficied position
+    units::angle::turn_t newPosition = (units::angle::turn_t) (position.value() * ElevatorContants::PositionToTurnsConversionFactor);
+
     // Set the elevator set position
-    //m_elevatorMotor->SetControl(m_motionMagicVoltage.WithPosition(position).WithSlot(0)); TODO: Fix
+    m_elevatorMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
 }
 #pragma endregion

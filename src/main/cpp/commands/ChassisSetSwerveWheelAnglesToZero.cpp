@@ -12,12 +12,12 @@ ChassisSetSwerveWheelAnglesToZero::ChassisSetSwerveWheelAnglesToZero(Drivetrain 
 }
 #pragma endregion
 
-#pragma region Initialize
-// Called when the command is initially scheduled.
-void ChassisSetSwerveWheelAnglesToZero::Initialize()
+#pragma region Execute
+/// @brief Called repeatedly when this Command is scheduled to run.
+void ChassisSetSwerveWheelAnglesToZero::Execute()
 {
     // Set the swerve wheel angles to zero
-    m_drivetrain->SetSwerveWheelAnglesToZero();
+    m_drivetrain->SetWheelAnglesToZero();
 }
 #pragma endregion
 
@@ -25,6 +25,7 @@ void ChassisSetSwerveWheelAnglesToZero::Initialize()
 // Returns true when the command should end.
 bool ChassisSetSwerveWheelAnglesToZero::IsFinished()
 {
-  return true;
+    // Execute only runs once
+    return true;
 }
 #pragma endregion

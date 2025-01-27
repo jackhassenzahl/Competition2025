@@ -11,7 +11,7 @@ class ChassisSetSwerveWheelAnglesToZero : public frc2::CommandHelper<frc2::Comma
 
         ChassisSetSwerveWheelAnglesToZero(Drivetrain *drivetrain);
 
-        void Initialize() override;
+        void Execute()    override;
         bool IsFinished() override;
 
     private:

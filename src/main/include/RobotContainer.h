@@ -55,12 +55,6 @@ class RobotContainer
         void                        SetPeriod(units::second_t period);
         units::second_t             GetPeriod();
 
-        // Instantiate the robot subsystems
-        AprilTags  m_aprilTags;
-        Drivetrain m_drivetrain;
-        Elevator   m_elevator;
-        Leds       m_leds;
-
     private:
 
         // Private class constructor to configure the robot and SmartDashboard configuration
@@ -74,6 +68,12 @@ class RobotContainer
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;
 
+        // Instantiate the robot subsystems
+        AprilTags                             m_aprilTags;
+        Drivetrain                            m_drivetrain;
+        Elevator                              m_elevator;
+        Leds                                  m_leds;
+
         units::second_t                       m_period;
 
         // Joysticks
@@ -84,6 +84,9 @@ class RobotContainer
         frc::SlewRateLimiter<units::scalar>   m_xspeedLimiter{3 / 1_s};
         frc::SlewRateLimiter<units::scalar>   m_yspeedLimiter{3 / 1_s};
         frc::SlewRateLimiter<units::scalar>   m_rotLimiter   {3 / 1_s};
+
+        // Create the command to set the swerve wheel angles to zero based on the absolute encoder
+        ChassisSetSwerveWheelAnglesToZero    *m_swerveWheelAnglesToZero = new ChassisSetSwerveWheelAnglesToZero(&m_drivetrain);
 
         // Autonomous command chooser
         frc::SendableChooser<frc2::Command *> m_autonomousChooser;

@@ -122,11 +122,8 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
  /// @brief Method to set the swerve wheels to zero degrees based on the absolute encoder.
  void RobotContainer::SetSwerveWheelAnglesToZero()
  {
-    // Create a ChassisSetSwerveWheelAnglesToZero command
-    auto command = new ChassisSetSwerveWheelAnglesToZero(&m_drivetrain);
-
     // Execute the command
-    command->Execute();
+    m_swerveWheelAnglesToZero->Execute();
  }
 #pragma endregion
 
@@ -138,7 +135,7 @@ units::meters_per_second_t RobotContainer::Forward()
     // Get the forward joystick setting
     double joystickForward = GetDriverController()->GetRawAxis(ControllerConstants::JoystickForwardIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
+    // Use exponential function to calculate the forward value for better slow speed control
     joystickForward = GetExponentialValue(joystickForward, ControllerConstants::ExponentForward);
 
     // Return the x speed
@@ -154,7 +151,7 @@ units::meters_per_second_t RobotContainer::Strafe()
     // Get the strafe joystick setting
     double joystickStrafe = GetDriverController()->GetRawAxis(ControllerConstants::JoystickStrafeIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
+    // Use exponential function to calculate the forward value for better slow speed control
     joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
@@ -170,7 +167,7 @@ units::radians_per_second_t RobotContainer::Angle()
     // Get the angle joystick setting
     double joystickAngle = GetDriverController()->GetRawAxis(ControllerConstants::JoystickAngleIndex);
 
-    // Use expoendial function to calculate the forward value for better slow speed control
+    // Use exponential function to calculate the forward value for better slow speed control
     joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
 
     // Return the rotation speed
