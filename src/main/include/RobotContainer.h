@@ -64,7 +64,7 @@ class RobotContainer
         // Method to bind the joystick controls to the robot commands
         void   ConfigureButtonBindings();
 
-        double GetExponentialValue(double joystickValue, double exponent);
+        double GetExponentialValue(double joystickValue, double deadZone, double exponent);
 
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;

@@ -139,7 +139,7 @@ double RobotContainer::Forward()
     double joystickForward = GetDriverController()->GetRawAxis(ControllerConstants::JoystickForwardIndex);
 
     // Use exponential function to calculate the forward value for better slow speed control
-    joystickForward = GetExponentialValue(joystickForward, ControllerConstants::ExponentForward);
+    joystickForward = GetExponentialValue(joystickForward, ControllerConstants::JoystickDeadZone, ControllerConstants::ExponentForward);
 
     // Return the x speed
     return -joystickForward;
@@ -155,7 +155,7 @@ double RobotContainer::Strafe()
     double joystickStrafe = GetDriverController()->GetRawAxis(ControllerConstants::JoystickStrafeIndex);
 
     // Use exponential function to calculate the forward value for better slow speed control
-    joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
+    joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::JoystickDeadZone, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
     return -joystickStrafe;
@@ -171,7 +171,8 @@ double RobotContainer::Angle()
     double joystickAngle = GetDriverController()->GetRawAxis(ControllerConstants::JoystickAngleIndex);
 
     // Use exponential function to calculate the forward value for better slow speed control
-    joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
+    if (joystickAngle)
+        joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::JoystickAngleDeadZone, ControllerConstants::ExponentAngle);
 
     // Return the rotation speed
 	return joystickAngle;
@@ -183,13 +184,13 @@ double RobotContainer::Angle()
 /// @param joystickValue The raw joystick value.
 /// @param exponent The exponential value.
 /// @return The resultant exponential value.
-double RobotContainer::GetExponentialValue(double joystickValue, double exponent)
+double RobotContainer::GetExponentialValue(double joystickValue, double deadZone, double exponent)
 {
     int    direction = 1;
     double output    = 0.0;
 
     // Ignore joystick input if it's too small
-    if (joystickValue > -ControllerConstants::JoystickDeadZone && joystickValue < ControllerConstants::JoystickDeadZone)
+    if (joystickValue > -deadZone && joystickValue < deadZone)
         return 0.0;
 
     // Direction is either 1 or -1, based on joystick value

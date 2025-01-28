@@ -73,7 +73,7 @@ void SwerveModule::ConfigureAngleMotor()
 void SwerveModule::SetWheelAngleToForward(units::angle::degree_t forwardAngle)
 {
     // Set the motor angle encoder position to the forward direction
-    m_angleMotor.GetEncoder().SetPosition(GetAbsoluteAngle().value() - forwardAngle.value());
+    m_angleMotor.GetEncoder().SetPosition(forwardAngle.value() - GetAbsoluteAngle().value());
 
     // Ensure the PID controller set angle is zero (forward)
     m_pidController.SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
