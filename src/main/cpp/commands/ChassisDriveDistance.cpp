@@ -32,7 +32,7 @@ void ChassisDriveDistance::Initialize()
 void ChassisDriveDistance::Execute()
 {
     // Start driving
-    m_drivetrain->Drive(m_speed, 0_mps, 0_rad_per_s, RobotContainer::GetInstance()->GetPeriod());
+    m_drivetrain->Drive(m_speed, 0_mps, 0_rad_per_s);
 }
 #pragma endregion
 
@@ -52,7 +52,7 @@ bool ChassisDriveDistance::IsFinished()
 void ChassisDriveDistance::End(bool interrupted)
 {
     // Stop the move
-    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, RobotContainer::GetInstance()->GetPeriod());
+    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s);
 
     // Restore the field centricity
     m_drivetrain->SetFieldCentricity(m_fieldCentricity);

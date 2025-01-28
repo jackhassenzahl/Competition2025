@@ -4,8 +4,13 @@
 
 #include "studica/AHRS.h"
 
-#include <frc/AnalogGyro.h>
-#include <frc/geometry/Translation2d.h>
+#include <hal/FRCUsageReporting.h>
+
+#include <frc/ADIS16470_IMU.h>
+#include <frc/filter/SlewRateLimiter.h>
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 
@@ -19,67 +24,52 @@ class Drivetrain : public frc2::SubsystemBase
 {
     public:
 
-        explicit        Drivetrain() { m_gyro.Reset(); }
+        explicit        Drivetrain();
 
         void            Periodic() override;
 
         void            Drive(units::meters_per_second_t  xSpeed,
                               units::meters_per_second_t  ySpeed,
-                              units::radians_per_second_t rotation,
-                              units::second_t             period);
+                              units::radians_per_second_t rotation);
 
-        void            UpdateOdometry();
+        void            SetX();                           // Sets the wheels into an X formation to prevent movement
+
+        void            ResetEncoders();                  // Resets the drive encoders to currently read a position of 0.
+    
+        void            SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates); 
+        
+        units::degree_t GetHeading();                     // Returns the heading of the robot.
+        
+        void            ZeroHeading();                    // Zeroes the heading of the robot.
+      
+        double          GetTurnRate();                    // Returns the turn rate of the robot.
+      
+        frc::Pose2d     GetPose();                        // Returns the currently-estimated pose of the robot.
+      
+        void            ResetOdometry(frc::Pose2d pose);  // Resets the odometry to the specified pose.
 
         void            SetFieldCentricity(bool fieldCentric);
         bool            GetFieldCentricity();
 
         void            SetWheelAnglesToZero();
 
-        units::degree_t GetHeading();
-
-        static constexpr units::meters_per_second_t  kMaxSpeed{3.0_mps};                 // 3 meters per second
-        static constexpr units::radians_per_second_t kMaxAngularSpeed{std::numbers::pi}; // 1/2 rotation per second
+        frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{
+            frc::Translation2d{ ChassisConstants::kWheelBase / 2,  ChassisConstants::kTrackWidth / 2},
+            frc::Translation2d{ ChassisConstants::kWheelBase / 2, -ChassisConstants::kTrackWidth / 2},
+            frc::Translation2d{-ChassisConstants::kWheelBase / 2,  ChassisConstants::kTrackWidth / 2},
+            frc::Translation2d{-ChassisConstants::kWheelBase / 2, -ChassisConstants::kTrackWidth / 2}};
 
     private:
 
-        bool               m_fieldCentricity = false;                // Field centricity flag
+        studica::AHRS m_gyro{studica::AHRS::NavXComType::kMXP_SPI};  // The gyro sensor
 
-        studica::AHRS m_gyro{studica::AHRS::NavXComType::kMXP_SPI};  // navX MXP using SPI
+        bool          m_fieldCentricity = false;                     // Field centricity flag
 
-        frc::Translation2d m_frontLeftLocation {+0.381_m, +0.381_m};
-        frc::Translation2d m_frontRightLocation{+0.381_m, -0.381_m};
-        frc::Translation2d m_backLeftLocation  {-0.381_m, +0.381_m};
-        frc::Translation2d m_backRightLocation {-0.381_m, -0.381_m};
+        SwerveModule  m_frontLeft;
+        SwerveModule  m_rearLeft;
+        SwerveModule  m_frontRight;
+        SwerveModule  m_rearRight;
 
-        /// Swerve Module Indexes:
-        ///
-        ///          Front
-        ///       +---------+ ---
-        ///       |[0]   [1]|  ^       0   Front Left
-        ///       |         |  |       1   Front Right
-        ///       |         | Length   2   Rear Left
-        ///       |         |  |       3   Rear Right
-        ///       |[2]   [3]|  v
-        ///       +---------+ ---
-        ///       |         |
-        ///       |< Width >|
-        SwerveModule       m_frontLeft {CanConstants::SwerveFrontRightDriveMotorCanId,
-                                        CanConstants::SwerveFrontRightAngleMotorCanId,
-                                        CanConstants::SwerveFrontRightAngleEncoderCanId};
-        SwerveModule       m_frontRight{CanConstants::SwerveFrontLeftDriveMotorCanId,
-                                        CanConstants::SwerveFrontLeftAngleMotorCanId,
-                                        CanConstants::SwerveFrontLeftAngleEncoderCanId};
-        SwerveModule       m_backLeft  {CanConstants::SwerveRearLeftDriveMotorCanId,
-                                        CanConstants::SwerveRearLeftAngleMotorCanId,
-                                        CanConstants::SwerveRearLeftAngleEncoderCanId};
-        SwerveModule       m_backRight {CanConstants::SwerveRearRightDriveMotorCanId,
-                                        CanConstants::SwerveRearRightAngleMotorCanId,
-                                        CanConstants::SwerveRearRightAngleEncoderCanId};
-
-        frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{m_frontLeftLocation, m_frontRightLocation,
-                                                                                         m_backLeftLocation, m_backRightLocation};
-
-        frc::SwerveDriveOdometry<ChassisConstants::NumberOfSwerveModules>   m_odometry{m_kinematics, m_gyro.GetRotation2d(),
-                                                                                      {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
-                                                                                       m_backLeft.GetPosition(),  m_backRight.GetPosition()}};
+        // Odometry class for tracking robot pose for the swerve modules modules
+        frc::SwerveDriveOdometry<ChassisConstants::NumberOfSwerveModules> m_odometry;
 };

@@ -49,19 +49,29 @@ namespace CanConstants
 #pragma region ChassisConstants
 namespace ChassisConstants
 {
-    constexpr auto NumberOfSwerveModules           =     4;
+    constexpr auto NumberOfSwerveModules             =     4;
 
-    constexpr auto ChassisLength                   =   100;  // TODO: Set properly
-    constexpr auto ChassisWidth                    =   100;
+    // Chassis configuration
+    constexpr units::meter_t kTrackWidth             = 0.6731_m;  // Distance between centers of right and left wheels on robot
+    constexpr units::meter_t kWheelBase              = 0.6731_m;  // Distance between centers of front and back wheels on robot
 
-    constexpr auto MotorConfigurationAttempts      =     5;
+    constexpr units::meters_per_second_t  kMaxSpeed  = 4.8_mps;
+    constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
 
-    constexpr auto SwerveDriveMaxAmperage          =  60_A;
+    // Angular offsets of the modules relative to the chassis in radians
+    constexpr double kFrontLeftChassisAngularOffset  = -std::numbers::pi / 2;
+    constexpr double kFrontRightChassisAngularOffset = 0;
+    constexpr double kRearLeftChassisAngularOffset   = std::numbers::pi;
+    constexpr double kRearRightChassisAngularOffset  = std::numbers::pi / 2;
 
-    constexpr auto SwerveAngleMaxAmperage          =    30;
+    constexpr auto MotorConfigurationAttempts        =     5;
 
-    constexpr auto SwerveMotorRevolutions          =    21.5;                                 // The number of motor revolutions per wheel revolutions
-    constexpr auto SwerveDegreesToMotorRevolutions = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions
+    constexpr auto SwerveDriveMaxAmperage            =  60_A;
+
+    constexpr auto SwerveAngleMaxAmperage            =    30;
+
+    constexpr auto SwerveMotorRevolutions            =    21.5;                                 // The number of motor revolutions per wheel revolutions
+    constexpr auto SwerveDegreesToMotorRevolutions   = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions	
 }
 #pragma endregion
 
@@ -84,6 +94,7 @@ namespace SwerveConstants
 }
 #pragma endregion
 
+#pragma region ModuleConstants
 namespace ModuleConstants 
 {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
@@ -100,6 +111,7 @@ namespace ModuleConstants
     constexpr double kDrivingMotorReduction      = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     constexpr double kDriveWheelFreeSpeedRps     = (kDrivingMotorFreeSpeedRps * kWheelCircumference.value()) / kDrivingMotorReduction;
 }
+#pragma endregion
 
 #pragma region ElevatorContants
 namespace ElevatorContants

@@ -28,6 +28,6 @@ ChassisDrive::ChassisDrive(std::function<units::meters_per_second_t()>  forward,
 void ChassisDrive::Execute()
 {
     // Perform the chassis drive
-    m_drivetrain->Drive(m_forward(), m_strafe(), m_angle(), RobotContainer::GetInstance()->GetPeriod());
+    m_drivetrain->Drive(m_forward(), m_strafe(), m_angle());
 }
 #pragma endregion

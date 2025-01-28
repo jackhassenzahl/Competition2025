@@ -54,6 +54,6 @@ bool ChassisTurnAngle::IsFinished()
 void ChassisTurnAngle::End(bool interrupted)
 {
     // Stop the move
-    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, RobotContainer::GetInstance()->GetPeriod());
+    m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s);
 }
 #pragma endregion

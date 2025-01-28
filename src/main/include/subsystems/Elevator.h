@@ -19,7 +19,7 @@ class Elevator : public frc2::SubsystemBase
 
     private:
 
-        void ConfigureElevatorMotor(int driveMotorCANid);
+        void ConfigureElevatorMotor(int driveMotorCanId);
 
         ctre::phoenix6::hardware::TalonFX           *m_elevatorMotor;
         ctre::phoenix6::controls::MotionMagicVoltage m_motionMagicVoltage{0_tr};

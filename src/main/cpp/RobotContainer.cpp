@@ -139,7 +139,7 @@ units::meters_per_second_t RobotContainer::Forward()
     joystickForward = GetExponentialValue(joystickForward, ControllerConstants::ExponentForward);
 
     // Return the x speed
-    return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
+    return -m_xspeedLimiter.Calculate(frc::ApplyDeadband(joystickForward, ControllerConstants::JoystickDeadZone)) * ChassisConstants::kMaxSpeed;
 }
 #pragma endregion
 
@@ -155,7 +155,7 @@ units::meters_per_second_t RobotContainer::Strafe()
     joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
-    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxSpeed;
+    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * ChassisConstants::kMaxSpeed;
 }
 #pragma endregion
 
@@ -171,7 +171,7 @@ units::radians_per_second_t RobotContainer::Angle()
     joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
 
     // Return the rotation speed
-    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickDeadZone)) * Drivetrain::kMaxAngularSpeed;
+    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickDeadZone)) * ChassisConstants::kMaxAngularSpeed;
 }
 #pragma endregion
 
