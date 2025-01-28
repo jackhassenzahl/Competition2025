@@ -20,8 +20,8 @@ class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>
 
     private:
 
-        std::function<units::meters_per_second_t()>  m_forward;
-        std::function<units::meters_per_second_t()>  m_strafe;
-        std::function<units::radians_per_second_t()> m_angle;
-        Drivetrain                                  *m_drivetrain;
+        std::function<units::meters_per_second_t()>  m_forward;     // The forward speed
+        std::function<units::meters_per_second_t()>  m_strafe;      // The strafe speed
+        std::function<units::radians_per_second_t()> m_angle;       // The angle speed
+        Drivetrain                                  *m_drivetrain;  // The drivetrain subsystem;
 };

@@ -52,23 +52,27 @@ namespace ChassisConstants
     constexpr auto NumberOfSwerveModules             =     4;
 
     // Chassis configuration
-    constexpr units::meter_t kTrackWidth             = 0.6731_m;  // Distance between centers of right and left wheels on robot
-    constexpr units::meter_t kWheelBase              = 0.6731_m;  // Distance between centers of front and back wheels on robot
+    constexpr auto TrackWidth                        = 0.6731_m;  // Distance between centers of right and left wheels on robot
+    constexpr auto WheelBase                         = 0.6731_m;  // Distance between centers of front and back wheels on robot
 
-    constexpr units::meters_per_second_t  kMaxSpeed  = 4.8_mps;
-    constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
+    constexpr units::meters_per_second_t  MaxSpeed   = 4.8_mps;
+    constexpr units::radians_per_second_t MaxAngularSpeed{2 * std::numbers::pi};
+
+    constexpr auto DriveMotorVelocityConversion      = 1.0;
+    constexpr auto ModuleMaxAngularVelocity          = std::numbers::pi * 1_rad_per_s;       // radians per second
+    constexpr auto ModuleMaxAngularAcceleration      = std::numbers::pi * 2_rad_per_s / 1_s; // radians per second^2
 
     // Angular offsets of the modules relative to the chassis in radians
-    constexpr double kFrontLeftChassisAngularOffset  = -std::numbers::pi / 2;
-    constexpr double kFrontRightChassisAngularOffset = 0;
-    constexpr double kRearLeftChassisAngularOffset   = std::numbers::pi;
-    constexpr double kRearRightChassisAngularOffset  = std::numbers::pi / 2;
+    constexpr auto FrontLeftChassisAngularOffset     = -std::numbers::pi / 2;
+    constexpr auto FrontRightChassisAngularOffset    = 0.0;
+    constexpr auto RearLeftChassisAngularOffset      = std::numbers::pi;
+    constexpr auto RearRightChassisAngularOffset     = std::numbers::pi / 2;
 
     constexpr auto MotorConfigurationAttempts        =     5;
 
     constexpr auto SwerveDriveMaxAmperage            =  60_A;
 
-    constexpr auto SwerveAngleMaxAmperage            =    30;
+    constexpr auto SwerveAngleMaxAmperage            =    20;
 
     constexpr auto SwerveMotorRevolutions            =    21.5;                                 // The number of motor revolutions per wheel revolutions
     constexpr auto SwerveDegreesToMotorRevolutions   = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions	
@@ -88,28 +92,32 @@ namespace SwerveConstants
     constexpr auto RearRightForwardAngle  = -0.064 * 360_deg;
     constexpr auto RearLeftForwardAngle   = -0.022 * 360_deg;
 
-    constexpr auto P                      = 0.025;
-    constexpr auto I                      = 0.000;
-    constexpr auto D                      = 0.010;    
+    constexpr auto AngleP                 = 0.025;
+    constexpr auto AngleI                 = 0.000;
+    constexpr auto AngleD                 = 0.010;
+
+    constexpr auto DriveP                 = 0.025;
+    constexpr auto DriveI                 = 0.000;
+    constexpr auto DriveD                 = 0.010;    
 }
 #pragma endregion
 
 #pragma region ModuleConstants
-namespace ModuleConstants 
+namespace ModuleConstants
 {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
     // more teeth will result in a robot that drives faster).
-    constexpr int kDrivingMotorPinionTeeth       = 14;
+    constexpr int DrivingMotorPinionTeeth       = 14;
 
     // Calculations required for driving motor conversion factors and feed forward
-    constexpr double kDrivingMotorFreeSpeedRps   = 5676.0 / 60;  // NEO free speed is 5676 RPM
-    constexpr units::meter_t kWheelDiameter      = 0.0762_m;
-    constexpr units::meter_t kWheelCircumference = kWheelDiameter * std::numbers::pi;
+    constexpr double DrivingMotorFreeSpeedRps   = 5676.0 / 60;  // NEO free speed is 5676 RPM
+    constexpr units::meter_t WheelDiameter      = 0.0762_m;
+    constexpr units::meter_t WheelCircumference = WheelDiameter * std::numbers::pi;
 
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-    constexpr double kDrivingMotorReduction      = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-    constexpr double kDriveWheelFreeSpeedRps     = (kDrivingMotorFreeSpeedRps * kWheelCircumference.value()) / kDrivingMotorReduction;
+    constexpr double DrivingMotorReduction      = (45.0 * 22) / (DrivingMotorPinionTeeth * 15);
+    constexpr double DriveWheelFreeSpeedRps     = (DrivingMotorFreeSpeedRps * WheelCircumference.value()) / DrivingMotorReduction;
 }
 #pragma endregion
 
@@ -127,7 +135,7 @@ namespace ElevatorContants
 
     constexpr auto MotionMagicCruiseVelocity       = 5_tps;            // 5 (mechanism) rotations per second cruise
     constexpr auto MotionMagicAcceleration         = 10_tr_per_s_sq;   // Take approximately 0.5 seconds to reach max vel
-    constexpr auto MotionMagicJerk                 = 100_tr_per_s_cu;  // Take approximately 0.1 seconds to reach max accel   
+    constexpr auto MotionMagicJerk                 = 100_tr_per_s_cu;  // Take approximately 0.1 seconds to reach max accel
 
     constexpr auto PositionToTurnsConversionFactor = 1.0;
 }

@@ -13,7 +13,6 @@
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
-
 #include <frc2/command/SubsystemBase.h>
 
 #include "SwerveModule.h"
@@ -32,32 +31,32 @@ class Drivetrain : public frc2::SubsystemBase
                               units::meters_per_second_t  ySpeed,
                               units::radians_per_second_t rotation);
 
-        void            SetX();                           // Sets the wheels into an X formation to prevent movement
+        void            SetX();                                 // Sets the wheels into an X formation to prevent movement
 
-        void            ResetEncoders();                  // Resets the drive encoders to currently read a position of 0.
-    
-        void            SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates); 
-        
-        units::degree_t GetHeading();                     // Returns the heading of the robot.
-        
-        void            ZeroHeading();                    // Zeroes the heading of the robot.
-      
-        double          GetTurnRate();                    // Returns the turn rate of the robot.
-      
-        frc::Pose2d     GetPose();                        // Returns the currently-estimated pose of the robot.
-      
-        void            ResetOdometry(frc::Pose2d pose);  // Resets the odometry to the specified pose.
+        void            ResetEncoders();                        // Resets the drive encoders to currently read a position of 0.
 
-        void            SetFieldCentricity(bool fieldCentric);
-        bool            GetFieldCentricity();
+        void            SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates);
 
-        void            SetWheelAnglesToZero();
+        units::degree_t GetHeading();                           // Returns the heading of the robot.
+
+        void            ZeroHeading();                          // Zeroes the heading of the robot.
+
+        double          GetTurnRate();                          // Returns the turn rate of the robot.
+
+        frc::Pose2d     GetPose();                              // Returns the currently-estimated pose of the robot.
+
+        void            ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose.
+
+        void            SetFieldCentricity(bool fieldCentric);  // Sets the field centricity
+        bool            GetFieldCentricity();                   // Reads the field centricity
+
+        void            SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
         frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{
-            frc::Translation2d{ ChassisConstants::kWheelBase / 2,  ChassisConstants::kTrackWidth / 2},
-            frc::Translation2d{ ChassisConstants::kWheelBase / 2, -ChassisConstants::kTrackWidth / 2},
-            frc::Translation2d{-ChassisConstants::kWheelBase / 2,  ChassisConstants::kTrackWidth / 2},
-            frc::Translation2d{-ChassisConstants::kWheelBase / 2, -ChassisConstants::kTrackWidth / 2}};
+            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},
+            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},
+            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},
+            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}};
 
     private:
 
