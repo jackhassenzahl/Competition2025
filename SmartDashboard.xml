@@ -88,33 +88,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="SetLeds: HvaColors"/>
-	<hidden field="Vector Front Left Drive"/>
-	<hidden field="Chassis Strafe: "/>
-	<hidden field="SetLeds: Off"/>
-	<hidden field="Vector Front Right Angle"/>
-	<hidden field="DriveDistance: OneFoot"/>
-	<hidden field="Vector Front Left Angle"/>
-	<hidden field="Strafe"/>
-	<hidden field="Vector Rear Left Angle"/>
-	<hidden field="SetLeds: Rainbow"/>
-	<hidden field="Chassis Gyro"/>
-	<hidden field="ChassisDrive"/>
-	<hidden field="Finished"/>
-	<hidden field="Vector Rear Right Angle"/>
-	<hidden field="Vector Rear Right Drive"/>
-	<hidden field="Vector Front Right Drive"/>
-	<hidden field="SetLeds: SolidRed"/>
-	<hidden field="Vector Rear Left Drive"/>
-	<hidden field="Chassis Forward: "/>
-	<hidden field="SetLeds: SolidGreen"/>
-	<hidden field="Gyro"/>
-	<hidden field="Led Timer"/>
-	<hidden field="LED Counter"/>
-	<hidden field="Angle"/>
-	<hidden field="DriveDistance: TwoFeet"/>
-	<hidden field="Forward"/>
-	<hidden field="SetLeds: ShootingAnimation"/>
-	<hidden field="Chassis Angle: "/>
-	<hidden field="SetLeds: Strobe"/>
 </xml>
