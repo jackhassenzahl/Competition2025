@@ -33,15 +33,13 @@ class Drivetrain : public frc2::SubsystemBase
 
         void            SetX();                                 // Sets the wheels into an X formation to prevent movement
 
-        void            ResetEncoders();                        // Resets the drive encoders to currently read a position of 0.
+        void            ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0.
 
         void            SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates);
 
-        units::degree_t GetHeading();                           // Returns the heading of the robot.
+        units::radian_t GetHeading();                           // Returns the heading of the robot.
 
         void            ZeroHeading();                          // Zeroes the heading of the robot.
-
-        double          GetTurnRate();                          // Returns the turn rate of the robot.
 
         frc::Pose2d     GetPose();                              // Returns the currently-estimated pose of the robot.
 
@@ -65,8 +63,8 @@ class Drivetrain : public frc2::SubsystemBase
         bool          m_fieldCentricity = false;                     // Field centricity flag
 
         SwerveModule  m_frontLeft;
-        SwerveModule  m_rearLeft;
         SwerveModule  m_frontRight;
+        SwerveModule  m_rearLeft;
         SwerveModule  m_rearRight;
 
         // Odometry class for tracking robot pose for the swerve modules modules

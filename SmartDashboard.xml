@@ -1,7 +1,25 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Wheel Velocity" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="409" y="289"/>
+	</widget>
+	<widget field="Rear Right correctedDesired Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="251" y="649"/>
+	</widget>
+	<widget field="Rear Left correctedDesired Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="255" y="623"/>
+	</widget>
+	<widget field="Front Right correctedDesired Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="249" y="596"/>
+	</widget>
+	<widget field="Front Left correctedDesired Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="253" y="569"/>
+	</widget>
+	<widget field="Wheel Position" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="406" y="260"/>
+	</widget>
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="238" y="321"/>
+		<location x="429" y="145"/>
 	</widget>
 	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="71" y="376"/>
@@ -17,7 +35,7 @@
 		<location x="390" y="51"/>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
-		<location x="35" y="64"/>
+		<location x="34" y="57"/>
 	</widget>
 	<widget field="Rear Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="42" y="516"/>
@@ -51,7 +69,7 @@
 		<location x="54" y="324"/>
 	</widget>
 	<widget field="Chassis Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="46" y="297"/>
+		<location x="45" y="300"/>
 	</widget>
 	<widget field="pose_0" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="589" y="450"/>

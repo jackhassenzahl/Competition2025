@@ -43,81 +43,61 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleEncoderCanId  = 13;
 
     constexpr int ElevatorMotorCanId                 = 20;
+    
+    constexpr auto MotorConfigurationAttempts        =  5; 
 }
 #pragma endregion
 
 #pragma region ChassisConstants
 namespace ChassisConstants
 {
-    constexpr auto NumberOfSwerveModules             =     4;
+    constexpr auto NumberOfSwerveModules             = 4;
 
     // Chassis configuration
     constexpr auto TrackWidth                        = 0.6731_m;  // Distance between centers of right and left wheels on robot
     constexpr auto WheelBase                         = 0.6731_m;  // Distance between centers of front and back wheels on robot
 
-    constexpr units::meters_per_second_t  MaxSpeed   = 4.8_mps;
-    constexpr units::radians_per_second_t MaxAngularSpeed{2 * std::numbers::pi};
-
-    constexpr auto DriveMotorVelocityConversion      = 1.0;
-    constexpr auto ModuleMaxAngularVelocity          = std::numbers::pi * 1_rad_per_s;       // radians per second
-    constexpr auto ModuleMaxAngularAcceleration      = std::numbers::pi * 2_rad_per_s / 1_s; // radians per second^2
+    constexpr auto MaxSpeed                          = 4.8_mps;
+    constexpr auto MaxAngularSpeed                   = std::numbers::pi * 2_rad_per_s;
 
     // Angular offsets of the modules relative to the chassis in radians
-    constexpr auto FrontLeftChassisAngularOffset     = -std::numbers::pi / 2;
-    constexpr auto FrontRightChassisAngularOffset    = 0.0;
-    constexpr auto RearLeftChassisAngularOffset      = std::numbers::pi;
-    constexpr auto RearRightChassisAngularOffset     = std::numbers::pi / 2;
-
-    constexpr auto MotorConfigurationAttempts        =     5;
-
-    constexpr auto SwerveDriveMaxAmperage            =  60_A;
-
-    constexpr auto SwerveAngleMaxAmperage            =    20;
-
-    constexpr auto SwerveMotorRevolutions            =    21.5;                                 // The number of motor revolutions per wheel revolutions
-    constexpr auto SwerveDegreesToMotorRevolutions   = 180.0 / (SwerveMotorRevolutions / 2.0);  // Degrees to motor revolutions	
+    constexpr auto FrontLeftChassisAngularOffset     = 0.0;   // -std::numbers::pi / 2;
+    constexpr auto FrontRightChassisAngularOffset    = 0.0;   //  0.0;
+    constexpr auto RearLeftChassisAngularOffset      = 0.0;   //  std::numbers::pi;
+    constexpr auto RearRightChassisAngularOffset     = 0.0;   //  std::numbers::pi / 2;
 }
 #pragma endregion
 
 #pragma region SwerveConstants
 namespace SwerveConstants
 {
-    constexpr auto FrontRightIndex        = 0;
-    constexpr auto FrontLeftIndex         = 1;
-    constexpr auto RearRightIndex         = 3;
-    constexpr auto RearLeftIndex          = 2;
+    // Define the absolute encoder value for forward
+    constexpr auto FrontRightForwardAngle =  0.301 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontLeftForwardAngle  = -0.464 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearRightForwardAngle  = -0.064 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearLeftForwardAngle   = -0.022 * 2.0_rad * std::numbers::pi;
 
-    constexpr auto FrontRightForwardAngle =  0.301 * 360_deg;
-    constexpr auto FrontLeftForwardAngle  = -0.464 * 360_deg;
-    constexpr auto RearRightForwardAngle  = -0.064 * 360_deg;
-    constexpr auto RearLeftForwardAngle   = -0.022 * 360_deg;
+    // Drive motor parameters
+    constexpr auto DriveMaxAmperage                =     60_A;
+    constexpr auto DriveMotorReduction             =     6.75;
+    constexpr auto WheelDiameter                   = 0.1016_m;
+    constexpr auto WheelCircumference              = WheelDiameter * std::numbers::pi;
+    constexpr auto DriveMotorVelocityConversion    = WheelCircumference / DriveMotorReduction;
+    
+    constexpr auto DriveP                          = 0.20;
+    constexpr auto DriveI                          = 0.10;
+    constexpr auto DriveD                          = 0.00;   
+    constexpr auto DriveV                          = 0.10;   
+    constexpr auto DriveA                          = 0.10;   
 
-    constexpr auto AngleP                 = 0.025;
-    constexpr auto AngleI                 = 0.000;
-    constexpr auto AngleD                 = 0.010;
+    // Angle motor parameters
+    constexpr auto AngleMaxAmperage                =   20;
+    constexpr auto AngleMotorRevolutions           = 21.5;  // The number of motor revolutions per wheel revolutions
+    constexpr auto AngleRadiansToMotorRevolutions  = (2.0 * std::numbers::pi) / AngleMotorRevolutions;  // Radians to motor revolutions	
 
-    constexpr auto DriveP                 = 0.025;
-    constexpr auto DriveI                 = 0.000;
-    constexpr auto DriveD                 = 0.010;    
-}
-#pragma endregion
-
-#pragma region ModuleConstants
-namespace ModuleConstants
-{
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
-    // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
-    // more teeth will result in a robot that drives faster).
-    constexpr int DrivingMotorPinionTeeth       = 14;
-
-    // Calculations required for driving motor conversion factors and feed forward
-    constexpr double DrivingMotorFreeSpeedRps   = 5676.0 / 60;  // NEO free speed is 5676 RPM
-    constexpr units::meter_t WheelDiameter      = 0.0762_m;
-    constexpr units::meter_t WheelCircumference = WheelDiameter * std::numbers::pi;
-
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-    constexpr double DrivingMotorReduction      = (45.0 * 22) / (DrivingMotorPinionTeeth * 15);
-    constexpr double DriveWheelFreeSpeedRps     = (DrivingMotorFreeSpeedRps * WheelCircumference.value()) / DrivingMotorReduction;
+    constexpr auto AngleP                          = 2.00;
+    constexpr auto AngleI                          = 0.00;
+    constexpr auto AngleD                          = 0.20;
 }
 #pragma endregion
 
@@ -151,11 +131,12 @@ namespace ControllerConstants
     constexpr auto JoystickStrafeIndex     =   0;
     constexpr auto JoystickAngleIndex      =   2;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
 
-    constexpr auto JoystickDeadZone        = 0.1;
+    constexpr auto JoystickDeadZone        = 0.05;
+    constexpr auto JoystickRotateDeadZone  = 0.15;
 
-    constexpr auto ExponentForward         = 2.0;
-    constexpr auto ExponentStrafe          = 2.0;
-    constexpr auto ExponentAngle           = 2.0;
+    constexpr auto ExponentForward         = 1.0;
+    constexpr auto ExponentStrafe          = 1.0;
+    constexpr auto ExponentAngle           = 1.0;
 }
 #pragma endregion
 

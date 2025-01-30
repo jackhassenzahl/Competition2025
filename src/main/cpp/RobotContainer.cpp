@@ -121,7 +121,7 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 #pragma endregion
 
 #pragma region SetSwerveWheelAnglesToZero
- /// @brief Method to set the swerve wheels to zero degrees based on the absolute encoder.
+ /// @brief Method to set the swerve wheels to starting position based on the absolute encoder.
  void RobotContainer::SetSwerveWheelAnglesToZero()
  {
     // Execute the command
@@ -173,7 +173,7 @@ units::radians_per_second_t RobotContainer::Angle()
     joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
 
     // Return the rotation speed
-    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickDeadZone)) * ChassisConstants::MaxAngularSpeed;
+    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickRotateDeadZone)) * ChassisConstants::MaxAngularSpeed;
 }
 #pragma endregion
 
@@ -186,10 +186,6 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 {
     int    direction = 1;
     double output    = 0.0;
-
-    // Ignore joystick input if it's too small
-    if (joystickValue > -ControllerConstants::JoystickDeadZone && joystickValue < ControllerConstants::JoystickDeadZone)
-        return 0.0;
 
     // Direction is either 1 or -1, based on joystick value
     if (joystickValue < 0.0)

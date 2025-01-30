@@ -9,15 +9,16 @@
 SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId, double chassisAngularOffset) :
                            m_driveMotor(driveMotorCanId, CanConstants::CanBus),
                            m_angleMotor(angleMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
-
                            m_chassisAngularOffset(chassisAngularOffset),
+                           m_angleEncoder(m_angleMotor.GetEncoder()),
+                           m_turnClosedLoopController(m_angleMotor.GetClosedLoopController()),
                            m_angleAbsoluteEncoder(angleEncoderCanId, CanConstants::CanBus)
 {
     // Configure the drive and angle motors
     ConfigureDriveMotor();
     ConfigureAngleMotor();
 
-    m_desiredState.angle = frc::Rotation2d(units::radian_t{m_turnAbsoluteEncoder.GetPosition()});
+    // Ensure the drive motor encoder is reset to zero
     m_driveMotor.SetPosition(0_tr);
 }
 #pragma endregion
@@ -26,25 +27,6 @@ SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEn
 /// @brief Method to configure the drive motor.
 void SwerveModule::ConfigureDriveMotor()
 {
-    // Use module constants to calculate conversion factors and feed forward gain.
-    double drivingFactor = ModuleConstants::WheelDiameter.value() *
-                           std::numbers::pi / ModuleConstants::DrivingMotorReduction;
-
-    double drivingVelocityFeedForward = 1 / ModuleConstants::DriveWheelFreeSpeedRps;
-
-    // drivingConfig
-    //     .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
-    //     .SmartCurrentLimit(50);
-    // drivingConfig.encoder
-    //     .PositionConversionFactor(drivingFactor)          // meters
-    //     .VelocityConversionFactor(drivingFactor / 60.0);  // meters per second
-    // drivingConfig.closedLoop
-    //     .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-    //     // These are example gains you may need to them for your own robot!
-    //     .Pid(0.04, 0, 0)
-    //     .VelocityFF(drivingVelocityFeedForward)
-    //     .OutputRange(-1, 1);
-
     // Create the drive motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration talonFXConfiguration{};
 
@@ -54,7 +36,7 @@ void SwerveModule::ConfigureDriveMotor()
 
     // Add the "Current Limits" section settings
     ctre::phoenix6::configs::CurrentLimitsConfigs &currentLimitsConfigs = talonFXConfiguration.CurrentLimits;
-    currentLimitsConfigs.StatorCurrentLimit       = ChassisConstants::SwerveDriveMaxAmperage;
+    currentLimitsConfigs.StatorCurrentLimit       = SwerveConstants::DriveMaxAmperage;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
 
     // Add the "Slot0" section settings
@@ -62,15 +44,16 @@ void SwerveModule::ConfigureDriveMotor()
     slot0Configs.kP = SwerveConstants::DriveP;
     slot0Configs.kI = SwerveConstants::DriveI;
     slot0Configs.kD = SwerveConstants::DriveD;
-    slot0Configs.kV = drivingVelocityFeedForward;
+    slot0Configs.kV = SwerveConstants::DriveV;
+    slot0Configs.kA = SwerveConstants::DriveA;
 
     // Add the "Feedback" section settings
-    ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = talonFXConfiguration.Feedback;
-    feedbackConfigs.SensorToMechanismRatio = drivingFactor;
+    // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = talonFXConfiguration.Feedback;
+    // feedbackConfigs.SensorToMechanismRatio = SwerveConstants::WheelCircumference.value() / SwerveConstants::DriveMotorReduction;
 
     // Apply the configuration to the drive motor
     ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
-    for (int attempt = 0; attempt < ChassisConstants::MotorConfigurationAttempts; attempt++)
+    for (int attempt = 0; attempt < CanConstants::MotorConfigurationAttempts; attempt++)
     {
         // Apply the configuration to the drive motor
         status = m_driveMotor.GetConfigurator().Apply(talonFXConfiguration);
@@ -90,33 +73,55 @@ void SwerveModule::ConfigureDriveMotor()
 /// @brief Method to configure the angle motor and encoder.
 void SwerveModule::ConfigureAngleMotor()
 {
+    // Configure the angle motor
     static rev::spark::SparkMaxConfig sparkMaxConfig{};
-
-    // Use module constants to calculate conversion factor
-    double turningFactor = 2 * std::numbers::pi;
 
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(ChassisConstants::SwerveAngleMaxAmperage);
-    sparkMaxConfig.absoluteEncoder
-        // Invert the turning encoder, since the output shaft rotates in the
-        // opposite direction of the steering motor in the MAXSwerve Module.
-        .Inverted(true)
-        .PositionConversionFactor(turningFactor)          // radians
-        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
+        .SmartCurrentLimit(SwerveConstants::AngleMaxAmperage);
+    sparkMaxConfig.encoder
+        //.Inverted(true)
+        .PositionConversionFactor(SwerveConstants::AngleRadiansToMotorRevolutions)
+        .VelocityConversionFactor(SwerveConstants::AngleRadiansToMotorRevolutions / 60.0);
     sparkMaxConfig.closedLoop
-        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
-        .Pid(SwerveConstants::AngleP, SwerveConstants::AngleI, SwerveConstants::AngleD)
-        .OutputRange(-1, 1)
+        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+        .Pid(SwerveConstants::AngleP, SwerveConstants::AngleI, SwerveConstants::AngleD);
+        //.OutputRange(-1, 1)
         // Enable PID wrap around for the turning motor. This will allow the
         // PID controller to go through 0 to get to the setpoint i.e. going
         // from 350 degrees to 10 degrees will go through 0 rather than the
         // other direction which is a longer route.
-        .PositionWrappingEnabled(true)
-        .PositionWrappingInputRange(0, turningFactor);
+        //.PositionWrappingEnabled(true)
+        //.PositionWrappingInputRange(0, 2 * std::numbers::pi);  TODO: Try these settings
 
     // Write the configuration to the motor controller
     m_angleMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+}
+#pragma endregion
+
+#pragma region SetDesiredState
+/// @brief Method to set the swerve module state to the desired state.
+/// @param desiredState The desired swerve module velocity and angle.
+/// @param description String to show the module state on the SmartDashboard.
+void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState, std::string description)
+{
+    frc::SmartDashboard::PutNumber(description + "Drive", (double) desiredState.speed);
+    frc::SmartDashboard::PutNumber(description + "Angle", (double) desiredState.angle.Degrees().value());
+    
+    // Apply chassis angular offset to the desired state.
+    frc::SwerveModuleState correctedDesiredState{};
+    correctedDesiredState.speed = desiredState.speed / SwerveConstants::DriveMotorVelocityConversion.value();
+    correctedDesiredState.angle = desiredState.angle + frc::Rotation2d(units::radian_t{m_chassisAngularOffset});
+
+    // Optimize the reference state to avoid spinning further than 90 degrees.
+    correctedDesiredState.Optimize(frc::Rotation2d(units::radian_t{m_angleEncoder.GetPosition()}));
+
+    // Set the motor speed
+    m_driveMotor.SetControl(ctre::phoenix6::controls::VelocityVoltage((units::angular_velocity::turns_per_second_t) correctedDesiredState.speed.value()));
+    m_turnClosedLoopController.SetReference(correctedDesiredState.angle.Radians().value(), rev::spark::SparkMax::ControlType::kPosition);
+
+    // Remeber the desired state
+    m_desiredState = desiredState;
 }
 #pragma endregion
 
@@ -126,11 +131,10 @@ void SwerveModule::ConfigureAngleMotor()
 frc::SwerveModuleState SwerveModule::GetState()
 {
     // Determine the module wheel velocity
-    double velocity = (double) m_driveMotor.GetVelocity().GetValue() / ChassisConstants::DriveMotorVelocityConversion;  // TODO: Determine DriveMotorVelocityConversion
+    double velocity = (double) m_driveMotor.GetVelocity().GetValue() * SwerveConstants::DriveMotorVelocityConversion.value();
 
     // Return the swerve module state
-    return {units::meters_per_second_t {velocity},
-            units::radian_t{m_turnAbsoluteEncoder.GetPosition() - m_chassisAngularOffset}};
+    return {units::meters_per_second_t {velocity}, units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset}};
 }
 #pragma endregion
 
@@ -142,41 +146,13 @@ frc::SwerveModulePosition SwerveModule::GetPosition()
     double position = (double) m_driveMotor.GetPosition().GetValue();
 
     // Return the swerve module position
-    return {units::meter_t{position},
-            units::radian_t{m_turnAbsoluteEncoder.GetPosition() - m_chassisAngularOffset}};
+    return {units::meter_t{position}, units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset}};
 }
 #pragma endregion
 
-#pragma region SetDesiredState
-/// @brief Method to set the swerve module state to the desired state.
-/// @param desiredState The desired swerve module velocity and angle.
-/// @param description String to show the module state on the SmartDashboard.
-void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState, std::string description)
-{
-    // Apply chassis angular offset to the desired state.
-    frc::SwerveModuleState correctedDesiredState{};
-    correctedDesiredState.speed = desiredState.speed;
-    correctedDesiredState.angle = desiredState.angle + frc::Rotation2d(units::radian_t{m_chassisAngularOffset});
-
-    // Optimize the reference state to avoid spinning further than 90 degrees.
-    correctedDesiredState.Optimize(frc::Rotation2d(units::radian_t{m_turnAbsoluteEncoder.GetPosition()}));
-
-    frc::SmartDashboard::PutString("Debug", "SetDesiredState: " + description);
-
-    frc::SmartDashboard::PutNumber(description + "Drive", (double) correctedDesiredState.speed );
-    frc::SmartDashboard::PutNumber(description + "Angle", (double) correctedDesiredState.angle.Degrees().value());
-
-    //m_driveClosedLoopController.SetReference((double)correctedDesiredState.speed, rev::spark::SparkMax::ControlType::kVelocity);  TODO: Set the drive motor state
-    m_turnClosedLoopController.SetReference(correctedDesiredState.angle.Radians().value(), rev::spark::SparkMax::ControlType::kPosition);
-
-    // Remeber the desired state
-    m_desiredState = desiredState;
-}
-#pragma endregion
-
-#pragma region ResetEncoders
+#pragma region ResetDriveEncoder
 // Reset the drive encoder position.
-void SwerveModule::ResetEncoders()
+void SwerveModule::ResetDriveEncoder()
 {
     m_driveMotor.SetPosition(0_tr);
 }
@@ -185,23 +161,26 @@ void SwerveModule::ResetEncoders()
 #pragma region SetWheelAngleToForward
 /// @brief Method to set the swerve wheel encoder to the forward angle.
 /// @param angle The absolute angle for the forward direction.
-void SwerveModule::SetWheelAngleToForward(units::angle::degree_t forwardAngle)
+void SwerveModule::SetWheelAngleToForward(units::angle::radian_t forwardAngle)
 {
+    // Ensure the drive motor encoder is reset to zero
+    m_driveMotor.SetPosition(0_tr);
+
     // Set the motor angle encoder position to the forward direction
-    m_angleMotor.GetEncoder().SetPosition(GetAbsoluteAngle().value() - forwardAngle.value());
+    m_angleMotor.GetEncoder().SetPosition(GetAbsoluteEncoderAngle().value() - forwardAngle.value());
 }
 #pragma endregion
 
-#pragma region GetAbsoluteAngle
-/// @brief Method to read the absolute encode in Degrees.
-/// @return The absolute angle value in degrees.
-units::angle::degree_t SwerveModule::GetAbsoluteAngle()
+#pragma region GetAbsoluteEncoderAngle
+/// @brief Method to read the absolute encode in radians.
+/// @return The absolute angle value in radians.
+units::angle::radian_t SwerveModule::GetAbsoluteEncoderAngle()
 {
     // The GetAbsolutePosition() method returns a value from -1 to 1
     double encoderValue = (double) m_angleAbsoluteEncoder.GetAbsolutePosition().GetValue();
 
-    // To convert to degrees
-    return encoderValue * 360_deg;
+    // To convert to radians
+    return encoderValue * 2.0_rad * std::numbers::pi;
 }
 #pragma endregion
 

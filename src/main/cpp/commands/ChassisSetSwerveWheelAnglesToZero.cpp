@@ -1,7 +1,7 @@
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 
 #pragma region ChassisSetSwerveWheelAnglesToZero (constructor)
-/// @brief Command to set the swerve wheels to the zero degree congiguration based on the absolute encode.
+/// @brief Command to set the swerve wheels to the starting position based on the absolute encode.
 ChassisSetSwerveWheelAnglesToZero::ChassisSetSwerveWheelAnglesToZero(Drivetrain *drivetrain) : m_drivetrain(drivetrain)
 {
     // Set the command name

@@ -31,15 +31,15 @@ class SwerveModule
 
         explicit                  SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId, double chassisAngularOffset);
 
+        void                      SetDesiredState(const frc::SwerveModuleState& state, std::string description);  // Sets the desired state for the module
+
         frc::SwerveModuleState    GetState();                                            // Returns the current state of the module
 
         frc::SwerveModulePosition GetPosition();                                         // Returns the current position of the module
 
-        void                      SetDesiredState(const frc::SwerveModuleState& state, std::string description);  // Sets the desired state for the module
+        void                      ResetDriveEncoder();                                   // Zeroes all the  encoders
 
-        void                      ResetEncoders();                                       // Zeroes all the  encoders
-
-        void                      SetWheelAngleToForward(units::angle::degree_t desiredAngle);
+        void                      SetWheelAngleToForward(units::angle::radian_t desiredAngle);
 
     private:
 
@@ -47,19 +47,18 @@ class SwerveModule
         void                       ConfigureDriveMotor();
         void                       ConfigureAngleMotor();
 
-        units::angle::degree_t     GetAbsoluteAngle();
+        units::angle::radian_t     GetAbsoluteEncoderAngle();
         units::meters_per_second_t GetDriveEncoderRate();
 
         ctre::phoenix6::hardware::TalonFX     m_driveMotor;
         rev::spark::SparkMax                  m_angleMotor;
 
-        rev::spark::SparkAbsoluteEncoder      m_turnAbsoluteEncoder      = m_angleMotor.GetAbsoluteEncoder();
+        rev::spark::SparkClosedLoopController m_turnClosedLoopController;
 
-        rev::spark::SparkClosedLoopController m_turnClosedLoopController = m_angleMotor.GetClosedLoopController();
-
-        double                                m_chassisAngularOffset     = 0;
-
-        frc::SwerveModuleState                m_desiredState{units::meters_per_second_t{0.0}, frc::Rotation2d()};
+        rev::spark::SparkRelativeEncoder      m_angleEncoder;
+        double                                m_chassisAngularOffset = 0;
 
         ctre::phoenix6::hardware::CANcoder    m_angleAbsoluteEncoder;
+
+        frc::SwerveModuleState                m_desiredState{units::meters_per_second_t{0.0}, frc::Rotation2d()};
 };

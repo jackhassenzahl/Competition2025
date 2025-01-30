@@ -44,7 +44,7 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
 
     // Apply the configuration to the drive motor
     ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
-    for (int attempt = 0; attempt < ChassisConstants::MotorConfigurationAttempts; attempt++)
+    for (int attempt = 0; attempt < CanConstants::MotorConfigurationAttempts; attempt++)
     {
         // Apply the configuration to the drive motor
         status = m_elevatorMotor->GetConfigurator().Apply(elevatorMotorConfiguration);
