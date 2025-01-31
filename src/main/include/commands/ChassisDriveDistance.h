@@ -1,7 +1,7 @@
 #pragma once
 
-#include <frc2/command/CommandHelper.h>
 #include <frc2/command/Command.h>
+#include <frc2/command/CommandHelper.h>
 
 #include "RobotContainer.h"
 
@@ -11,7 +11,7 @@ class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDr
 {
     public:
 
-        explicit ChassisDriveDistance(units::meter_t distance, units::meters_per_second_t speed, Drivetrain *drivetrain);
+        explicit ChassisDriveDistance(units::meter_t distance, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -22,7 +22,9 @@ class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDr
 
         units::meter_t             m_distance;         // The distance that the chassis will drive
         units::meters_per_second_t m_speed;            // The speed that the chassis will drive
+        units::time::second_t      m_timeoutTime;      // The time to stop the turn
         Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
         bool                       m_fieldCentricity;  // The field centricity setting (true = field centric, false = robot centric)
+        units::second_t            m_startTime;        // The start of the drive time
 };

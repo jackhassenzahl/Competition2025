@@ -5,7 +5,8 @@
 /// @param time The time to drive the robot.
 /// @param speed The speed to perform the drive.
 /// @param drivetrain The Drivetrains subsystem.
-ChassisDriveTime::ChassisDriveTime(units::second_t time, units::meters_per_second_t speed, Drivetrain *drivetrain) : m_time(time), m_speed(speed), m_drivetrain(drivetrain)
+ChassisDriveTime::ChassisDriveTime(units::second_t time, units::meters_per_second_t speed, Drivetrain *drivetrain) :
+                                   m_time(time), m_speed(speed), m_drivetrain(drivetrain)
 {
     // Set the command name
     SetName("ChassisDriveTime");

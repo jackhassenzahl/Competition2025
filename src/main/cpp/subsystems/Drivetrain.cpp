@@ -64,7 +64,7 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
     frc::SmartDashboard::PutNumber("Chassis Strafe",  (double) ySpeed);
     frc::SmartDashboard::PutNumber("Chassis Angle",   (double) rotation);
 
-    // Determine the swerve module states from teh 
+    // Determine the swerve module states from teh
     auto states = m_kinematics.ToSwerveModuleStates(m_fieldCentricity ?
                   frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, m_gyro.GetRotation2d()) :
                   frc::ChassisSpeeds{xSpeed, ySpeed, rotation});
@@ -75,7 +75,7 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
 #pragma endregion
 
 #pragma region SetX
-/// @brief 
+/// @brief
 void Drivetrain::SetX()
 {
     m_frontLeft. SetDesiredState(frc::SwerveModuleState{0_mps, frc::Rotation2d{ 45_deg}}, "Front Left " );
@@ -99,7 +99,7 @@ void Drivetrain::ResetDriveEncoders()
 
 #pragma region SetModuleStates
 /// @brief Method to set the swerve drive states.
-/// @param desiredStates 
+/// @param desiredStates
 void Drivetrain::SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates)
 {
     // Normalize the wheel speeds if any individual speed is above the specified maximum

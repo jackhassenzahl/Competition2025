@@ -1,5 +1,44 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Chassis: Time " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="410" y="67"/>
+	</widget>
+	<widget field="Chassis: AprilTag " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="394" y="178"/>
+	</widget>
+	<widget field="Chassis: Turn " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="411" y="150"/>
+	</widget>
+	<widget field="Chassis: TwoMeters" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="383" y="123"/>
+	</widget>
+	<widget field="Chassis: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="388" y="95"/>
+	</widget>
+	<widget field="Chassis: Stop" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="413" y="41"/>
+	</widget>
+	<widget field="AprilTag" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="644" y="472"/>
+	</widget>
+	<widget field="Rotation Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="914" y="516"/>
+	</widget>
+	<widget field="Rotation Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="913" y="492"/>
+	</widget>
+	<widget field="Rotation X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="912" y="469"/>
+	</widget>
+	<widget field="Pose Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="780" y="519"/>
+	</widget>
+	<widget field="Pose Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="780" y="494"/>
+	</widget>
+	<widget field="Pose X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="778" y="470"/>
+	</widget>
 	<widget field="Rear Left Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="32" y="597"/>
 	</widget>
@@ -25,20 +64,15 @@
 		<location x="224" y="511"/>
 	</widget>
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="429" y="145"/>
+		<location x="298" y="319"/>
+		<height>20</height>
 	</widget>
 	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="59" y="307"/>
 	</widget>
 	<widget field="Debug" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="318" y="187"/>
+		<location x="297" y="235"/>
 		<width>243</width>
-	</widget>
-	<widget field="DriveDistance: TwoMeters" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="384" y="84"/>
-	</widget>
-	<widget field="DriveDistance: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="390" y="51"/>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="34" y="57"/>
@@ -78,19 +112,6 @@
 	<widget field="Chassis Forward" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="38" y="233"/>
 	</widget>
-	<widget field="pose_0" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="589" y="450"/>
-		<width>494</width>
-	</widget>
-	<widget field="April Tag Z: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="588" y="529"/>
-	</widget>
-	<widget field="April Tag Y: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="587" y="504"/>
-	</widget>
-	<widget field="April Tag X: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="586" y="479"/>
-	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
 		<location x="614" y="10"/>
 		<width>515</width>
@@ -101,76 +122,25 @@
 		<location x="31" y="16"/>
 		<width>193</width>
 	</static-widget>
-	<widget field="ChassisDrive: Stop" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="421" y="20"/>
-	</widget>
-	<widget field="tags" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="748" y="424"/>
-	</widget>
-	<widget field="Detections: " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="588" y="423"/>
-	</widget>
 </dashboard>
 <live-window>
-	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<widget field="Talon FX (v6) [3]" type="Motor Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="16"/>
-			<height>45</height>
-			<width>293</width>
-		</widget>
-		<widget field="Talon FX (v6) [9]" type="Motor Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="61"/>
-			<height>45</height>
-			<width>293</width>
-		</widget>
-		<widget field="frc2::SubsystemBase" type="Subsystem" class="edu.wpi.first.smartdashboard.gui.elements.Subsystem">
-			<location x="6" y="106"/>
-			<height>20</height>
-			<width>293</width>
-		</widget>
-		<widget field="Scheduler" type="Scheduler" class="edu.wpi.first.smartdashboard.gui.elements.Scheduler">
-			<location x="6" y="126"/>
-			<height>14</height>
-			<width>293</width>
-		</widget>
-		<widget field="Talon FX (v6) [6]" type="Motor Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="140"/>
-			<height>45</height>
-			<width>293</width>
-		</widget>
-		<widget field="Talon FX (v6) [11]" type="Motor Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="185"/>
-			<height>45</height>
-			<width>293</width>
-		</widget>
-		<widget field="navX-Sensor[4]" type="Gyro" class="edu.wpi.first.smartdashboard.gui.elements.Compass">
-			<location x="6" y="230"/>
-			<height>150</height>
-			<width>293</width>
-		</widget>
-		<widget field="Talon FX (v6) [20]" type="Motor Controller" class="edu.wpi.first.smartdashboard.livewindow.elements.SpeedController">
-			<location x="6" y="380"/>
-			<height>45</height>
-			<width>293</width>
-		</widget>
-		<location x="0" y="23"/>
-		<width>305</width>
-		<height>431</height>
-	</widget>
-	<widget field="AprilTags" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
-		<location x="0" y="0"/>
-	</widget>
 </live-window>
-	<hidden field="Front Left correctedDesired Speed"/>
-	<hidden field="Wheel State Speed"/>
-	<hidden field="Rear Right correctedDesired Speed"/>
-	<hidden field="Wheel Position Angle"/>
-	<hidden field="SetWheelAngleToForward"/>
-	<hidden field="Wheel Velocity"/>
-	<hidden field="Wheel State Angle"/>
-	<hidden field="Wheel Positoin Distance"/>
-	<hidden field="Front Right correctedDesired Speed"/>
-	<hidden field="Rear Left correctedDesired Speed"/>
-	<hidden field="Wheel Position Distance"/>
-	<hidden field="Wheel Position"/>
+	<hidden field="Detections: "/>
+	<hidden field="DriveDistance: OneMeter"/>
+	<hidden field="April Tag Z: "/>
+	<hidden field="pose_10"/>
+	<hidden field="Time-out Timer"/>
+	<hidden field="tags"/>
+	<hidden field="DriveDistance: TwoMeters"/>
+	<hidden field="ChassisDrive: Stop"/>
+	<hidden field="Test[0]"/>
+	<hidden field="foundAprilTags"/>
+	<hidden field="Test[1]"/>
+	<hidden field="April Tag Y: "/>
+	<hidden field="End"/>
+	<hidden field="Test[2]"/>
+	<hidden field="Test Size"/>
+	<hidden field="April Tag X: "/>
+	<hidden field="Test[3]"/>
+	<hidden field="Pose Status"/>
 </xml>

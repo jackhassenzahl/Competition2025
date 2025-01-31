@@ -43,8 +43,8 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleEncoderCanId  = 13;
 
     constexpr int ElevatorMotorCanId                 = 20;
-    
-    constexpr auto MotorConfigurationAttempts        =  5; 
+
+    constexpr auto MotorConfigurationAttempts        =  5;
 }
 #pragma endregion
 
@@ -83,19 +83,19 @@ namespace SwerveConstants
     constexpr auto WheelDiameter                   = 0.1016_m;
     constexpr auto WheelCircumference              = WheelDiameter * std::numbers::pi;
     constexpr auto DriveMotorVelocityConversion    = WheelCircumference / DriveMotorReduction;
-    
-    constexpr auto DriveP                          = 0.20;
-    constexpr auto DriveI                          = 0.10;
-    constexpr auto DriveD                          = 0.00;   
-    constexpr auto DriveV                          = 0.10;   
-    constexpr auto DriveA                          = 0.10;   
+
+    constexpr auto DriveP                          = 0.10;
+    constexpr auto DriveI                          = 0.02;
+    constexpr auto DriveD                          = 0.00;
+    constexpr auto DriveV                          = 0.10;
+    constexpr auto DriveA                          = 0.10;
 
     // Angle motor parameters
     constexpr auto AngleMaxAmperage                =   20;
     constexpr auto AngleMotorRevolutions           = 21.5;  // The number of motor revolutions per wheel revolutions
     constexpr auto AngleRadiansToMotorRevolutions  = (2.0 * std::numbers::pi) / AngleMotorRevolutions;  // Radians to motor revolutions	
 
-    constexpr auto AngleP                          = 2.00;
+    constexpr auto AngleP                          = 1.00;
     constexpr auto AngleI                          = 0.00;
     constexpr auto AngleD                          = 0.20;
 }

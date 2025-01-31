@@ -1,16 +1,16 @@
-#include "commands/ChassisTurnAngle.h"
+#include "commands/ChassisDriveTurnAngle.h"
 
-#pragma region ChassisTurnAngle (constructor)
+#pragma region ChassisDriveTurnAngle (constructor)
 /// @brief Command to rotate the chassis to the specified angle.
 /// @param angle The desire robot angle.
-/// @param speed The speed to move the chiaais.
+/// @param speed The speed to move the chassis.
 /// @param timeoutTime The timeout time for the rotation.
 /// @param drivetrain The Drivetrain subsystem.
-ChassisTurnAngle::ChassisTurnAngle(units::angle::degrees angle, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) :
+ChassisDriveTurnAngle::ChassisDriveTurnAngle(units::angle::degree_t angle, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) :
                                    m_angle(angle), m_speed(speed), m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
     // Set the command name
-    SetName("ChassisTurnAngle");
+    SetName("ChassisDriveTurnAngle");
 
     // Declare subsystem dependencies
     AddRequirements(drivetrain);
@@ -19,8 +19,14 @@ ChassisTurnAngle::ChassisTurnAngle(units::angle::degrees angle, units::meters_pe
 
 #pragma region Initialize
 /// @brief Called just before this Command runs the first time.
-void ChassisTurnAngle::Initialize()
+void ChassisDriveTurnAngle::Initialize()
 {
+    // Remember the field centric setting
+    m_fieldCentricity = m_drivetrain->GetFieldCentricity();
+
+    // Do not use field coordinates
+    m_drivetrain->SetFieldCentricity(false);
+
     // Get the start time
     m_startTime = frc::GetTime();
 }
@@ -28,7 +34,7 @@ void ChassisTurnAngle::Initialize()
 
 #pragma region Execute
 /// @brief Called repeatedly when this Command is scheduled to run.
-void ChassisTurnAngle::Execute()
+void ChassisDriveTurnAngle::Execute()
 {
 
 }
@@ -37,9 +43,9 @@ void ChassisTurnAngle::Execute()
 #pragma region IsFinished
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
 /// @return True is the command has completed.
-bool ChassisTurnAngle::IsFinished()
+bool ChassisDriveTurnAngle::IsFinished()
 {
-    // Determine if the sequence is complete
+    // Determine if the time-out time has expired
     if (frc::GetTime() - m_startTime > m_timeoutTime)
         return true;
 
@@ -51,9 +57,12 @@ bool ChassisTurnAngle::IsFinished()
 #pragma region End
 /// @brief Called once after isFinished returns true.
 /// @param interrupted Indicated that the command was interrupted.
-void ChassisTurnAngle::End(bool interrupted)
+void ChassisDriveTurnAngle::End(bool interrupted)
 {
     // Stop the move
     m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s);
+
+    // Restore the field centricity
+    m_drivetrain->SetFieldCentricity(m_fieldCentricity);
 }
 #pragma endregion

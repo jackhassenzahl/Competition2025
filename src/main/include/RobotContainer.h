@@ -21,15 +21,19 @@
 #include "subsystems/Leds.h"
 
 // Commands
+#include "commands/AutonomousComplex.h"
 #include "commands/AutonomousDoNothing.h"
 #include "commands/AutonomousLed.h"
 #include "commands/AutonomousParallel.h"
-#include "commands/AutonomousComplex.h"
+#include "commands/AutonomousRaceGroup.h"
 #include "commands/ChassisDrive.h"
 #include "commands/ChassisDriveDistance.h"
 #include "commands/ChassisDriveTime.h"
+#include "commands/ChassisDriveToAprilTag.h"
+#include "Commands/ChassisDriveTurnAngle.h"
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
+#include "commands/ElevatorSetHeight.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"

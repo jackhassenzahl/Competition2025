@@ -1,25 +1,20 @@
 #include "subsystems/AprilTags.h"
 
-#if defined(__linux__) || defined(_WIN32)
-
 static void VisionThread();
 
 #pragma region AprilTags (constructor)
-AprilTags::AprilTags()
+AprilTags::AprilTags() : m_instance(nt::NetworkTableInstance::GetDefault()),
+                         m_aprilTagsTable(m_instance.GetTable("apriltags")),
+                         m_aprilTagsIntegerArrayTopic(m_aprilTagsTable->GetIntegerArrayTopic("tags")),
+                         m_aprilTagsIntegerArraySubscriber(m_aprilTagsIntegerArrayTopic.Subscribe({}))
 {
     SetName("AprilTags");
 
     SetSubsystem("AprilTags");
 
-#if defined(__linux__) || defined(_WIN32)
-    // We need to run our vision program in a separate thread. If not, our robot
-    // program will not run.
+    // Need to run the vision program in a separate thread
     std::thread visionThread(VisionThread);
     visionThread.detach();
-#else
-    std::fputs("Vision only available on Linux or Windows.\n", stderr);
-    std::fflush(stderr);
-#endif
 }
 #pragma endregion
 
@@ -27,7 +22,110 @@ AprilTags::AprilTags()
 // This method will be called once per scheduler run
 void AprilTags::Periodic()
 {
+    // Read Apriltag information to Network Table
+    auto foundAprilTags = m_aprilTagsIntegerArraySubscriber.Get();
 
+    //frc::SmartDashboard::PutNumber("foundAprilTags", foundAprilTags.size());
+
+    // Clear the AprilTag vector
+    m_detectedAprilTags.clear();
+
+    // Determine if any AprilTags were detected
+    for (auto aprilTagIndex = 0; aprilTagIndex < foundAprilTags.size(); aprilTagIndex++)
+    {
+        AprilTagInformation aprilTagInformation;
+
+        // Get the AprilTag identification
+        aprilTagInformation.Identification = foundAprilTags[aprilTagIndex];
+
+        //frc::SmartDashboard::PutNumber("AprilTag", aprilTagInformation.Identification);
+
+        // Retrieve the entry using the GetEntry method
+        nt::NetworkTableEntry entry = m_aprilTagsTable->GetEntry(fmt::format("pose_{}", aprilTagInformation.Identification));
+
+        // Read the value from the entry
+        std::vector<double> poseValues = entry.GetDoubleArray({});
+
+        // Check if the entry has values and use them
+        if (!poseValues.empty())
+        {
+            aprilTagInformation.X         = poseValues[0];
+            aprilTagInformation.Y         = poseValues[1];
+            aprilTagInformation.Z         = poseValues[2];
+            aprilTagInformation.rotationX = poseValues[3];
+            aprilTagInformation.rotationY = poseValues[4];
+            aprilTagInformation.rotationZ = poseValues[5];
+
+            // // Use the retrieved values (e.g., display them on the SmartDashboard)
+            // frc::SmartDashboard::PutNumber("Pose X",     aprilTagInformation.X);
+            // frc::SmartDashboard::PutNumber("Pose Y",     aprilTagInformation.Y);
+            // frc::SmartDashboard::PutNumber("Pose Z",     aprilTagInformation.Z);
+            // frc::SmartDashboard::PutNumber("Rotation X", aprilTagInformation.rotationX);
+            // frc::SmartDashboard::PutNumber("Rotation Y", aprilTagInformation.rotationY);
+            // frc::SmartDashboard::PutNumber("Rotation Z", aprilTagInformation.rotationZ);
+        }
+
+        // Add the AprilTag to the found vector
+        m_detectedAprilTags.push_back(aprilTagInformation);
+    }
+}
+#pragma endregion
+
+#pragma region GetTag
+/// @brief Method to get the specified AprilTag by identification.
+/// @param id The AprilTag identificaton to get.
+/// @param aprilTagInformation Reference to return the AprilTag information.
+/// @return true to indicate that the AprilTag information is available.
+bool AprilTags::GetTag(int id, AprilTagInformation &aprilTagInformation)
+{
+    // Search through all found AprilTags
+    for (auto aprilTagIndex = 0; aprilTagIndex < m_detectedAprilTags.size(); aprilTagIndex++)
+    {
+        // Determine if the specified AprilTag was detected
+        if (id == m_detectedAprilTags[aprilTagIndex].Identification)
+        {
+            // Copy the AprilTag information and return
+            aprilTagInformation =  m_detectedAprilTags[aprilTagIndex];
+            return true;
+        }
+    }
+
+    // Indicate that the specified AprilTag was not found
+    return false;
+}
+#pragma endregion
+
+#pragma region
+/// @brief Method to get the closest AprilTag.
+/// @param aprilTagInformation Reference to return the AprilTag information.
+/// @return true to indicate that the AprilTag information is available.
+bool AprilTags::GetClosestTag(AprilTagInformation &aprilTagInformation)
+{
+    // Determine if any AprilTags have been found
+    if (m_detectedAprilTags.size() == 0)
+        return false;
+
+    // If only one AprilTag is detected, then return it
+    else if (m_detectedAprilTags.size() == 1)
+    {
+        // Copy the AprilTag information and return
+        aprilTagInformation = m_detectedAprilTags[0];
+        return true;
+    }
+
+    // Assume the first AprilTag is the closest
+    aprilTagInformation = m_detectedAprilTags[0];
+
+    // Search through the remainin found AprilTags
+    for (auto aprilTagIndex = 1; aprilTagIndex < m_detectedAprilTags.size(); aprilTagIndex++)
+    {
+        // Determine if the new AprilTag is closer
+        if (m_detectedAprilTags[aprilTagIndex].Z < aprilTagInformation.Z)
+            aprilTagInformation = m_detectedAprilTags[aprilTagIndex];
+    }
+
+    // Indicate that an AprilTag was detected
+    return true;
 }
 #pragma endregion
 
@@ -35,8 +133,16 @@ void AprilTags::Periodic()
 /// @brief
 static void VisionThread()
 {
-    // Declaring AprilTagDetector:
-    frc::AprilTagDetector detector;
+    frc::AprilTagDetector             detector;                                                // Declaring AprilTagDetector
+    cv::Mat                           mat;                                                     // Matrix representing the image
+    cv::Mat                           grayMat;                                                 // Matrix representing the gray scale image
+    std::vector<int64_t>              detectedTags;                                            // Vector containing all the tags currently detected.
+    cv::Scalar                        outlineColor                   = cv::Scalar(0, 255, 0);  // Color of the lines outlineing the april tags
+    cv::Scalar                        crossColor                     = cv::Scalar(0, 0, 255);  // Color of the cross in the center of the april tags
+    nt::NetworkTableInstance          instance                       = nt::NetworkTableInstance::GetDefault();
+    std::shared_ptr<nt::NetworkTable> aprilTagsTable                 = instance.GetTable("apriltags");
+    nt::IntegerArrayTopic             aprilTagsIntegerArrayTopic     = aprilTagsTable->GetIntegerArrayTopic("tags");
+    nt::IntegerArrayPublisher         aprilTagsIntegerArrayPublisher= aprilTagsIntegerArrayTopic.Publish();
 
     // look for tag36h11
     detector.AddFamily("tag36h11", ApriltagConstants::NumberOfBitsCorrected);
@@ -49,7 +155,7 @@ static void VisionThread()
         .fx = ApriltagConstants::CameraWidthInPixels,     // The width of the camera in pixels
         .fy = ApriltagConstants::CameraHeightInPixels,    // The Hight of the camera in pixels
         .cx = ApriltagConstants::CameraCenterXInPixels,   // The center focus point of the camera x pos
-        .cy = ApriltagConstants::CameraCenterXInPixels    // The center focus point of the camera y pos
+        .cy = ApriltagConstants::CameraCenterYInPixels    // The center focus point of the camera y pos
     };
 
     // Making estimator to estimate the tag's possition wich somehow makes it more accurate.
@@ -67,21 +173,6 @@ static void VisionThread()
     // Setup a CvSource. This will send images back to the Dashboard
     cs::CvSource outputStream = frc::CameraServer::PutVideo("Detected", ApriltagConstants::CameraResolutionWidth, ApriltagConstants::CameraResolutionHeight);
 
-    /// @brief Matrix representing the image
-    cv::Mat mat;
-
-    /// @brief Matrix representing the image... but in grayscale. Who needs
-    cv::Mat grayMat;
-
-    /// @brief vector containing all the tags currently detected.
-    std::vector<int> detectedTags;
-
-    /// @brief color of the lines outlineing the april tags
-    cv::Scalar outlineColor = cv::Scalar(0, 255, 0);
-
-    /// @brief color of the cross in the center of the april tags
-    cv::Scalar crossColor = cv::Scalar(0, 0, 255);
-
     while (true)
     {
         // Tell the CvSink to grab a frame from the camera and put it in the source mat.
@@ -96,20 +187,15 @@ static void VisionThread()
            continue;
         }
 
-        // If GrabFrame(mat) didn't return 0, then mat now stores the current frame.
-
         // Make grayMat the same as mat(The current Frame), but in grayscale.
         cv::cvtColor(mat, grayMat, cv::COLOR_BGR2GRAY);
 
-        /// @brief Stores a bunch of information on the grayMat's size, but we just use it for width and height.
+        // Stores a bunch of information on the grayMat's size, but we just use it for width and height.
         cv::Size grayMatSize = grayMat.size();
         frc::AprilTagDetector::Results detections = detector.Detect(grayMatSize.width, grayMatSize.height, grayMat.data);
 
         // Have not seen any tags yet, so detectedTags should not have anything in it.
         detectedTags.clear();
-
-        // Putting the number of April Tags detected on SmartDashboard:
-        frc::SmartDashboard::PutNumber("Detections: ", detections.size());
 
         // If there are no detections then there is no point in looping through all the items in it.
         if (detections.size() > 0)
@@ -117,10 +203,10 @@ static void VisionThread()
             // Looping through all the detections. detection is the current detecion that the loop is on.
             for (const frc::AprilTagDetection *detection : detections)
             {
-                // We see a tag, and we need to remember that we have seen this tag, so we put all the tags we detect in this nice vector.
+                // Remember the detected tag (add to vector)
                 detectedTags.push_back(detection->GetId());
 
-                // draw lines around the tag
+                // Draw lines around the tag
                 for (auto cornerIndex = 0; cornerIndex <= (ApriltagConstants::NumberOfAprilTagCorners - 1); cornerIndex++)
                 {
                     int nextCornerIndex = (cornerIndex + 1) % ApriltagConstants::NumberOfAprilTagCorners;
@@ -146,51 +232,26 @@ static void VisionThread()
                 // identify the tag, and putting the tag name next to the cross in the center of the April tag
                 putText(mat, std::to_string(detection->GetId()), cv::Point(c.x + crossSize, c.y), cv::FONT_HERSHEY_SIMPLEX, 1, crossColor, 3);
 
-                // determine pose
+                // Determine pose
                 frc::Transform3d pose = estimator.Estimate(*detection);
 
-                // Putting the april tag possition on SmartDashboard:
-                frc::SmartDashboard::PutNumber("April Tag X: ", (double) pose.X());
-                frc::SmartDashboard::PutNumber("April Tag Y: ", (double) pose.Y());
-                frc::SmartDashboard::PutNumber("April Tag Z: ", (double) pose.Z());
-
-                // putting the April Tag's position a string so that we can put the string onto SmartDashboard:
-                std::stringstream dashboardString;
-                dashboardString << "Translation: " << units::length::to_string(pose.X())
-                                << ", " << units::length::to_string(pose.Y()) << ", "
-                                << units::length::to_string(pose.Z());
-
-                // Putting the April Tag's rotation into the string so that we can put the string onto SmartDashboard
+                // Add the pose to the Network Table
                 frc::Rotation3d rotation = pose.Rotation();
-                dashboardString << "; Rotation: "
-                                << units::angle::to_string(rotation.X()) << ", "
-                                << units::angle::to_string(rotation.Y()) << ", "
-                                << units::angle::to_string(rotation.Z());
-
-                // Putting the april tag's rotation and position onto SmartDashboard:
-                frc::SmartDashboard::PutString("pose_" + std::to_string(detection->GetId()), dashboardString.str());
+                aprilTagsTable->GetEntry(fmt::format("pose_{}", detection->GetId())).SetDoubleArray(
+                        {{ pose.X().value(),
+                           pose.Y().value(),
+                           pose.Z().value(),
+                           rotation.X().value(),
+                           rotation.Y().value(),
+                           rotation.Z().value() }});
             }
         }
 
-        // string we will put detectedTags into so that we can put it onto SmartDashboard
-        std::stringstream detectedTagsString;
-        if (detectedTags.size() > 0)
-        {
-            if (detectedTags.size() > 1)
-            {
-                // Copying detectedTags into detectedTagsString. We will put detectedTagsString onto SmartDashboard later.
-                std::copy(detectedTags.begin(), detectedTags.end() - 1, std::ostream_iterator<int>(detectedTagsString, ","));
-            }
+        // Put list of tags onto Network Table
+        aprilTagsIntegerArrayPublisher.Set(detectedTags);
 
-            detectedTagsString << detectedTags.back();
-        }
-
-    // Putting all of the detected tags onto smartDashboard:
-    frc::SmartDashboard::PutString("tags", detectedTagsString.str());
-
-    // Give the output stream a new image to display
-    outputStream.PutFrame(mat);
+        // Give the output stream a new image to display
+        outputStream.PutFrame(mat);
     }
 }
-#endif
 #pragma endregion

@@ -5,7 +5,8 @@
 /// @param distance The distance to drive the robot.
 /// @param speed The speed to perform the drive.
 /// @param drivetrain The Drivetrains subsystem.
-ChassisDriveDistance::ChassisDriveDistance(units::meter_t distance, units::meters_per_second_t speed, Drivetrain *drivetrain) : m_distance(distance), m_speed(speed), m_drivetrain(drivetrain)
+ChassisDriveDistance::ChassisDriveDistance(units::meter_t distance, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) :
+                                           m_distance(distance), m_speed(speed), m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
     // Set the command name
     SetName("ChassisDriveDistance");
@@ -24,6 +25,9 @@ void ChassisDriveDistance::Initialize()
 
     // Do not use field coordinates
     m_drivetrain->SetFieldCentricity(false);
+
+    // Get the start time
+    m_startTime = frc::GetTime();
 }
 #pragma endregion
 
@@ -41,8 +45,12 @@ void ChassisDriveDistance::Execute()
 /// @return True is the command has completed.
 bool ChassisDriveDistance::IsFinished()
 {
-    // Execute only runs once
-    return true;
+    // Determine if the time-out time has expired
+    if (frc::GetTime() - m_startTime > m_timeoutTime)
+        return true;
+
+   // Still driving
+    return false;
 }
 #pragma endregion
 

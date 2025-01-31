@@ -85,13 +85,13 @@ void SwerveModule::ConfigureAngleMotor()
         .VelocityConversionFactor(SwerveConstants::AngleRadiansToMotorRevolutions / 60.0);
     sparkMaxConfig.closedLoop
         .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        .Pid(SwerveConstants::AngleP, SwerveConstants::AngleI, SwerveConstants::AngleD);
+        .Pid(SwerveConstants::AngleP, SwerveConstants::AngleI, SwerveConstants::AngleD)
         //.OutputRange(-1, 1)
         // Enable PID wrap around for the turning motor. This will allow the
         // PID controller to go through 0 to get to the setpoint i.e. going
         // from 350 degrees to 10 degrees will go through 0 rather than the
         // other direction which is a longer route.
-        //.PositionWrappingEnabled(true)
+        .PositionWrappingEnabled(true);
         //.PositionWrappingInputRange(0, 2 * std::numbers::pi);  TODO: Try these settings
 
     // Write the configuration to the motor controller
@@ -107,7 +107,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState, s
 {
     frc::SmartDashboard::PutNumber(description + "Drive", (double) desiredState.speed);
     frc::SmartDashboard::PutNumber(description + "Angle", (double) desiredState.angle.Degrees().value());
-    
+
     // Apply chassis angular offset to the desired state.
     frc::SwerveModuleState correctedDesiredState{};
     correctedDesiredState.speed = desiredState.speed / SwerveConstants::DriveMotorVelocityConversion.value();
@@ -167,7 +167,9 @@ void SwerveModule::SetWheelAngleToForward(units::angle::radian_t forwardAngle)
     m_driveMotor.SetPosition(0_tr);
 
     // Set the motor angle encoder position to the forward direction
-    m_angleMotor.GetEncoder().SetPosition(GetAbsoluteEncoderAngle().value() - forwardAngle.value());
+    m_angleMotor.GetEncoder().SetPosition(forwardAngle.value() - GetAbsoluteEncoderAngle().value());
+
+    m_turnClosedLoopController.SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);
 }
 #pragma endregion
 

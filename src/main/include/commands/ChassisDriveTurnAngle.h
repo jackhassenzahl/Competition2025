@@ -7,11 +7,11 @@
 
 #include "subsystems/Drivetrain.h"
 
-class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveTime>
+class ChassisDriveTurnAngle : public frc2::CommandHelper<frc2::Command, ChassisDriveTurnAngle>
 {
     public:
 
-        explicit ChassisDriveTime(units::second_t time, units::meters_per_second_t speed, Drivetrain *drivetrain);
+        explicit ChassisDriveTurnAngle(units::angle::degree_t angle, units::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -20,8 +20,9 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 
     private:
 
-        units::second_t            m_time;             // The length of time that the chass will drive
+        units::angle::degree_t     m_angle;            // The angle to turn
         units::meters_per_second_t m_speed;            // The speed that the chassis will drive
+        units::time::second_t      m_timeoutTime;      // The time to stop the turn
         Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
         bool                       m_fieldCentricity;  // The field centricity setting (true = field centric, false = robot centric)

@@ -24,20 +24,23 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("ChassisDrive: Stop",       new ChassisDriveDistance(0_m, 0_mps,   &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, &m_drivetrain));
-    frc::SmartDashboard::PutData("DriveDistance: TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Stop",      new ChassisDriveDistance(0_m,     0_mps,   0_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Time ",     new ChassisDriveTime(2_s,         0.5_mps,                    &m_drivetrain));    
+    frc::SmartDashboard::PutData("Chassis: OneMeter",  new ChassisDriveDistance(1_m,     0.5_mps, 5_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters", new ChassisDriveDistance(2_m,     0.5_mps, 5_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",     new ChassisDriveTurnAngle(45_deg, 0.5_mps, 5_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ", new ChassisDriveToAprilTag(       0.5_mps, 5_s, &m_aprilTags, &m_drivetrain));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
     // Configure the autonomous command chooser
     m_autonomousChooser.SetDefaultOption("Do Nothing",       new AutonomousDoNothing());
-    m_autonomousChooser.AddOption("Drive Forward OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, &m_drivetrain));
-    m_autonomousChooser.AddOption("Drive Forward TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, 5_s, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, 5_s, &m_drivetrain));
     m_autonomousChooser.AddOption("Led Autonomous",          new AutonomousLed(&m_leds));
-    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds,        &m_drivetrain));
-    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,         &m_drivetrain));
+    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds,             &m_drivetrain));
+    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,              &m_drivetrain));
 
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);

@@ -5,13 +5,14 @@
 
 #include "RobotContainer.h"
 
+#include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
 
-class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveTime>
+class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, ChassisDriveToAprilTag>
 {
     public:
 
-        explicit ChassisDriveTime(units::second_t time, units::meters_per_second_t speed, Drivetrain *drivetrain);
+        explicit ChassisDriveToAprilTag(units::meters_per_second_t speed, units::time::second_t timeoutTime, AprilTags *aprilTags, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -20,8 +21,9 @@ class ChassisDriveTime : public frc2::CommandHelper<frc2::Command, ChassisDriveT
 
     private:
 
-        units::second_t            m_time;             // The length of time that the chass will drive
-        units::meters_per_second_t m_speed;            // The speed that the chassis will drive
+        units::meters_per_second_t m_speed;            // The speed of the chassis
+        units::time::second_t      m_timeoutTime;      // The time to stop the turn
+        AprilTags                 *m_aprilTags;        // The AprilTag subsystem
         Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
         bool                       m_fieldCentricity;  // The field centricity setting (true = field centric, false = robot centric)
