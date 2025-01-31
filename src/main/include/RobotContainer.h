@@ -4,12 +4,16 @@
 
 #include <frc/MathUtil.h>
 #include <frc/XboxController.h>
+#include <frc/trajectory/Trajectory.h>
+#include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/button/POVButton.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
+#include <frc2/command/SwerveControllerCommand.h>
+#include <frc2/command/InstantCommand.h>
 
 #include <frc/Joystick.h>
 #include <frc/filter/SlewRateLimiter.h>
@@ -62,6 +66,8 @@ class RobotContainer
 
         void                        SetPeriod(units::second_t period);
         units::second_t             GetPeriod();
+
+        frc2::Command              *GetTrajectoryCommand();
 
     private:
 

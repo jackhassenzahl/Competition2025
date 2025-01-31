@@ -209,3 +209,19 @@ namespace LedConstants
     constexpr auto HvaDelay    =  20;  // The delay between HVA color changes
 }
 #pragma endregion
+
+#pragma region AutoConstantsResetEncoders
+namespace AutoConstants
+{
+    constexpr auto   MaxSpeed                   = 3_mps;
+    constexpr auto   MaxAcceleration            = 3_mps_sq;
+    constexpr auto   MaxAngularSpeed            = 3.142_rad_per_s;
+    constexpr auto   MaxAngularAcceleration     = 3.142_rad_per_s_sq;
+
+    constexpr double PXController               = 0.5;
+    constexpr double PYController               = 0.5;
+    constexpr double PThetaController           = 0.5;
+
+    extern const frc::TrapezoidProfile<units::radians>::Constraints ThetaControllerConstraints;
+}
+#pragma endregion
