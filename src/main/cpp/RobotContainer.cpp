@@ -158,7 +158,7 @@ double RobotContainer::Strafe()
     joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::JoystickDeadZone, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
-    return -joystickStrafe;
+    return joystickStrafe;
 }
 #pragma endregion
 
