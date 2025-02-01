@@ -24,13 +24,16 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("Chassis: Stop",      new ChassisDriveDistance(0_m,     0_mps,   0_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Time ",     new ChassisDriveTime(2_s,         0.5_mps,                    &m_drivetrain));    
-    frc::SmartDashboard::PutData("Chassis: OneMeter",  new ChassisDriveDistance(1_m,     0.5_mps, 5_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters", new ChassisDriveDistance(2_m,     0.5_mps, 5_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",     new ChassisDriveTurnAngle(45_deg, 0.5_mps, 5_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ", new ChassisDriveToAprilTag(       0.5_mps, 5_s, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Stop",       new ChassisDriveDistance(0_m,     0_mps,   0_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Time ",      new ChassisDriveTime(2_s,         0.5_mps,                    &m_drivetrain));   
+    frc::SmartDashboard::PutData("Chassis: OneMeter",   new ChassisDriveDistance(1_m,     0.5_mps, 5_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",  new ChassisDriveDistance(2_m,     0.5_mps, 5_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",      new ChassisDriveTurnAngle(45_deg, 0.5_mps, 5_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",  new ChassisDriveToAprilTag(       0.5_mps, 5_s, &m_aprilTags, &m_drivetrain));
 
+    frc::SmartDashboard::PutData("Elevator: Zero",      new ElevatorSetHeight(0_m, &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: OneMeter",  new ElevatorSetHeight(1_m, &m_elevator));
+       
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 

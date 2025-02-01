@@ -22,7 +22,7 @@ class ChassisDriveDistance : public frc2::CommandHelper<frc2::Command, ChassisDr
 
         units::meter_t             m_distance;         // The distance that the chassis will drive
         units::meters_per_second_t m_speed;            // The speed that the chassis will drive
-        units::time::second_t      m_timeoutTime;      // The time to stop the turn
+        units::time::second_t      m_timeoutTime;      // The command time-out time
         Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
         bool                       m_fieldCentricity;  // The field centricity setting (true = field centric, false = robot centric)

@@ -22,7 +22,7 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
 
     // Add the Motor Output section settings
     ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = elevatorMotorConfiguration.MotorOutput;
-    motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+    motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = elevatorMotorConfiguration.Slot0;
     slot0Configs.kS = ElevatorContants::S;
@@ -32,9 +32,9 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
     slot0Configs.kI = ElevatorContants::I;
     slot0Configs.kD = ElevatorContants::D;
 
-    // Configure gear ratio
-    ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = elevatorMotorConfiguration.Feedback;
-    feedbackConfigs.SensorToMechanismRatio = ElevatorContants::SensorToMechanismRatio;
+    // // Configure gear ratio
+    // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = elevatorMotorConfiguration.Feedback;
+    // feedbackConfigs.SensorToMechanismRatio = ElevatorContants::SensorToMechanismRatio;
 
     // Configure Motion Magic
     ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = elevatorMotorConfiguration.MotionMagic;

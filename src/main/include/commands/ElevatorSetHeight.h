@@ -16,6 +16,6 @@ class ElevatorSetHeight : public frc2::CommandHelper<frc2::Command, ElevatorSetH
 
     private:
 
-        units::length::meter_t m_height;
-        Elevator              *m_elevator;
+        units::length::meter_t     m_height;
+        Elevator                  *m_elevator;
 };

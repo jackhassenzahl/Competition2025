@@ -104,20 +104,18 @@ namespace SwerveConstants
 #pragma region ElevatorContants
 namespace ElevatorContants
 {
-    constexpr auto S                               = 0.25;             // Static Friction: Add [voltage] output to overcome static friction
-    constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
-    constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
-    constexpr auto P                               = 60.0;             // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                               =  0.0;             // Integral:        No output for integrated error
-    constexpr auto D                               =  0.5;             // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 1.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto SensorToMechanismRatio          = 12.8;             // 12.8 rotor rotations per mechanism rotation
+    constexpr auto MotionMagicCruiseVelocity       = 100_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
 
-    constexpr auto MotionMagicCruiseVelocity       = 5_tps;            // 5 (mechanism) rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 10_tr_per_s_sq;   // Take approximately 0.5 seconds to reach max vel
-    constexpr auto MotionMagicJerk                 = 100_tr_per_s_cu;  // Take approximately 0.1 seconds to reach max accel
-
-    constexpr auto PositionToTurnsConversionFactor = 1.0;
+    constexpr auto PositionToTurnsConversionFactor = 100.0;            // The number of rotation per meter
 }
 #pragma endregion
 

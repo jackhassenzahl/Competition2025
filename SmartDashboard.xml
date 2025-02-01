@@ -1,5 +1,11 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Elevator: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="384" y="259"/>
+	</widget>
+	<widget field="Elevator: Zero" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="411" y="232"/>
+	</widget>
 	<widget field="Chassis: Time " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="410" y="67"/>
 	</widget>
@@ -64,14 +70,14 @@
 		<location x="224" y="511"/>
 	</widget>
 	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="298" y="319"/>
+		<location x="51" y="354"/>
 		<height>20</height>
 	</widget>
 	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="59" y="307"/>
 	</widget>
 	<widget field="Debug" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="297" y="235"/>
+		<location x="303" y="330"/>
 		<width>243</width>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
@@ -125,22 +131,5 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Detections: "/>
-	<hidden field="DriveDistance: OneMeter"/>
-	<hidden field="April Tag Z: "/>
-	<hidden field="pose_10"/>
-	<hidden field="Time-out Timer"/>
-	<hidden field="tags"/>
-	<hidden field="DriveDistance: TwoMeters"/>
-	<hidden field="ChassisDrive: Stop"/>
-	<hidden field="Test[0]"/>
-	<hidden field="foundAprilTags"/>
-	<hidden field="Test[1]"/>
-	<hidden field="April Tag Y: "/>
-	<hidden field="End"/>
-	<hidden field="Test[2]"/>
-	<hidden field="Test Size"/>
-	<hidden field="April Tag X: "/>
-	<hidden field="Test[3]"/>
-	<hidden field="Pose Status"/>
+	<hidden field="Elevator: TwoMeters"/>
 </xml>

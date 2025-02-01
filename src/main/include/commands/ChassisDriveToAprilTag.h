@@ -22,7 +22,7 @@ class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, Chassis
     private:
 
         units::meters_per_second_t m_speed;            // The speed of the chassis
-        units::time::second_t      m_timeoutTime;      // The time to stop the turn
+        units::time::second_t      m_timeoutTime;      // The command time-out time
         AprilTags                 *m_aprilTags;        // The AprilTag subsystem
         Drivetrain                *m_drivetrain;       // The drivetrain subsystem
 
