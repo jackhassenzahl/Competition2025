@@ -24,26 +24,27 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("Chassis: Stop",       new ChassisDriveDistance(0_m,     0_mps,   0_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Time ",      new ChassisDriveTime(2_s,         0.5_mps,                    &m_drivetrain));   
-    frc::SmartDashboard::PutData("Chassis: OneMeter",   new ChassisDriveDistance(1_m,     0.5_mps, 5_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters",  new ChassisDriveDistance(2_m,     0.5_mps, 5_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",      new ChassisDriveTurnAngle(45_deg, 0.5_mps, 5_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",  new ChassisDriveToAprilTag(       0.5_mps, 5_s, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Time ",      new ChassisDriveTime(2_s, 0.5_mps, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: OneMeter",   GetPoseCommand(0.5_mps, 1_m, 0_m,  0_deg));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",  GetPoseCommand(0.5_mps, 2_m, 0_m,  0_deg));
+    frc::SmartDashboard::PutData("Chassis: Turn ",      GetPoseCommand(0.0_mps, 0_m, 0_m, 45_deg));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",  new ChassisDriveToAprilTag(0.5_mps, 10_s, &m_aprilTags, &m_drivetrain));
+
+    frc::SmartDashboard::PutData("Chassis: Trajectory ", GetTrajectoryCommand());
 
     frc::SmartDashboard::PutData("Elevator: Zero",      new ElevatorSetHeight(0_m, &m_elevator));
     frc::SmartDashboard::PutData("Elevator: OneMeter",  new ElevatorSetHeight(1_m, &m_elevator));
-       
+
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
     // Configure the autonomous command chooser
     m_autonomousChooser.SetDefaultOption("Do Nothing",       new AutonomousDoNothing());
-    m_autonomousChooser.AddOption("Drive Forward OneMeter",  new ChassisDriveDistance(1_m, 0.5_mps, 5_s, &m_drivetrain));
-    m_autonomousChooser.AddOption("Drive Forward TwoMeters", new ChassisDriveDistance(2_m, 0.5_mps, 5_s, &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward OneMeter",  GetPoseCommand(0.5_mps, 1_m, 0_m,  0_deg));
+    m_autonomousChooser.AddOption("Drive Forward TwoMeters", GetPoseCommand(0.5_mps, 2_m, 0_m,  0_deg));
     m_autonomousChooser.AddOption("Led Autonomous",          new AutonomousLed(&m_leds));
-    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds,             &m_drivetrain));
-    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,              &m_drivetrain));
+    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds, &m_drivetrain));
+    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,  &m_drivetrain));
 
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);
@@ -56,6 +57,9 @@ RobotContainer::RobotContainer()
         &m_drivetrain));
 
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
+
+    // Set the swerve wheels to zero
+    SetSwerveWheelAnglesToZero();                                         
 }
 #pragma endregion
 
@@ -64,14 +68,17 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureButtonBindings()
 {
     // Bind the driver controller buttons to the robot commands
-    frc2::JoystickButton fieldCentricOn(&m_driverController, Extreme3DContants::HandleLowerLeft);
+    frc2::JoystickButton fieldCentricOn(&m_driverController, Extreme3DConstants::HandleLowerLeft);
     fieldCentricOn.OnTrue(ChassisSetFieldCentricity(true, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
-    frc2::JoystickButton fieldCentricOff(&m_driverController, Extreme3DContants::HandleLowerRight);
+    frc2::JoystickButton fieldCentricOff(&m_driverController, Extreme3DConstants::HandleLowerRight);
     fieldCentricOff.OnTrue(ChassisSetFieldCentricity(false, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     // Bind the operator controller buttons to the robot commands
     frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhileTrue(new frc2::RunCommand([this] { m_drivetrain.SetX(); }, {&m_drivetrain}));
+
+    frc2::JoystickButton driveTrajectory{&m_operatorController, XBoxConstants::A};
+    driveTrajectory.WhileTrue(GetPoseCommand(0.5_mps, 1_m, 0_m,  0_deg));
 
     frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
     setLedsOff.OnTrue(SetLeds(LedMode::Off, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
@@ -79,7 +86,7 @@ void RobotContainer::ConfigureButtonBindings()
     frc2::JoystickButton setLedsStrobe(&m_operatorController, XBoxConstants::RightStickButton);
     setLedsStrobe.OnTrue(SetLeds(LedMode::Strobe, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
-    frc2::JoystickButton setLedsShootingAnimation{&m_operatorController, XBoxConstants::A};
+    frc2::JoystickButton setLedsShootingAnimation{&m_operatorController, XBoxConstants::Y};
     setLedsShootingAnimation.OnTrue(SetLeds(LedMode::ShootingAnimation, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::POVButton setLedsSolidGreen{&m_operatorController, XBoxConstants::Pov_0};
@@ -163,7 +170,7 @@ units::meters_per_second_t RobotContainer::Strafe()
     joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
-    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * ChassisConstants::MaxSpeed;
+    return m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * ChassisConstants::MaxSpeed;
 }
 #pragma endregion
 
@@ -211,6 +218,7 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
     // Return the calculated value
     return output;
 }
+#pragma endregion
 
 #pragma region SetPeriod
 /// @brief Method to set the timed robot period.
@@ -238,7 +246,7 @@ units::second_t RobotContainer::GetPeriod()
 frc2::Command *RobotContainer::GetTrajectoryCommand()
 {
     // Set up config for trajectory
-    frc::TrajectoryConfig config(AutoConstants::MaxSpeed, AutoConstants::MaxAcceleration);
+    frc::TrajectoryConfig config(PoseConstants::MaxSpeed, PoseConstants::MaxAcceleration);
 
     // Add kinematics to ensure max speed is actually obeyed
     config.SetKinematics(m_drivetrain.m_kinematics);
@@ -255,30 +263,85 @@ frc2::Command *RobotContainer::GetTrajectoryCommand()
         config);
 
     frc::ProfiledPIDController<units::radians> thetaController{
-        AutoConstants::PThetaController, 0, 0,
-        AutoConstants::ThetaControllerConstraints};
+        PoseConstants::PProfileController, 0, 0,
+        PoseConstants::ThetaControllerConstraints};
 
     thetaController.EnableContinuousInput(units::radian_t{-std::numbers::pi},
                                           units::radian_t{std::numbers::pi});
 
     frc2::SwerveControllerCommand<4> swerveControllerCommand(
-        exampleTrajectory, [this]()
-        { return m_drivetrain.GetPose(); },
-
+        exampleTrajectory,
+        [this]() { return m_drivetrain.GetPose(); },
         m_drivetrain.m_kinematics,
-
-        frc::PIDController{AutoConstants::PXController, 0, 0},
-        frc::PIDController{AutoConstants::PYController, 0, 0}, thetaController,
-
-        [this](auto moduleStates)
-        { m_drivetrain.SetModuleStates(moduleStates); },
-
+        frc::PIDController{PoseConstants::PXController, 0, 0},
+        frc::PIDController{PoseConstants::PYController, 0, 0}, thetaController,
+        [this](auto moduleStates) { m_drivetrain.SetModuleStates(moduleStates); },
         {&m_drivetrain});
 
     // Reset odometry to the starting pose of the trajectory.
     m_drivetrain.ResetOdometry(exampleTrajectory.InitialPose());
 
     return new frc2::SequentialCommandGroup(std::move(swerveControllerCommand),
-               frc2::InstantCommand([this]() { m_drivetrain.Drive(0_mps, 0_mps, 0_rad_per_s); }, {}));
+               frc2::InstantCommand([this]() { m_drivetrain.Drive(0_mps, 0_mps, 0_rad_per_s); }));
+}
+#pragma endregion
+
+#pragma region GetPoseCommand
+/// @brief Method to return a pointer to the autonomous command.
+/// @return Pointer to the autonomous command
+frc2::Command *RobotContainer::GetPoseCommand(units::velocity::meters_per_second_t speed,
+                                              units::meter_t                       distanceX,
+                                              units::meter_t                       distanceY,
+                                              units::angle::degree_t               angle)
+{
+    try
+    {
+        // Set up config for trajectory
+        frc::TrajectoryConfig trajectoryConfig(PoseConstants::MaxSpeed, PoseConstants::MaxAcceleration);
+
+        // Add kinematics to ensure max speed is actually obeyed
+        trajectoryConfig.SetKinematics(m_drivetrain.m_kinematics);
+
+        // Ensure the new pose requires an X or Y move
+        // GenerateTrajectory will throw an exception if the distance X and Y are zero
+        if (fabs(distanceX.value()) < 0.001 && fabs(distanceY.value()) < 0.001)
+           distanceX = 0.001_m;
+
+        // An example trajectory to follow.  All units in meters.
+        auto goalTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(frc::Pose2d{0_m, 0_m, 0_deg}, {},
+                                                                           frc::Pose2d{distanceX, distanceY, angle}, trajectoryConfig);
+
+        // Create a profile PID controller
+        frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
+                                                                         PoseConstants::ThetaControllerConstraints};
+
+        // enable continuous input for the profile PID controller
+        profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
+
+        // Create the swerve controller command
+        frc2::SwerveControllerCommand<4> swerveControllerCommand(
+            goalTrajectory,
+            [this]() { return m_drivetrain.GetPose(); },
+            m_drivetrain.m_kinematics,
+            frc::PIDController{PoseConstants::PXController, 0, 0},
+            frc::PIDController{PoseConstants::PYController, 0, 0},
+            profiledPIDController,
+            [this](auto moduleStates) { m_drivetrain.SetModuleStates(moduleStates); },
+            {&m_drivetrain});
+
+        // Reset odometry to the starting pose of the trajectory.
+        m_drivetrain.ResetOdometry(goalTrajectory.InitialPose());
+
+        return new frc2::SequentialCommandGroup(std::move(swerveControllerCommand),
+                    frc2::InstantCommand([this]() { m_drivetrain.Drive(0_mps, 0_mps, 0_rad_per_s); }));
+
+    }
+    catch(const std::exception& exception)
+    {
+        frc::SmartDashboard::PutString("Debug", "Exception");
+        frc::SmartDashboard::PutString("GetPoseCommand Exception", exception.what());
+    }
+
+    return GetTrajectoryCommand();
 }
 #pragma endregion

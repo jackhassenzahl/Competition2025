@@ -64,9 +64,13 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
     frc::SmartDashboard::PutNumber("Chassis Strafe",  (double) ySpeed);
     frc::SmartDashboard::PutNumber("Chassis Angle",   (double) rotation);
 
+    frc::SmartDashboard::PutNumber("Gyro Rotation", (double) m_gyro.GetRotation2d().Degrees());
+
+    auto reverseGyro = m_gyro.GetRotation2d() * -1.0;
+
     // Determine the swerve module states from teh
     auto states = m_kinematics.ToSwerveModuleStates(m_fieldCentricity ?
-                  frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, m_gyro.GetRotation2d()) :
+                  frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, reverseGyro) :
                   frc::ChassisSpeeds{xSpeed, ySpeed, rotation});
 
     // Set the module states

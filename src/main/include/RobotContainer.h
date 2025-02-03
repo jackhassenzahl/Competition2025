@@ -31,7 +31,6 @@
 #include "commands/AutonomousParallel.h"
 #include "commands/AutonomousRaceGroup.h"
 #include "commands/ChassisDrive.h"
-#include "commands/ChassisDriveDistance.h"
 #include "commands/ChassisDriveTime.h"
 #include "commands/ChassisDriveToAprilTag.h"
 #include "Commands/ChassisDriveTurnAngle.h"
@@ -68,6 +67,8 @@ class RobotContainer
         units::second_t             GetPeriod();
 
         frc2::Command              *GetTrajectoryCommand();
+        frc2::Command              *GetPoseCommand(units::meters_per_second_t speed, units::meter_t distanceX,
+                                                   units::meter_t distanceY, units::angle::degree_t angle);
 
     private:
 

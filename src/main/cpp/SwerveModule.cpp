@@ -110,7 +110,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState, s
 
     // Apply chassis angular offset to the desired state.
     frc::SwerveModuleState correctedDesiredState{};
-    correctedDesiredState.speed = desiredState.speed / SwerveConstants::DriveMotorVelocityConversion.value();
+    correctedDesiredState.speed = desiredState.speed / SwerveConstants::DriveMotorConversion.value();
     correctedDesiredState.angle = desiredState.angle + frc::Rotation2d(units::radian_t{m_chassisAngularOffset});
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
@@ -131,10 +131,13 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState, s
 frc::SwerveModuleState SwerveModule::GetState()
 {
     // Determine the module wheel velocity
-    double velocity = (double) m_driveMotor.GetVelocity().GetValue() * SwerveConstants::DriveMotorVelocityConversion.value();
+    auto driveVelocity = units::meters_per_second_t {
+        (double) m_driveMotor.GetVelocity().GetValue() * SwerveConstants::DriveMotorConversion.value()};
+
+    auto anglePosition = units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset};
 
     // Return the swerve module state
-    return {units::meters_per_second_t {velocity}, units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset}};
+    return {driveVelocity, anglePosition};
 }
 #pragma endregion
 
@@ -143,10 +146,12 @@ frc::SwerveModuleState SwerveModule::GetState()
 frc::SwerveModulePosition SwerveModule::GetPosition()
 {
     // Determine the module wheel position
-    double position = (double) m_driveMotor.GetPosition().GetValue();
+    auto drivePosition = units::meter_t{
+        ((double) m_driveMotor.GetPosition().GetValue()) * SwerveConstants::DriveMotorConversion.value()};
+    auto anglePosition = units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset};
 
     // Return the swerve module position
-    return {units::meter_t{position}, units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset}};
+    return {drivePosition, anglePosition};
 }
 #pragma endregion
 

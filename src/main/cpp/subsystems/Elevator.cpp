@@ -25,22 +25,22 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = elevatorMotorConfiguration.Slot0;
-    slot0Configs.kS = ElevatorContants::S;
-    slot0Configs.kV = ElevatorContants::V;
-    slot0Configs.kA = ElevatorContants::A;
-    slot0Configs.kP = ElevatorContants::P;
-    slot0Configs.kI = ElevatorContants::I;
-    slot0Configs.kD = ElevatorContants::D;
+    slot0Configs.kS = ElevatorConstants::S;
+    slot0Configs.kV = ElevatorConstants::V;
+    slot0Configs.kA = ElevatorConstants::A;
+    slot0Configs.kP = ElevatorConstants::P;
+    slot0Configs.kI = ElevatorConstants::I;
+    slot0Configs.kD = ElevatorConstants::D;
 
     // // Configure gear ratio
     // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = elevatorMotorConfiguration.Feedback;
-    // feedbackConfigs.SensorToMechanismRatio = ElevatorContants::SensorToMechanismRatio;
+    // feedbackConfigs.SensorToMechanismRatio = ElevatorConstants::SensorToMechanismRatio;
 
     // Configure Motion Magic
     ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = elevatorMotorConfiguration.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorContants::MotionMagicCruiseVelocity;
-    motionMagicConfigs.MotionMagicAcceleration   = ElevatorContants::MotionMagicAcceleration;
-    motionMagicConfigs.MotionMagicJerk           = ElevatorContants::MotionMagicJerk;
+    motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants::MotionMagicCruiseVelocity;
+    motionMagicConfigs.MotionMagicAcceleration   = ElevatorConstants::MotionMagicAcceleration;
+    motionMagicConfigs.MotionMagicJerk           = ElevatorConstants::MotionMagicJerk;
 
     // Apply the configuration to the drive motor
     ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
@@ -66,7 +66,7 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
 void Elevator::SetHeight(units::length::meter_t position)
 {
     // Compute the number of turns based on the specficied position
-    units::angle::turn_t newPosition = (units::angle::turn_t) (position.value() * ElevatorContants::PositionToTurnsConversionFactor);
+    units::angle::turn_t newPosition = (units::angle::turn_t) (position.value() * ElevatorConstants::PositionToTurnsConversionFactor);
 
     // Set the elevator set position
     m_elevatorMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));

@@ -44,6 +44,8 @@ namespace CanConstants
 
     constexpr int ElevatorMotorCanId                 = 20;
 
+    constexpr int ArmMotorCanId                      = 120390; // Change later
+
     constexpr auto MotorConfigurationAttempts        =  5;
 }
 #pragma endregion
@@ -82,7 +84,7 @@ namespace SwerveConstants
     constexpr auto DriveMotorReduction             =     6.75;
     constexpr auto WheelDiameter                   = 0.1016_m;
     constexpr auto WheelCircumference              = WheelDiameter * std::numbers::pi;
-    constexpr auto DriveMotorVelocityConversion    = WheelCircumference / DriveMotorReduction;
+    constexpr auto DriveMotorConversion            = WheelCircumference / DriveMotorReduction;
 
     constexpr auto DriveP                          = 0.10;
     constexpr auto DriveI                          = 0.02;
@@ -101,8 +103,26 @@ namespace SwerveConstants
 }
 #pragma endregion
 
-#pragma region ElevatorContants
-namespace ElevatorContants
+#pragma region ElevatorConstants
+namespace ElevatorConstants
+{
+    constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 1.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+
+    constexpr auto MotionMagicCruiseVelocity       = 100_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
+
+    constexpr auto PositionToTurnsConversionFactor = 100.0;            // The number of rotation per meter
+}
+#pragma endregion
+
+#pragma region ArmConstants
+namespace ArmConstants
 {
     constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
     constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
@@ -138,8 +158,8 @@ namespace ControllerConstants
 }
 #pragma endregion
 
-#pragma region Extreme3DContants
-namespace Extreme3DContants
+#pragma region Extreme3DConstants
+namespace Extreme3DConstants
 {
     constexpr auto HandleLowerLeft  = 3;
     constexpr auto HandleLowerRight = 4;
@@ -208,17 +228,17 @@ namespace LedConstants
 }
 #pragma endregion
 
-#pragma region AutoConstantsResetEncoders
-namespace AutoConstants
+#pragma region PoseConstants
+namespace PoseConstants
 {
     constexpr auto   MaxSpeed                   = 3_mps;
     constexpr auto   MaxAcceleration            = 3_mps_sq;
     constexpr auto   MaxAngularSpeed            = 3.142_rad_per_s;
     constexpr auto   MaxAngularAcceleration     = 3.142_rad_per_s_sq;
 
-    constexpr double PXController               = 0.5;
-    constexpr double PYController               = 0.5;
-    constexpr double PThetaController           = 0.5;
+    constexpr double PXController               = 0.1;
+    constexpr double PYController               = 0.1;
+    constexpr double PProfileController         = 0.1;
 
     extern const frc::TrapezoidProfile<units::radians>::Constraints ThetaControllerConstraints;
 }

@@ -51,10 +51,10 @@ class Drivetrain : public frc2::SubsystemBase
         void            SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
         frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{
-            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},
-            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},
-            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},
-            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}};
+            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}, // Front Left
+            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2}, // Front Right
+            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}, // Rear Left
+            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2}};// Rear Right
 
     private:
 
