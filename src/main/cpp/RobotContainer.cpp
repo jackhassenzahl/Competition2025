@@ -173,7 +173,7 @@ units::meters_per_second_t RobotContainer::Strafe()
     joystickStrafe = GetExponentialValue(joystickStrafe, ControllerConstants::ExponentStrafe);
 
     // Return the y speed
-    return m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * ChassisConstants::MaxSpeed;
+    return -m_yspeedLimiter.Calculate(frc::ApplyDeadband(joystickStrafe, ControllerConstants::JoystickDeadZone)) * ChassisConstants::MaxSpeed;
 }
 #pragma endregion
 

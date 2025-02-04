@@ -25,24 +25,24 @@ void Drivetrain::Periodic()
     frc::SmartDashboard::PutNumber("Gyro Angle",           GetHeading().value());
     frc::SmartDashboard::PutBoolean("Field Centricity",    m_fieldCentricity);
 
-    frc::SmartDashboard::PutNumber("Front Right Speed",    m_frontRight.GetState().speed.value());
     frc::SmartDashboard::PutNumber("Front Left Speed",     m_frontLeft.GetState().speed.value());
-    frc::SmartDashboard::PutNumber("Rear Right Speed",     m_rearRight.GetState().speed.value());
+    frc::SmartDashboard::PutNumber("Front Right Speed",    m_frontRight.GetState().speed.value());
     frc::SmartDashboard::PutNumber("Rear Left Speed",      m_rearLeft.GetState().speed.value());
+    frc::SmartDashboard::PutNumber("Rear Right Speed",     m_rearRight.GetState().speed.value());
 
-    frc::SmartDashboard::PutNumber("Front Right Distance", m_frontRight.GetPosition().distance.value());
     frc::SmartDashboard::PutNumber("Front Left Distance",  m_frontLeft.GetPosition().distance.value());
-    frc::SmartDashboard::PutNumber("Rear Right Distance",  m_rearRight.GetPosition().distance.value());
+    frc::SmartDashboard::PutNumber("Front Right Distance", m_frontRight.GetPosition().distance.value());
     frc::SmartDashboard::PutNumber("Rear Left Distance",   m_rearLeft.GetPosition().distance.value());
+    frc::SmartDashboard::PutNumber("Rear Right Distance",  m_rearRight.GetPosition().distance.value());
 
-    frc::SmartDashboard::PutNumber("Front Right Angle",    m_frontRight.GetPosition().angle.Degrees().value());
     frc::SmartDashboard::PutNumber("Front Left Angle",     m_frontLeft.GetPosition().angle.Degrees().value());
-    frc::SmartDashboard::PutNumber("Rear Right Angle",     m_rearRight.GetPosition().angle.Degrees().value());
+    frc::SmartDashboard::PutNumber("Front Right Angle",    m_frontRight.GetPosition().angle.Degrees().value());
     frc::SmartDashboard::PutNumber("Rear Left Angle",      m_rearLeft.GetPosition().angle.Degrees().value());
+    frc::SmartDashboard::PutNumber("Rear Right Angle",     m_rearRight.GetPosition().angle.Degrees().value());
 
     // Update the swerve drive odometry
     m_odometry.Update(m_gyro.GetRotation2d(),
-                     {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+                     {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),   // TODO: Order in example if FL, RL, FR, RR?
                       m_rearLeft.GetPosition(),  m_rearRight.GetPosition()});
 }
 #pragma endregion
@@ -66,7 +66,7 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
 
     frc::SmartDashboard::PutNumber("Gyro Rotation", (double) m_gyro.GetRotation2d().Degrees());
 
-    auto reverseGyro = m_gyro.GetRotation2d() * -1.0;  // TODO: Verify if needed (does not seem correct)
+    auto reverseGyro = m_gyro.GetRotation2d();
 
     // Determine the swerve module states
     auto states = m_kinematics.ToSwerveModuleStates(m_fieldCentricity ?
@@ -104,7 +104,7 @@ void Drivetrain::ResetDriveEncoders()
 #pragma region SetModuleStates
 /// @brief Method to set the swerve drive states.
 /// @param desiredStates
-void Drivetrain::SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates)
+void Drivetrain::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates)
 {
     // Normalize the wheel speeds if any individual speed is above the specified maximum
     m_kinematics.DesaturateWheelSpeeds(&desiredStates, ChassisConstants::MaxSpeed);

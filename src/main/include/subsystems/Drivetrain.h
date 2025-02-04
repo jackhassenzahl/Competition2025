@@ -35,7 +35,7 @@ class Drivetrain : public frc2::SubsystemBase
 
         void                          ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0.
 
-        void                          SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates);
+        void                          SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
 
         units::radian_t               GetHeading();                           // Returns the heading of the robot.
 
@@ -50,11 +50,21 @@ class Drivetrain : public frc2::SubsystemBase
 
         void                          SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
+        // Swerve module order for kinematics calculations
+        //
+        //         Front          Translation2d Coordinates
+        //   FL +----------+ FR              ^ X
+        //      | 0      1 |                 |
+        //      |          |            Y    |
+        //      |          |          <------+-------
+        //      | 2      3 |                 |
+        //   RL +----------+ RR              |
+
         frc::SwerveDriveKinematics<4> m_kinematics{
-            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},   // Front Left
-            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},   // Front Right
-            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},   // Rear Left
-            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2}};  // Rear Right
+            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},   // Front Left
+            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},   // Front Right
+            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},   // Rear Left
+            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}};  // Rear Right
 
     private:
 

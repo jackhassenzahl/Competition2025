@@ -26,13 +26,13 @@ namespace CanConstants
 {
     const     auto CanBus                            = "rio";
 
-    constexpr auto SwerveFrontRightDriveMotorCanId   =  3;
-    constexpr auto SwerveFrontRightAngleMotorCanId   =  2;
-    constexpr auto SwerveFrontRightAngleEncoderCanId = 12;
-
     constexpr auto SwerveFrontLeftDriveMotorCanId    =  6;
     constexpr auto SwerveFrontLeftAngleMotorCanId    =  5;
     constexpr auto SwerveFrontLeftAngleEncoderCanId  =  4;
+
+    constexpr auto SwerveFrontRightDriveMotorCanId   =  3;
+    constexpr auto SwerveFrontRightAngleMotorCanId   =  2;
+    constexpr auto SwerveFrontRightAngleEncoderCanId = 12;
 
     constexpr auto SwerveRearLeftDriveMotorCanId     =  9;
     constexpr auto SwerveRearLeftAngleMotorCanId     =  8;
@@ -53,20 +53,18 @@ namespace CanConstants
 #pragma region ChassisConstants
 namespace ChassisConstants
 {
-    constexpr auto NumberOfSwerveModules             = 4;
-
     // Chassis configuration
-    constexpr auto TrackWidth                        = 0.6731_m;  // Distance between centers of right and left wheels on robot
-    constexpr auto WheelBase                         = 0.6731_m;  // Distance between centers of front and back wheels on robot
+    constexpr auto TrackWidth                     = 0.6731_m;  // Distance between centers of right and left wheels on robot
+    constexpr auto WheelBase                      = 0.6731_m;  // Distance between centers of front and back wheels on robot
 
-    constexpr auto MaxSpeed                          = 4.8_mps;
-    constexpr auto MaxAngularSpeed                   = std::numbers::pi * 2_rad_per_s;
+    constexpr auto MaxSpeed                       = 4.8_mps;
+    constexpr auto MaxAngularSpeed                = std::numbers::pi * 2_rad_per_s;
 
     // Angular offsets of the modules relative to the chassis in radians
-    constexpr auto FrontLeftChassisAngularOffset     = 0.0;   // -std::numbers::pi / 2;
-    constexpr auto FrontRightChassisAngularOffset    = 0.0;   //  0.0;
-    constexpr auto RearLeftChassisAngularOffset      = 0.0;   //  std::numbers::pi;
-    constexpr auto RearRightChassisAngularOffset     = 0.0;   //  std::numbers::pi / 2;
+    constexpr auto FrontLeftChassisAngularOffset  = -std::numbers::pi / 2;
+    constexpr auto FrontRightChassisAngularOffset =  0.0;
+    constexpr auto RearLeftChassisAngularOffset   =  std::numbers::pi;
+    constexpr auto RearRightChassisAngularOffset  =  std::numbers::pi / 2;
 }
 #pragma endregion
 
