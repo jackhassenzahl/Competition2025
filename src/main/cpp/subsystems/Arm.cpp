@@ -60,13 +60,13 @@ void Arm::ConfigureArmMotor(int motorCanId)
 }
 #pragma endregion
 
-#pragma region SetHeight
-/// @brief Method to set the arm height.
-/// @param position The setpoint for the arm height.
-void Arm::SetHeight(units::length::meter_t position)
+#pragma region SetAngle
+/// @brief Method to set the arm angle.
+/// @param position The setpoint for the arm angle.
+void Arm::SetAngle(units::angle::degree_t angle)
 {
-    // Compute the number of turns based on the specficied position
-    units::angle::turn_t newPosition = (units::angle::turn_t) (position.value() * ArmConstants::PositionToTurnsConversionFactor);
+    // Compute the number of turns based on the specficied angle
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor);
 
     // Set the arm set position
     m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));

@@ -1,7 +1,6 @@
 #include "commands/ElevatorSetHeight.h"
 
-ElevatorSetHeight::ElevatorSetHeight(units::length::meter_t height, Elevator *elevator) :
-                                     m_height(height), m_elevator(elevator)
+ElevatorSetHeight::ElevatorSetHeight(units::length::meter_t height, Elevator *elevator) : m_height(height), m_elevator(elevator)
 {
     // Set the command name
     SetName("Elevator");

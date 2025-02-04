@@ -1,9 +1,9 @@
-#include "subsystems/DriveTrain.h"
+#include "subsystems/Drivetrain.h"
 
 using namespace CanConstants;
 
-#pragma region DriveTrain (constructor)
-/// @brief The Constructor for the DriveTrain class.
+#pragma region Drivetrain (constructor)
+/// @brief The Constructor for the Drivetrain class.
 Drivetrain::Drivetrain()
     : m_frontLeft {SwerveFrontLeftDriveMotorCanId,  SwerveFrontLeftAngleMotorCanId,  SwerveFrontLeftAngleEncoderCanId,  ChassisConstants::FrontLeftChassisAngularOffset},
       m_frontRight{SwerveFrontRightDriveMotorCanId, SwerveFrontRightAngleMotorCanId, SwerveFrontRightAngleEncoderCanId, ChassisConstants::FrontRightChassisAngularOffset},
@@ -66,9 +66,9 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
 
     frc::SmartDashboard::PutNumber("Gyro Rotation", (double) m_gyro.GetRotation2d().Degrees());
 
-    auto reverseGyro = m_gyro.GetRotation2d() * -1.0;
+    auto reverseGyro = m_gyro.GetRotation2d() * -1.0;  // TODO: Verify if needed (does not seem correct)
 
-    // Determine the swerve module states from teh
+    // Determine the swerve module states
     auto states = m_kinematics.ToSwerveModuleStates(m_fieldCentricity ?
                   frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, reverseGyro) :
                   frc::ChassisSpeeds{xSpeed, ySpeed, rotation});
@@ -190,3 +190,4 @@ void Drivetrain::SetWheelAnglesToZero()
     m_rearRight. SetWheelAngleToForward(SwerveConstants::RearRightForwardAngle);
 }
 #pragma endregion
+

@@ -1,18 +1,18 @@
-#include "commands/ChassisDriveToAprilTag.h"
+#include "commands/ChassisDrivePose.h"
 
-#pragma region
-/// @brief Command to drive the chassis to an AprilTag.
+#pragma region ChassisDrivePose
+/// @brief  Command to drive the chassis to a specific pose.
 /// @param speed The speed to move the chassis.
-/// @param timeoutTime The timeout time for the move.
-/// @param aprilTags The AprilTag subsystem.
+/// @param distanceX The distance to move the chassis in the X direction.
+/// @param distanceY The distance to move the chassis in the Y direction.
+/// @param angle The angle to move the chassis.
 /// @param drivetrain The Drivetrain subsystem.
-ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed, units::time::second_t timeoutTime,
-                                               AprilTags *aprilTags, Drivetrain *drivetrain) :
-                                               m_speed(speed), m_timeoutTime(timeoutTime), m_aprilTags(aprilTags),
-                                               m_drivetrain(drivetrain)
+ChassisDrivePose::ChassisDrivePose(units::velocity::meters_per_second_t speed, units::meter_t distanceX, units::meter_t distanceY,
+                                   units::angle::degree_t angle, units::time::second_t timeoutTime, Drivetrain *drivetrain) :
+                                   m_speed(speed), m_distanceX(distanceX), m_distanceY(distanceY), m_angle(angle),
+                                   m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
-    // Set the command name
-    SetName("ChassisDriveToAprilTag");
+   SetName("ChassisDriveToAprilTag");
 
     // Declare subsystem dependencies
     AddRequirements(m_drivetrain);
@@ -20,42 +20,28 @@ ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed,
     // Ensure the SwerveControllerCommand is set to nullptr
     m_swerveControllerCommand = nullptr;
 }
-#pragma endregion
 
 #pragma region Initialize
-/// @brief Called just before this Command runs the first time.
-void ChassisDriveToAprilTag::Initialize()
+// Called when the command is initially scheduled.
+void ChassisDrivePose::Initialize()
 {
     try
     {
-        auto aprilTagInformation = m_aprilTags->GetClosestTag();
-
-        // Determine if an AprilTag was found
-        if (aprilTagInformation.Found == true)
-        {
-            frc::SmartDashboard::PutNumber("Pose Y",     aprilTagInformation.Y);
-            frc::SmartDashboard::PutNumber("Pose Z",     aprilTagInformation.Z);
-            frc::SmartDashboard::PutNumber("Rotation X", aprilTagInformation.rotationX);
-            frc::SmartDashboard::PutNumber("Rotation Y", aprilTagInformation.rotationY);
-            frc::SmartDashboard::PutNumber("Rotation Z", aprilTagInformation.rotationZ);
-        }
-        else  // If no AprilTag is found, end the command
-        {
-            // End the command
-            End(true);
-        }
-
         // Set up config for trajectory
         frc::TrajectoryConfig trajectoryConfig(m_speed, PoseConstants::MaxAcceleration);
 
         // Add kinematics to ensure maximum speed is actually obeyed
         trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
 
-        // Create the trajectory to follow
-        frc::Pose2d endPose{units::meter_t{aprilTagInformation.X},
-                            units::meter_t{aprilTagInformation.Y},
-                            units::radian_t{aprilTagInformation.rotationZ}};
+        // Ensure the new pose requires an X or Y move
+        // Note: GenerateTrajectory will throw an exception if the distance X and Y are zero
+        if (fabs(m_distanceX.value()) < 0.001 && fabs(m_distanceY.value()) < 0.001)
+           m_distanceX = 0.01_m;
 
+        // Create the trajectory to follow
+        frc::Pose2d endPose{m_distanceX, m_distanceY, m_angle};
+
+        // Create the trajectory to follow
         auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(m_drivetrain->GetPose(), {}, endPose, trajectoryConfig);
 
         // Create a profile PID controller
@@ -65,6 +51,7 @@ void ChassisDriveToAprilTag::Initialize()
         // enable continuous input for the profile PID controller
         profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
 
+        // Create the swerve controller command
         m_swerveControllerCommand = new frc2::SwerveControllerCommand<4>(
             trajectory,
             [this]() { return m_drivetrain->GetPose(); },
@@ -94,7 +81,7 @@ void ChassisDriveToAprilTag::Initialize()
 
 #pragma region Execute
 /// @brief Called repeatedly when this Command is scheduled to run.
-void ChassisDriveToAprilTag::Execute()
+void ChassisDrivePose::Execute()
 {
     // Execute the swerve controller command
     if (m_swerveControllerCommand)
@@ -105,7 +92,7 @@ void ChassisDriveToAprilTag::Execute()
 #pragma region IsFinished
 /// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
 /// @return True is the command has completed.
-bool ChassisDriveToAprilTag::IsFinished()
+bool ChassisDrivePose::IsFinished()
 {
     // Determine if the time-out time has expired
     if (frc::GetTime() - m_startTime > m_timeoutTime)
@@ -119,7 +106,7 @@ bool ChassisDriveToAprilTag::IsFinished()
 #pragma region End
 /// @brief Called once after isFinished returns true.
 /// @param interrupted Indicated that the command was interrupted.
-void ChassisDriveToAprilTag::End(bool interrupted)
+void ChassisDrivePose::End(bool interrupted)
 {
     // If the swerve controller command is not nullptr, end the command
     if (m_swerveControllerCommand)

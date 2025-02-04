@@ -1,28 +1,39 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Chassis: Serpentine " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="304" y="197"/>
+	</widget>
+	<widget field="AprilTags Found" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="607" y="447"/>
+	</widget>
+	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="50" y="351"/>
+		<width>124</width>
+		<height>16</height>
+	</widget>
+	<widget field="Gyro Rotation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="242" y="364"/>
+	</widget>
 	<widget field="Elevator: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="384" y="259"/>
+		<location x="417" y="366"/>
 	</widget>
 	<widget field="Elevator: Zero" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="411" y="232"/>
+		<location x="444" y="337"/>
 	</widget>
 	<widget field="Chassis: Time " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="410" y="67"/>
+		<location x="336" y="54"/>
 	</widget>
 	<widget field="Chassis: AprilTag " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="394" y="178"/>
+		<location x="317" y="165"/>
 	</widget>
 	<widget field="Chassis: Turn " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="411" y="150"/>
+		<location x="334" y="139"/>
 	</widget>
 	<widget field="Chassis: TwoMeters" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="383" y="123"/>
+		<location x="307" y="112"/>
 	</widget>
 	<widget field="Chassis: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="388" y="95"/>
-	</widget>
-	<widget field="Chassis: Stop" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="413" y="41"/>
+		<location x="314" y="84"/>
 	</widget>
 	<widget field="AprilTag" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="644" y="472"/>
@@ -69,16 +80,12 @@
 	<widget field="Front Right Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="224" y="511"/>
 	</widget>
-	<widget field="Field Centricity" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="51" y="354"/>
-		<height>20</height>
-	</widget>
 	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="59" y="307"/>
 	</widget>
 	<widget field="Debug" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="303" y="330"/>
-		<width>243</width>
+		<location x="495" y="559"/>
+		<width>371</width>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="34" y="57"/>
@@ -131,5 +138,6 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Elevator: TwoMeters"/>
+	<hidden field="ChassisDriveToAprilTag::Initialize"/>
+	<hidden field="Chassis: Trajectory "/>
 </xml>

@@ -135,7 +135,7 @@ namespace ArmConstants
     constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
     constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
 
-    constexpr auto PositionToTurnsConversionFactor = 100.0;            // The number of rotation per meter
+    constexpr auto AngleToTurnsConversionFactor    = 100.0;            // The number of rotation per degree
 }
 #pragma endregion
 
@@ -236,9 +236,9 @@ namespace PoseConstants
     constexpr auto   MaxAngularSpeed            = 3.142_rad_per_s;
     constexpr auto   MaxAngularAcceleration     = 3.142_rad_per_s_sq;
 
-    constexpr double PXController               = 0.1;
-    constexpr double PYController               = 0.1;
-    constexpr double PProfileController         = 0.1;
+    constexpr double PXController               = 0.4;
+    constexpr double PYController               = 0.4;
+    constexpr double PProfileController         = 0.4;
 
     extern const frc::TrapezoidProfile<units::radians>::Constraints ThetaControllerConstraints;
 }

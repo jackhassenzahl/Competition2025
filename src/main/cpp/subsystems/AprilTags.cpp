@@ -25,7 +25,7 @@ void AprilTags::Periodic()
     // Read Apriltag information to Network Table
     auto foundAprilTags = m_aprilTagsIntegerArraySubscriber.Get();
 
-    //frc::SmartDashboard::PutNumber("foundAprilTags", foundAprilTags.size());
+    frc::SmartDashboard::PutNumber("AprilTags Found", foundAprilTags.size());
 
     // Clear the AprilTag vector
     m_detectedAprilTags.clear();
@@ -38,7 +38,7 @@ void AprilTags::Periodic()
         // Get the AprilTag identification
         aprilTagInformation.Identification = foundAprilTags[aprilTagIndex];
 
-        //frc::SmartDashboard::PutNumber("AprilTag", aprilTagInformation.Identification);
+        frc::SmartDashboard::PutNumber("AprilTag", aprilTagInformation.Identification);
 
         // Retrieve the entry using the GetEntry method
         nt::NetworkTableEntry entry = m_aprilTagsTable->GetEntry(fmt::format("pose_{}", aprilTagInformation.Identification));
@@ -99,33 +99,45 @@ bool AprilTags::GetTag(int id, AprilTagInformation &aprilTagInformation)
 /// @brief Method to get the closest AprilTag.
 /// @param aprilTagInformation Reference to return the AprilTag information.
 /// @return true to indicate that the AprilTag information is available.
-bool AprilTags::GetClosestTag(AprilTagInformation &aprilTagInformation)
+AprilTagInformation AprilTags::GetClosestTag()
 {
+    frc::SmartDashboard::PutString("Debug", "GetClosestTag");
+
+    AprilTagInformation aprilTagInformation;
+
+    // Indicate that no AprilTag was found
+    aprilTagInformation.Found = false;
+
     // Determine if any AprilTags have been found
     if (m_detectedAprilTags.size() == 0)
-        return false;
+        return aprilTagInformation;
 
     // If only one AprilTag is detected, then return it
     else if (m_detectedAprilTags.size() == 1)
     {
-        // Copy the AprilTag information and return
+        // Copy the AprilTag information
         aprilTagInformation = m_detectedAprilTags[0];
-        return true;
+        aprilTagInformation.Found = true;
+        return aprilTagInformation;
     }
 
     // Assume the first AprilTag is the closest
     aprilTagInformation = m_detectedAprilTags[0];
+    aprilTagInformation.Found = true;
 
     // Search through the remainin found AprilTags
     for (auto aprilTagIndex = 1; aprilTagIndex < m_detectedAprilTags.size(); aprilTagIndex++)
     {
         // Determine if the new AprilTag is closer
         if (m_detectedAprilTags[aprilTagIndex].Z < aprilTagInformation.Z)
+        {
             aprilTagInformation = m_detectedAprilTags[aprilTagIndex];
+            aprilTagInformation.Found = true;
+        }
     }
 
     // Indicate that an AprilTag was detected
-    return true;
+    return aprilTagInformation;
 }
 #pragma endregion
 

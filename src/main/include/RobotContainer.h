@@ -33,7 +33,8 @@
 #include "commands/ChassisDrive.h"
 #include "commands/ChassisDriveTime.h"
 #include "commands/ChassisDriveToAprilTag.h"
-#include "Commands/ChassisDriveTurnAngle.h"
+#include "commands/ChassisDrivePose.h"
+#include "commands/ChassisDriveSerpentine.h"
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/ElevatorSetHeight.h"
@@ -65,10 +66,6 @@ class RobotContainer
 
         void                        SetPeriod(units::second_t period);
         units::second_t             GetPeriod();
-
-        frc2::Command              *GetTrajectoryCommand();
-        frc2::Command              *GetPoseCommand(units::meters_per_second_t speed, units::meter_t distanceX,
-                                                   units::meter_t distanceY, units::angle::degree_t angle);
 
     private:
 
@@ -104,5 +101,5 @@ class RobotContainer
         ChassisSetSwerveWheelAnglesToZero    *m_swerveWheelAnglesToZero = new ChassisSetSwerveWheelAnglesToZero(&m_drivetrain);
 
         // Autonomous command chooser
-        frc::SendableChooser<frc2::Command*> m_autonomousChooser;
+        frc::SendableChooser<frc2::Command*>  m_autonomousChooser;
 };

@@ -23,44 +23,44 @@ class Drivetrain : public frc2::SubsystemBase
 {
     public:
 
-        explicit        Drivetrain();
+        explicit                      Drivetrain();
 
-        void            Periodic() override;
+        void                          Periodic() override;
 
-        void            Drive(units::meters_per_second_t  xSpeed,
-                              units::meters_per_second_t  ySpeed,
-                              units::radians_per_second_t rotation);
+        void                          Drive(units::meters_per_second_t  xSpeed,
+                                            units::meters_per_second_t  ySpeed,
+                                            units::radians_per_second_t rotation);
 
-        void            SetX();                                 // Sets the wheels into an X formation to prevent movement
+        void                          SetX();                                 // Sets the wheels into an X formation to prevent movement
 
-        void            ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0.
+        void                          ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0.
 
-        void            SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates);
+        void                          SetModuleStates(wpi::array<frc::SwerveModuleState, ChassisConstants::NumberOfSwerveModules> desiredStates);
 
-        units::radian_t GetHeading();                           // Returns the heading of the robot.
+        units::radian_t               GetHeading();                           // Returns the heading of the robot.
 
-        void            ZeroHeading();                          // Zeroes the heading of the robot.
+        void                          ZeroHeading();                          // Zeroes the heading of the robot.
 
-        frc::Pose2d     GetPose();                              // Returns the currently-estimated pose of the robot.
+        frc::Pose2d                   GetPose();                              // Returns the currently-estimated pose of the robot.
 
-        void            ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose.
+        void                          ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose.
 
-        void            SetFieldCentricity(bool fieldCentric);  // Sets the field centricity
-        bool            GetFieldCentricity();                   // Reads the field centricity
+        void                          SetFieldCentricity(bool fieldCentric);  // Sets the field centricity
+        bool                          GetFieldCentricity();                   // Reads the field centricity
 
-        void            SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
+        void                          SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
-        frc::SwerveDriveKinematics<ChassisConstants::NumberOfSwerveModules> m_kinematics{
-            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}, // Front Left
-            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2}, // Front Right
-            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}, // Rear Left
-            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2}};// Rear Right
+        frc::SwerveDriveKinematics<4> m_kinematics{
+            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},   // Front Left
+            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},   // Front Right
+            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},   // Rear Left
+            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2}};  // Rear Right
 
     private:
 
         studica::AHRS m_gyro{studica::AHRS::NavXComType::kMXP_SPI};  // The gyro sensor
 
-        bool          m_fieldCentricity = false;                     // Field centricity flag
+        bool          m_fieldCentricity = true;                      // Field centricity flag
 
         SwerveModule  m_frontLeft;
         SwerveModule  m_frontRight;
@@ -68,5 +68,5 @@ class Drivetrain : public frc2::SubsystemBase
         SwerveModule  m_rearRight;
 
         // Odometry class for tracking robot pose for the swerve modules modules
-        frc::SwerveDriveOdometry<ChassisConstants::NumberOfSwerveModules> m_odometry;
+        frc::SwerveDriveOdometry<4> m_odometry;
 };

@@ -3,8 +3,6 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/Command.h>
 
-#include "RobotContainer.h"
-
 #include "subsystems/Drivetrain.h"
 
 class ChassisDrive : public frc2::CommandHelper<frc2::Command, ChassisDrive>

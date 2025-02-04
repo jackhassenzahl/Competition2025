@@ -1,24 +1,24 @@
 #pragma once
 
+#include <frc/MathUtil.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc/controller/ProfiledPIDController.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/SwerveControllerCommand.h>
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
 
-class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, ChassisDriveToAprilTag>
+#include "Constants.h"
+
+class ChassisDriveSerpentine : public frc2::CommandHelper<frc2::Command, ChassisDriveSerpentine>
 {
     public:
 
-        explicit ChassisDriveToAprilTag(units::meters_per_second_t speed,
-                                        units::time::second_t      timeoutTime,
-                                        AprilTags                 *aprilTags,
-                                        Drivetrain                *drivetrain);
+        ChassisDriveSerpentine(units::velocity::meters_per_second_t speed,
+                               units::time::second_t                timeoutTime,
+                               Drivetrain                          *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -27,11 +27,11 @@ class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, Chassis
 
     private:
 
-        units::meters_per_second_t        m_speed;                    // The speed of the chassis
+        units::meters_per_second_t        m_speed;                    // The speed that the chassis will drive
         units::time::second_t             m_timeoutTime;              // The command time-out time
-        AprilTags                        *m_aprilTags;                // The AprilTag subsystem
         Drivetrain                       *m_drivetrain;               // The drivetrain subsystem
 
         units::second_t                   m_startTime;                // The start of the drive time
         frc2::SwerveControllerCommand<4> *m_swerveControllerCommand;  // The swerve controller command
 };
+

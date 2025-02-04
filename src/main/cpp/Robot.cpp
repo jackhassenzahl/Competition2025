@@ -5,7 +5,7 @@
 void Robot::RobotInit()
 {
     // Get the timed robot cycle period and store it in the container
-    m_container->SetPeriod(GetPeriod());
+    m_robotContainer->SetPeriod(GetPeriod());
 
     // Enable LiveWindow in test mode
     EnableLiveWindowInTest(true);
@@ -32,10 +32,10 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
     // Set the swerve wheels to zero
-    m_container->SetSwerveWheelAnglesToZero();
+    m_robotContainer->SetSwerveWheelAnglesToZero();
 
     // Get the selected autonomous command
-    m_autonomousCommand = m_container->GetAutonomousCommand();
+    m_autonomousCommand = m_robotContainer->GetAutonomousCommand();
 
     // Determine if the chooser returned a pointer to a command
     if (m_autonomousCommand != nullptr)
@@ -59,7 +59,7 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
     // Set the swerve wheels to zero
-    m_container->SetSwerveWheelAnglesToZero();
+    m_robotContainer->SetSwerveWheelAnglesToZero();
 
     // This makes sure that the autonomous stops running when teleop starts running.
     if (m_autonomousCommand != nullptr)

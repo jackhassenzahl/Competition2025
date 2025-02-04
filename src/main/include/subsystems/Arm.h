@@ -3,7 +3,6 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
 
-#include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/configs/Configs.hpp>
 
@@ -15,7 +14,7 @@ class Arm : public frc2::SubsystemBase
 
         Arm();
 
-        void SetHeight(units::length::meter_t position);
+        void SetAngle(units::angle::degree_t angle);
 
     private:
 

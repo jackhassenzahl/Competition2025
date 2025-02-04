@@ -148,6 +148,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition()
     // Determine the module wheel position
     auto drivePosition = units::meter_t{
         ((double) m_driveMotor.GetPosition().GetValue()) * SwerveConstants::DriveMotorConversion.value()};
+
     auto anglePosition = units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset};
 
     // Return the swerve module position

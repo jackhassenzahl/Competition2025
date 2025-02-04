@@ -20,6 +20,7 @@
 
 struct AprilTagInformation
 {
+    bool   Found;
     int    Identification;
     double X;
     double Y;
@@ -33,13 +34,13 @@ class AprilTags : public frc2::SubsystemBase
 {
     public:
 
-        explicit AprilTags();
+        explicit            AprilTags();
 
-        void     Periodic() override;
+        void                Periodic() override;
 
-        bool     GetTag(int id, AprilTagInformation &aprilTagInformation);
+        bool                GetTag(int id, AprilTagInformation &aprilTagInformation);
 
-        bool     GetClosestTag(AprilTagInformation &aprilTagInformation);
+        AprilTagInformation GetClosestTag();
 
     private:
 
