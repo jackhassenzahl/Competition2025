@@ -45,6 +45,9 @@ namespace CanConstants
     constexpr int ElevatorMotorCanId                 = 20;
 
     constexpr int ArmMotorCanId                      = 120390; // Change later
+    constexpr int GrabberMotorCanId                  = 120390; // Change later
+    constexpr int WristMotorCanId                    = 120390; // Change later
+    constexpr int ClimbMotorCanId                    = 120390; // Change later
 
     constexpr auto MotorConfigurationAttempts        =  5;
 }
@@ -119,6 +122,26 @@ namespace ElevatorConstants
 }
 #pragma endregion
 
+#pragma region GrabberConstants
+namespace GrabberConstants
+{
+    constexpr auto WristP                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto WristI                               = 2.0;              // Integral:        No output for integrated error
+    constexpr auto WristD                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    
+    constexpr auto GrabberP                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto GrabberI                               = 2.0;              // Integral:        No output for integrated error
+    constexpr auto GrabberD                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    
+    constexpr auto GrabberMaxAmperage                =     60;
+    constexpr auto WristMaxAmperage                =     60;
+
+    constexpr auto WristRadiansToMotorRevolutions  = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
+
+    constexpr auto GrabberMaxRevolutionsPerMinute  = 180; // About 3 revolutions per second
+}
+#pragma endregion
+
 #pragma region ArmConstants
 namespace ArmConstants
 {
@@ -134,6 +157,27 @@ namespace ArmConstants
     constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
 
     constexpr auto AngleToTurnsConversionFactor    = 100.0;            // The number of rotation per degree
+}
+#pragma endregion
+
+#pragma region ClimbConstants
+namespace ClimbConstants
+{
+    constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 1.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+
+    constexpr auto MotionMagicCruiseVelocity       = 100_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
+
+    constexpr auto AngleToTurnsConversionFactor    = 100.0;            // The number of rotation per degree
+
+    constexpr auto MinClimbPosition                = 100_deg;
+    constexpr auto MaxClimbPosition                = 270_deg;
 }
 #pragma endregion
 

@@ -62,11 +62,11 @@ void Arm::ConfigureArmMotor(int motorCanId)
 
 #pragma region SetAngle
 /// @brief Method to set the arm angle.
-/// @param position The setpoint for the arm angle.
+/// @param position The setpoint for the arm angle. Takes -180 -> 180
 void Arm::SetAngle(units::angle::degree_t angle)
 {
     // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor);
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / 360.0);
 
     // Set the arm set position
     m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
