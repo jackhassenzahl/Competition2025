@@ -75,10 +75,10 @@ namespace ChassisConstants
 namespace SwerveConstants
 {
     // Define the absolute encoder value for forward
-    constexpr auto FrontRightForwardAngle =  0.301 * 2.0_rad * std::numbers::pi;
-    constexpr auto FrontLeftForwardAngle  = -0.464 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearRightForwardAngle  = -0.064 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearLeftForwardAngle   = -0.022 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontRightForwardAngle          =  0.301 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontLeftForwardAngle           = -0.464 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearRightForwardAngle           = -0.064 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearLeftForwardAngle            = -0.022 * 2.0_rad * std::numbers::pi;
 
     // Drive motor parameters
     constexpr auto DriveMaxAmperage                =     60_A;
@@ -125,16 +125,16 @@ namespace ElevatorConstants
 #pragma region GrabberConstants
 namespace GrabberConstants
 {
-    constexpr auto WristP                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto WristI                               = 2.0;              // Integral:        No output for integrated error
-    constexpr auto WristD                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    
-    constexpr auto GrabberP                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto GrabberI                               = 2.0;              // Integral:        No output for integrated error
-    constexpr auto GrabberD                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    
-    constexpr auto GrabberMaxAmperage                =     60;
-    constexpr auto WristMaxAmperage                =     60;
+    constexpr auto WristP                          = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto WristI                          = 2.0;              // Integral:        No output for integrated error
+    constexpr auto WristD                          = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+
+    constexpr auto GrabberP                        = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto GrabberI                        = 2.0;              // Integral:        No output for integrated error
+    constexpr auto GrabberD                        = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+
+    constexpr auto GrabberMaxAmperage              =  60;
+    constexpr auto WristMaxAmperage                =  60;
 
     constexpr auto WristRadiansToMotorRevolutions  = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
 

@@ -39,10 +39,10 @@ class Leds : public frc2::SubsystemBase
         void Strobe();
         void ShootingAnimation();
 
-        LedMode m_ledMode;            // The LED mode
+        LedMode             m_ledMode;            // The LED mode
 
-        int     m_firstPixelHue = 0;  // Store the hue of the first pixel for rainbow mode
-        int     m_cycleCounter  = 0;  // Counter for dynamic LED modes
+        int                 m_firstPixelHue = 0;  // Store the hue of the first pixel for rainbow mode
+        int                 m_cycleCounter  = 0;  // Counter for dynamic LED modes
 
         // Create an LED pattern that will display a rainbow across all hues at maximum saturation and half brightness and
         // that scrolls the rainbow pattern across the LED strip, moving at a speed of 1 meter per second.

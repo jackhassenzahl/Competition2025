@@ -8,12 +8,14 @@
 class GrabberSetWristAngle : public frc2::CommandHelper<frc2::Command, GrabberSetWristAngle>
 {
     public:
+
         GrabberSetWristAngle(units::angle::degree_t setGrabberAngleTo, Grabber *grabber);
 
         void Execute()    override;
         bool IsFinished() override;
-    
+
     private:
-        units::angle::degree_t     m_angle;
-        Grabber                   *m_grabber;
+
+        units::angle::degree_t  m_angle;
+        Grabber                *m_grabber;
 };

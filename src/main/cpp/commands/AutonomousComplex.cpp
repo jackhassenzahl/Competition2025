@@ -1,10 +1,12 @@
 #include "commands/AutonomousComplex.h"
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.
-// For more information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+#pragma region AutonomousComplex
+/// @brief Constructor for the AutonomousComplex class.
+/// @param leds The Leds subsystem.
+/// @param drivetrain The Drivetrain subsystem.
 AutonomousComplex::AutonomousComplex(Leds *leds, Drivetrain *drivetrain)
 {
-  // Add your commands here, e.g.
-  AddCommands(AutonomousLed(leds), AutonomousParallel(leds, drivetrain));
+    // Add your commands here, e.g.
+    AddCommands(AutonomousLed(leds), AutonomousParallel(leds, drivetrain));
 }
+#pragma endregion

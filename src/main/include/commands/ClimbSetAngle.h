@@ -12,7 +12,7 @@ class ClimbSetAngle : public frc2::CommandHelper<frc2::Command, ClimbSetAngle>
 
         void Execute()    override;
         bool IsFinished() override;
-    
+
     private:
         units::angle::degree_t m_angle;
         Climb                 *m_climb;

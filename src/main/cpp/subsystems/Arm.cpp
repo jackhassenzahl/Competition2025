@@ -66,6 +66,7 @@ void Arm::ConfigureArmMotor(int motorCanId)
 void Arm::SetAngle(units::angle::degree_t angle)
 {
     // Compute the number of turns based on the specficied angle
+//    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor);
     units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / 360.0);
 
     // Set the arm set position

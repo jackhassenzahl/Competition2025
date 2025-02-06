@@ -3,6 +3,7 @@
 static void VisionThread();
 
 #pragma region AprilTags (constructor)
+/// @brief Constructor for the AprilTags class.
 AprilTags::AprilTags() : m_instance(nt::NetworkTableInstance::GetDefault()),
                          m_aprilTagsTable(m_instance.GetTable("apriltags")),
                          m_aprilTagsIntegerArrayTopic(m_aprilTagsTable->GetIntegerArrayTopic("tags")),

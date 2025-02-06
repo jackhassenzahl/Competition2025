@@ -1,7 +1,7 @@
 #include "commands/SetLeds.h"
 
 #pragma region SetLeds (constructor) - Mode and Leds
-/// @brief Command to set the LED mode.
+/// @brief Coinstructor for the SetLeds command.
 /// @param Mode The LED mode.
 /// @param m_leds The LED subsystem.
 SetLeds::SetLeds(int Mode, Leds *leds) : m_mode(Mode), m_leds(leds)
@@ -11,7 +11,6 @@ SetLeds::SetLeds(int Mode, Leds *leds) : m_mode(Mode), m_leds(leds)
 
     // Declare subsystem dependencies
     AddRequirements({m_leds});
-
 }
 #pragma endregion
 
@@ -48,7 +47,7 @@ void SetLeds::Initialize()
 #pragma endregion
 
 #pragma region IsFinished
-/// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
+/// @brief Indicates if the command has completed.
 /// @return True is the command has completed.
 bool SetLeds::IsFinished()
 {

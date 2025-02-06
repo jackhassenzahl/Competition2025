@@ -12,8 +12,8 @@ class GrabberSetIntakeWheelVelocity : public frc2::CommandHelper<frc2::Command, 
 
         void Execute()    override;
         bool IsFinished() override;
-    
+
     private:
-        double                     m_velocity;
-        Grabber                   *m_grabber;
+        double   m_velocity;
+        Grabber *m_grabber;
 };

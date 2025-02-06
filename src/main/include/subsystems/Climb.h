@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/CommandPtr.h>
 
@@ -13,11 +12,13 @@
 class Climb : public frc2::SubsystemBase
 {
     public:
+
         Climb();
 
         void SetAngle(units::angle::degree_t angle);
 
     private:
+
         void ConfigureClimbMotor(int motorCanId);
 
         ctre::phoenix6::hardware::TalonFX           *m_climbMotor;

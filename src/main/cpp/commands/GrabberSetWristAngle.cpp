@@ -1,24 +1,35 @@
 #include "commands/GrabberSetWristAngle.h"
 
+#pragma region GrabberSetWristAngle
+/// @brief Constructor for the GrabberSetWristAngle class.
+/// @param setGrabberAngleTo The angle to set the grabber to.
+/// @param grabber The grabber subsystem.
 GrabberSetWristAngle::GrabberSetWristAngle(units::angle::degree_t setGrabberAngleTo, Grabber *grabber) :
-                             m_angle(setGrabberAngleTo),  m_grabber(grabber)
+                                           m_angle(setGrabberAngleTo), m_grabber(grabber)
 {
     // Set the command name
     SetName("GrabberSetWristAngle");
-    // asdf
-    
+
     // Declare subsystem dependencies
     AddRequirements(grabber);
 }
+#pragma endregion
 
-// Called repeatedly when this Command is scheduled to run
-void GrabberSetWristAngle::Execute() 
+#pragma region Execute
+/// @brief Called repeatedly when this Command is scheduled to run.
+void GrabberSetWristAngle::Execute()
 {
+    // Set the grabber angle
     m_grabber->SetWristAngle(m_angle);
 }
+#pragma endregion
 
-/// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
+#pragma region IsFinished
+/// @brief Indicates if the command has completed.
 /// @return True is the command has completed.
-bool GrabberSetWristAngle::IsFinished() {
+bool GrabberSetWristAngle::IsFinished()
+{
+    // Execute only runs once
     return true;
 }
+#pragma endregion

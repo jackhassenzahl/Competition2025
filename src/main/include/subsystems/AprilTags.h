@@ -46,6 +46,7 @@ class AprilTags : public frc2::SubsystemBase
 
         nt::NetworkTableInstance          m_instance;
         std::shared_ptr<nt::NetworkTable> m_aprilTagsTable;
+
         nt::IntegerArrayTopic             m_aprilTagsIntegerArrayTopic;
         nt::IntegerArraySubscriber        m_aprilTagsIntegerArraySubscriber;
 

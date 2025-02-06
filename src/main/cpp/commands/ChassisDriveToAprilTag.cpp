@@ -103,7 +103,7 @@ void ChassisDriveToAprilTag::Execute()
 #pragma endregion
 
 #pragma region IsFinished
-/// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
+/// @brief Indicates if the command has completed.
 /// @return True is the command has completed.
 bool ChassisDriveToAprilTag::IsFinished()
 {

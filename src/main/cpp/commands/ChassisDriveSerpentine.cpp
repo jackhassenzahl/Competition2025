@@ -1,5 +1,10 @@
 #include "commands/ChassisDriveSerpentine.h"
 
+#pragma region ChassisDriveSerpentine
+/// @brief Constructor for the ChassisDriveSerpentine class.
+/// @param speed The speed to move the chassis.
+/// @param timeoutTime The time-out time for the command.
+/// @param drivetrain The Drivetrain subsystem.
 ChassisDriveSerpentine::ChassisDriveSerpentine(units::velocity::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) :
                                                m_speed(speed), m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
@@ -11,9 +16,10 @@ ChassisDriveSerpentine::ChassisDriveSerpentine(units::velocity::meters_per_secon
     // Ensure the SwerveControllerCommand is set to nullptr
     m_swerveControllerCommand = nullptr;
 }
+#pragma endregion
 
 #pragma region Initialize
-// Called when the command is initially scheduled.
+/// @brief Called when the command is initially scheduled.
 void ChassisDriveSerpentine::Initialize()
 {
     try
@@ -80,7 +86,7 @@ void ChassisDriveSerpentine::Execute()
 #pragma endregion
 
 #pragma region IsFinished
-/// @brief Indicates if the command has completed. Make this return true when this Command no longer needs to run execute().
+/// @brief Indicates if the command has completed.
 /// @return True is the command has completed.
 bool ChassisDriveSerpentine::IsFinished()
 {

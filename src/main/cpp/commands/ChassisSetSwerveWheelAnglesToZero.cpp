@@ -22,7 +22,8 @@ void ChassisSetSwerveWheelAnglesToZero::Execute()
 #pragma endregion
 
 #pragma region IsFinished
-// Returns true when the command should end.
+/// @brief Returns true when the command should end.
+/// @return True when the command should end.
 bool ChassisSetSwerveWheelAnglesToZero::IsFinished()
 {
     // Execute only runs once

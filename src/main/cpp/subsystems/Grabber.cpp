@@ -1,25 +1,27 @@
 #include "subsystems/Grabber.h"
 
-
+#pragma region Grabber
+/// @brief The Constructor for the Grabber class.
 Grabber::Grabber() :
             m_grabberMotor(CanConstants::GrabberMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
             m_grabberEncoder(m_wristMotor.GetEncoder()),
             m_grabberTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
-           
+
             m_wristMotor(CanConstants::WristMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
             m_wristEncoder(m_wristMotor.GetEncoder()),
             m_wristTurnClosedLoopController(m_wristMotor.GetClosedLoopController())
 {
     ConfigGrabberMotor();
-    ConfigGrabberMotor();
+    ConfigWristMotor();
 }
+#pragma endregion
 
-
+#pragma region ConfigGrabberMotor
+/// @brief Method to configure the Grabber motor using MotionMagic.
 void Grabber::ConfigGrabberMotor()
 {
     // Configure the angle motor
     static rev::spark::SparkMaxConfig sparkMaxConfig{};
-
 
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
@@ -39,17 +41,17 @@ void Grabber::ConfigGrabberMotor()
         .PositionWrappingEnabled(true);
         //.PositionWrappingInputRange(0, 2 * std::numbers::pi);  TODO: Try these settings
 
-
     // Write the configuration to the motor controller
     m_grabberMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
+#pragma endregion
 
-
+#pragma region ConfigWristMotor
+/// @brief Method to configure the Wrist motor using MotionMagic.
 void Grabber::ConfigWristMotor()
 {
     // Configure the angle motor
     static rev::spark::SparkMaxConfig sparkMaxConfig{};
-
 
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
@@ -69,38 +71,36 @@ void Grabber::ConfigWristMotor()
         .PositionWrappingEnabled(true);
         //.PositionWrappingInputRange(0, 2 * std::numbers::pi);  TODO: Try these settings
 
-
     // Write the configuration to the motor controller
     m_wristMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
+#pragma endregion
 
-
-/// @brief
-/// @param velocity
+#pragma region SetGrabberWheelsVelocity
+/// @brief Method to set the Grabber wheels velocity.
+/// @param velocity The setpoint for the Grabber wheels velocity.
 void Grabber::SetGrabberWheelsVelocity(double velocity)
 {
-    if (fabs(velocity) > GrabberConstants::GrabberMaxRevolutionsPerMinute)
-    {
-        return;
-    }
+    // Make sure the velocity is within the allowable range
+    if (velocity > GrabberConstants::GrabberMaxRevolutionsPerMinute)
+        velocity = GrabberConstants::GrabberMaxRevolutionsPerMinute;
+    else if (velocity < -GrabberConstants::GrabberMaxRevolutionsPerMinute)
+        velocity = -GrabberConstants::GrabberMaxRevolutionsPerMinute;
 
-
-    m_wristTurnClosedLoopController
-        .SetReference(velocity, rev::spark::SparkMax::ControlType::kVelocity);
+    // Set the velocity of the Grabber wheels
+    m_wristTurnClosedLoopController.SetReference(velocity, rev::spark::SparkMax::ControlType::kVelocity);
 }
+#pragma endregion
 
-
+#pragma region SetWristAngle
+/// @brief Method to set the Wrist angle.
+/// @param position The setpoint for the Wrist angle.
 void Grabber::SetWristAngle(units::angle::degree_t position)
 {
-    // This is in radians but conversion sucks:
+    // Convert the position to radians
     double positionRadian = (position.value() * std::numbers::pi) / 180.0;
-   
-    m_wristTurnClosedLoopController
-        .SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
+
+    // Set the Wrist set position
+    m_wristTurnClosedLoopController.SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
 }
-
-
-
-
-
-
+#pragma endregion
