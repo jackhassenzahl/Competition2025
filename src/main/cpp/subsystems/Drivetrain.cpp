@@ -5,10 +5,10 @@ using namespace CanConstants;
 #pragma region Drivetrain (constructor)
 /// @brief The Constructor for the Drivetrain class.
 Drivetrain::Drivetrain()
-    : m_frontLeft {SwerveFrontLeftDriveMotorCanId,  SwerveFrontLeftAngleMotorCanId,  SwerveFrontLeftAngleEncoderCanId,  ChassisConstants::FrontLeftChassisAngularOffset},
-      m_frontRight{SwerveFrontRightDriveMotorCanId, SwerveFrontRightAngleMotorCanId, SwerveFrontRightAngleEncoderCanId, ChassisConstants::FrontRightChassisAngularOffset},
-      m_rearLeft  {SwerveRearLeftDriveMotorCanId,   SwerveRearLeftAngleMotorCanId,   SwerveRearLeftAngleEncoderCanId,   ChassisConstants::RearLeftChassisAngularOffset},
-      m_rearRight {SwerveRearRightDriveMotorCanId,  SwerveRearRightAngleMotorCanId,  SwerveRearRightAngleEncoderCanId,  ChassisConstants::RearRightChassisAngularOffset},
+    : m_frontLeft {SwerveFrontLeftDriveMotorCanId,  SwerveFrontLeftAngleMotorCanId,  SwerveFrontLeftAngleEncoderCanId },
+      m_frontRight{SwerveFrontRightDriveMotorCanId, SwerveFrontRightAngleMotorCanId, SwerveFrontRightAngleEncoderCanId},
+      m_rearLeft  {SwerveRearLeftDriveMotorCanId,   SwerveRearLeftAngleMotorCanId,   SwerveRearLeftAngleEncoderCanId  },
+      m_rearRight {SwerveRearRightDriveMotorCanId,  SwerveRearRightAngleMotorCanId,  SwerveRearRightAngleEncoderCanId },
       m_odometry  {m_kinematics, frc::Rotation2d(units::radian_t{m_gyro.GetAngle()}),
                   {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                    m_rearLeft.GetPosition(),  m_rearRight.GetPosition()}, frc::Pose2d{}}
@@ -82,10 +82,15 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
 /// @brief
 void Drivetrain::SetX()
 {
-    m_frontLeft. SetDesiredState(frc::SwerveModuleState{0_mps, frc::Rotation2d{ 45_deg}}, "Front Left " );
-    m_frontRight.SetDesiredState(frc::SwerveModuleState{0_mps, frc::Rotation2d{-45_deg}}, "Front Right ");
-    m_rearLeft.  SetDesiredState(frc::SwerveModuleState{0_mps, frc::Rotation2d{-45_deg}}, "Rear Left "  );
-    m_rearRight. SetDesiredState(frc::SwerveModuleState{0_mps, frc::Rotation2d{ 45_deg}}, "Rear Right " );
+    frc::SwerveModuleState frontLeftState {0_mps, frc::Rotation2d{ 45_deg}};
+    frc::SwerveModuleState frontRightState{0_mps, frc::Rotation2d{-45_deg}};
+    frc::SwerveModuleState rearLeftState  {0_mps, frc::Rotation2d{-45_deg}};
+    frc::SwerveModuleState rearRightState {0_mps, frc::Rotation2d{ 45_deg}};
+    
+    m_frontLeft. SetDesiredState(frontLeftState,  "Front Left " );
+    m_frontRight.SetDesiredState(frontRightState, "Front Right ");
+    m_rearLeft.  SetDesiredState(rearLeftState,   "Rear Left "  );
+    m_rearRight. SetDesiredState(rearRightState,  "Rear Right " );
 }
 #pragma endregion
 

@@ -44,10 +44,10 @@ namespace CanConstants
 
     constexpr int ElevatorMotorCanId                 = 20;
 
-    constexpr int ArmMotorCanId                      = 120390; // Change later
-    constexpr int GrabberMotorCanId                  = 120390; // Change later
-    constexpr int WristMotorCanId                    = 120390; // Change later
-    constexpr int ClimbMotorCanId                    = 120390; // Change later
+    constexpr int ArmMotorCanId                      = 30; // Change later
+    constexpr int GrabberMotorCanId                  = 40; // Change later
+    constexpr int WristMotorCanId                    = 50; // Change later
+    constexpr int ClimbMotorCanId                    = 60; // Change later
 
     constexpr auto MotorConfigurationAttempts        =  5;
 }
@@ -62,12 +62,6 @@ namespace ChassisConstants
 
     constexpr auto MaxSpeed                       = 4.8_mps;
     constexpr auto MaxAngularSpeed                = std::numbers::pi * 2_rad_per_s;
-
-    // Angular offsets of the modules relative to the chassis in radians
-    constexpr auto FrontLeftChassisAngularOffset  = -std::numbers::pi / 2;
-    constexpr auto FrontRightChassisAngularOffset =  0.0;
-    constexpr auto RearLeftChassisAngularOffset   =  std::numbers::pi;
-    constexpr auto RearRightChassisAngularOffset  =  std::numbers::pi / 2;
 }
 #pragma endregion
 

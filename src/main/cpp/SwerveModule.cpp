@@ -5,14 +5,13 @@
 /// @param driveMotorCanId The CAN ID for the swerve module drive motor.
 /// @param angleMotorCanId The CAN ID for the swerve module angle motor.
 /// @param angleEncoderCanId The CAN ID for the swerve module angle encoder.
-/// @param chassisAngularOffset The offset of the swerve module to the chassis.
-SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId, double chassisAngularOffset) :
+SwerveModule::SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId) :
                            m_driveMotor(driveMotorCanId, CanConstants::CanBus),
                            m_angleMotor(angleMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
-                           m_chassisAngularOffset(chassisAngularOffset),
+                           m_angleAbsoluteEncoder(angleEncoderCanId, CanConstants::CanBus),
                            m_angleEncoder(m_angleMotor.GetEncoder()),
-                           m_turnClosedLoopController(m_angleMotor.GetClosedLoopController()),
-                           m_angleAbsoluteEncoder(angleEncoderCanId, CanConstants::CanBus)
+                           m_turnClosedLoopController(m_angleMotor.GetClosedLoopController())
+
 {
     // Configure the drive and angle motors
     ConfigureDriveMotor();
@@ -103,25 +102,18 @@ void SwerveModule::ConfigureAngleMotor()
 /// @brief Method to set the swerve module state to the desired state.
 /// @param desiredState The desired swerve module velocity and angle.
 /// @param description String to show the module state on the SmartDashboard.
-void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState, std::string description)
+void SwerveModule::SetDesiredState(frc::SwerveModuleState& desiredState, std::string description)
 {
     frc::SmartDashboard::PutNumber(description + "Drive", (double) desiredState.speed);
     frc::SmartDashboard::PutNumber(description + "Angle", (double) desiredState.angle.Degrees().value());
 
-    // Apply chassis angular offset to the desired state.
-    frc::SwerveModuleState correctedDesiredState{};
-    correctedDesiredState.speed = desiredState.speed / SwerveConstants::DriveMotorConversion.value();
-    correctedDesiredState.angle = desiredState.angle + frc::Rotation2d(units::radian_t{m_chassisAngularOffset});
-
     // Optimize the reference state to avoid spinning further than 90 degrees.
-    correctedDesiredState.Optimize(frc::Rotation2d(units::radian_t{m_angleEncoder.GetPosition()}));
+    desiredState.Optimize(frc::Rotation2d(units::radian_t{m_angleEncoder.GetPosition()}));
 
-    // Set the motor speed
-    m_driveMotor.SetControl(ctre::phoenix6::controls::VelocityVoltage((units::angular_velocity::turns_per_second_t) correctedDesiredState.speed.value()));
-    m_turnClosedLoopController.SetReference(correctedDesiredState.angle.Radians().value(), rev::spark::SparkMax::ControlType::kPosition);
-
-    // Remeber the desired state
-    m_desiredState = desiredState;
+    // Set the motor speed and angle
+    m_driveMotor.SetControl(ctre::phoenix6::controls::VelocityVoltage((units::angular_velocity::turns_per_second_t)
+                           (desiredState.speed.value() / SwerveConstants::DriveMotorConversion.value())));
+    m_turnClosedLoopController.SetReference(desiredState.angle.Radians().value(), rev::spark::SparkMax::ControlType::kPosition);
 }
 #pragma endregion
 
@@ -134,7 +126,7 @@ frc::SwerveModuleState SwerveModule::GetState()
     auto driveVelocity = units::meters_per_second_t {
         (double) m_driveMotor.GetVelocity().GetValue() * SwerveConstants::DriveMotorConversion.value()};
 
-    auto anglePosition = units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset};
+    auto anglePosition = units::radian_t{m_angleEncoder.GetPosition()};
 
     // Return the swerve module state
     return {driveVelocity, anglePosition};
@@ -149,7 +141,7 @@ frc::SwerveModulePosition SwerveModule::GetPosition()
     auto drivePosition = units::meter_t{
         ((double) m_driveMotor.GetPosition().GetValue()) * SwerveConstants::DriveMotorConversion.value()};
 
-    auto anglePosition = units::radian_t{m_angleEncoder.GetPosition() - m_chassisAngularOffset};
+    auto anglePosition = units::radian_t{m_angleEncoder.GetPosition()};
 
     // Return the swerve module position
     return {drivePosition, anglePosition};
