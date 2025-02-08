@@ -42,7 +42,6 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleMotorCanId    = 17;
     constexpr auto SwerveRearRightAngleEncoderCanId  = 23;
 
-
     constexpr int ArmMotorCanId                      = 30;
     constexpr int GrabberMotorCanId                  = 31;
     constexpr int WristMotorCanId                    = 32;
@@ -102,7 +101,7 @@ namespace SwerveConstants
 #pragma region ElevatorConstants
 namespace ElevatorConstants
 {
-    constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto P                               = 10.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
     constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
     constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
     constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
@@ -113,7 +112,7 @@ namespace ElevatorConstants
     constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
     constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
 
-    constexpr auto PositionToTurnsConversionFactor = 100.0;            // The number of rotation per meter
+    constexpr auto PositionToTurnsConversionFactor =  16.0;            // The number of rotation per meter
 }
 #pragma endregion
 
@@ -253,7 +252,7 @@ namespace ApriltagConstants
 namespace LedConstants
 {
     constexpr auto Length      =  40;  // The length of the LED string
-    constexpr auto PwmPort     =   5;
+    constexpr auto PwmPort     =   9;
     constexpr auto Brightness  = 0.5;
 
     constexpr auto Red         = 255;

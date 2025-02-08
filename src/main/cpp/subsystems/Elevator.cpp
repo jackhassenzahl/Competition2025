@@ -23,6 +23,7 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
     // Add the Motor Output section settings
     ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = elevatorMotorConfiguration.MotorOutput;
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+    motorOutputConfigs.Inverted = true;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = elevatorMotorConfiguration.Slot0;
     slot0Configs.kS = ElevatorConstants::S;
