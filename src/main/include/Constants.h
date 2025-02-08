@@ -26,28 +26,29 @@ namespace CanConstants
 {
     const     auto CanBus                            = "rio";
 
-    constexpr auto SwerveFrontLeftDriveMotorCanId    =  6;
-    constexpr auto SwerveFrontLeftAngleMotorCanId    =  5;
-    constexpr auto SwerveFrontLeftAngleEncoderCanId  =  4;
+    constexpr auto SwerveFrontLeftDriveMotorCanId    = 10;
+    constexpr auto SwerveFrontLeftAngleMotorCanId    = 11;
+    constexpr auto SwerveFrontLeftAngleEncoderCanId  = 20;
 
-    constexpr auto SwerveFrontRightDriveMotorCanId   =  3;
-    constexpr auto SwerveFrontRightAngleMotorCanId   =  2;
-    constexpr auto SwerveFrontRightAngleEncoderCanId = 12;
+    constexpr auto SwerveFrontRightDriveMotorCanId   = 12;
+    constexpr auto SwerveFrontRightAngleMotorCanId   = 13;
+    constexpr auto SwerveFrontRightAngleEncoderCanId = 21;
 
-    constexpr auto SwerveRearLeftDriveMotorCanId     =  9;
-    constexpr auto SwerveRearLeftAngleMotorCanId     =  8;
-    constexpr auto SwerveRearLeftAngleEncoderCanId   =  7;
+    constexpr auto SwerveRearLeftDriveMotorCanId     = 14;
+    constexpr auto SwerveRearLeftAngleMotorCanId     = 15;
+    constexpr auto SwerveRearLeftAngleEncoderCanId   = 22;
 
-    constexpr auto SwerveRearRightDriveMotorCanId    = 11;
-    constexpr auto SwerveRearRightAngleMotorCanId    = 10;
-    constexpr auto SwerveRearRightAngleEncoderCanId  = 13;
+    constexpr auto SwerveRearRightDriveMotorCanId    = 16;
+    constexpr auto SwerveRearRightAngleMotorCanId    = 17;
+    constexpr auto SwerveRearRightAngleEncoderCanId  = 23;
 
-    constexpr int ElevatorMotorCanId                 = 20;
 
-    constexpr int ArmMotorCanId                      = 120390; // Change later
-    constexpr int GrabberMotorCanId                  = 120390; // Change later
-    constexpr int WristMotorCanId                    = 120390; // Change later
-    constexpr int ClimbMotorCanId                    = 120390; // Change later
+    constexpr int ArmMotorCanId                      = 30;
+    constexpr int GrabberMotorCanId                  = 31;
+    constexpr int WristMotorCanId                    = 32;
+    constexpr int ElevatorMotorCanId                 = 33;
+
+    constexpr int ClimbMotorCanId                    = 40;
 
     constexpr auto MotorConfigurationAttempts        =  5;
 }
@@ -75,7 +76,7 @@ namespace ChassisConstants
 namespace SwerveConstants
 {
     // Define the absolute encoder value for forward
-    constexpr auto FrontRightForwardAngle          =  0.301 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontRightForwardAngle          = -0.191 * 2.0_rad * std::numbers::pi;
     constexpr auto FrontLeftForwardAngle           = -0.464 * 2.0_rad * std::numbers::pi;
     constexpr auto RearRightForwardAngle           = -0.064 * 2.0_rad * std::numbers::pi;
     constexpr auto RearLeftForwardAngle            = -0.022 * 2.0_rad * std::numbers::pi;

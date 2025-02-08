@@ -166,7 +166,7 @@ void SwerveModule::ResetDriveEncoder()
 
 #pragma region SetWheelAngleToForward
 /// @brief Method to set the swerve wheel encoder to the forward angle.
-/// @param angle The absolute angle for the forward direction.
+/// @param forwardAngle The absolute angle for the forward direction.
 void SwerveModule::SetWheelAngleToForward(units::angle::radian_t forwardAngle)
 {
     // Ensure the drive motor encoder is reset to zero
