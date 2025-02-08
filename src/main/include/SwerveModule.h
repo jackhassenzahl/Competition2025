@@ -29,9 +29,9 @@ class SwerveModule
 {
     public:
 
-        explicit                  SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId, double chassisAngularOffset);
+        explicit                  SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId);
 
-        void                      SetDesiredState(const frc::SwerveModuleState& state, std::string description);  // Sets the desired state for the module
+        void                      SetDesiredState(frc::SwerveModuleState& state, std::string description);  // Sets the desired state for the module
 
         frc::SwerveModuleState    GetState();                                            // Returns the current state of the module
 
@@ -52,13 +52,8 @@ class SwerveModule
 
         ctre::phoenix6::hardware::TalonFX     m_driveMotor;
         rev::spark::SparkMax                  m_angleMotor;
-
-        rev::spark::SparkClosedLoopController m_turnClosedLoopController;
-
-        rev::spark::SparkRelativeEncoder      m_angleEncoder;
-        double                                m_chassisAngularOffset = 0;
-
         ctre::phoenix6::hardware::CANcoder    m_angleAbsoluteEncoder;
 
-        frc::SwerveModuleState                m_desiredState{units::meters_per_second_t{0.0}, frc::Rotation2d()};
+        rev::spark::SparkRelativeEncoder      m_angleEncoder;
+        rev::spark::SparkClosedLoopController m_turnClosedLoopController;
 };

@@ -63,12 +63,6 @@ namespace ChassisConstants
 
     constexpr auto MaxSpeed                       = 4.8_mps;
     constexpr auto MaxAngularSpeed                = std::numbers::pi * 2_rad_per_s;
-
-    // Angular offsets of the modules relative to the chassis in radians
-    constexpr auto FrontLeftChassisAngularOffset  = -std::numbers::pi / 2;
-    constexpr auto FrontRightChassisAngularOffset =  0.0;
-    constexpr auto RearLeftChassisAngularOffset   =  std::numbers::pi;
-    constexpr auto RearRightChassisAngularOffset  =  std::numbers::pi / 2;
 }
 #pragma endregion
 
