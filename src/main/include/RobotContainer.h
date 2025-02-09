@@ -20,24 +20,32 @@
 
 // Subsystems
 #include "subsystems/AprilTags.h"
+#include "subsystems/Arm.h"
+#include "subsystems/Climb.h"
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Elevator.h"
+#include "subsystems/Grabber.h"
 #include "subsystems/Leds.h"
 
 // Commands
+#include "commands/AprilTagGet.h"
+#include "commands/ArmSetAngle.h"
 #include "commands/AutonomousComplex.h"
 #include "commands/AutonomousDoNothing.h"
 #include "commands/AutonomousLed.h"
 #include "commands/AutonomousParallel.h"
 #include "commands/AutonomousRaceGroup.h"
 #include "commands/ChassisDrive.h"
-#include "commands/ChassisDriveTime.h"
-#include "commands/ChassisDriveToAprilTag.h"
 #include "commands/ChassisDrivePose.h"
 #include "commands/ChassisDriveSerpentine.h"
+#include "commands/ChassisDriveTime.h"
+#include "commands/ChassisDriveToAprilTag.h"
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
+#include "commands/ClimbSetAngle.h"
 #include "commands/ElevatorSetHeight.h"
+#include "commands/GrabberSetIntakeWheelVelocity.h"
+#include "commands/GrabberSetWristAngle.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"
@@ -82,8 +90,11 @@ class RobotContainer
 
         // Instantiate the robot subsystems
         AprilTags                             m_aprilTags;
+        Arm                                   m_arm;
+        Climb                                 m_climb;
         Drivetrain                            m_drivetrain;
         Elevator                              m_elevator;
+        Grabber                               m_grabber;
         Leds                                  m_leds;
 
         units::second_t                       m_period;

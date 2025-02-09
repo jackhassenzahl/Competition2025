@@ -1,7 +1,7 @@
 #include "subsystems/Elevator.h"
 
 #pragma region Elevator (constructor)
-/// @brief Class to support the elevator subsystem.
+/// @brief Class to support the Elevator subsystem.
 Elevator::Elevator()
 {
     // Configure the elevator motor
@@ -23,7 +23,7 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
     // Add the Motor Output section settings
     ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = elevatorMotorConfiguration.MotorOutput;
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
-    motorOutputConfigs.Inverted = true;
+    motorOutputConfigs.Inverted    = true;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = elevatorMotorConfiguration.Slot0;
     slot0Configs.kS = ElevatorConstants::S;
@@ -58,6 +58,9 @@ void Elevator::ConfigureElevatorMotor(int motorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure elevator motor. Error: " << status.GetName() << std::endl;
+
+    // Set the elevator motor control to the default
+    SetHeight(0_m);
 }
 #pragma endregion
 

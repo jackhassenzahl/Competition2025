@@ -42,12 +42,12 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleMotorCanId    = 17;
     constexpr auto SwerveRearRightAngleEncoderCanId  = 23;
 
-    constexpr int ArmMotorCanId                      = 30;
-    constexpr int GrabberMotorCanId                  = 31;
-    constexpr int WristMotorCanId                    = 32;
-    constexpr int ElevatorMotorCanId                 = 33;
+    constexpr auto ArmMotorCanId                     = 30;
+    constexpr auto GrabberMotorCanId                 = 31;
+    constexpr auto WristMotorCanId                   = 32;
+    constexpr auto ElevatorMotorCanId                = 33;
 
-    constexpr int ClimbMotorCanId                    = 40;
+    constexpr auto ClimbMotorCanId                   = 40;
 
     constexpr auto MotorConfigurationAttempts        =  5;
 }
@@ -101,31 +101,31 @@ namespace SwerveConstants
 #pragma region ElevatorConstants
 namespace ElevatorConstants
 {
-    constexpr auto P                               = 10.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
-    constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
-    constexpr auto V                               = 1.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 0.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 100_tps;          // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 110_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto PositionToTurnsConversionFactor =  16.0;            // The number of rotation per meter
+    constexpr auto PositionToTurnsConversionFactor = 100.0;            // The number of motor rotations per meter
 }
 #pragma endregion
 
 #pragma region GrabberConstants
 namespace GrabberConstants
 {
-    constexpr auto WristP                          = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto WristI                          = 2.0;              // Integral:        No output for integrated error
-    constexpr auto WristD                          = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto WristP                          = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto WristI                          = 0.0;              // Integral:        No output for integrated error
+    constexpr auto WristD                          = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
 
-    constexpr auto GrabberP                        = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto GrabberI                        = 2.0;              // Integral:        No output for integrated error
-    constexpr auto GrabberD                        = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto GrabberP                        = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto GrabberI                        = 0.0;              // Integral:        No output for integrated error
+    constexpr auto GrabberD                        = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
 
     constexpr auto GrabberMaxAmperage              =  60;
     constexpr auto WristMaxAmperage                =  60;
@@ -139,39 +139,39 @@ namespace GrabberConstants
 #pragma region ArmConstants
 namespace ArmConstants
 {
-    constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
-    constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
-    constexpr auto V                               = 1.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 0.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 100_tps;          // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 110_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto AngleToTurnsConversionFactor    = 100.0;            // The number of rotation per degree
+    constexpr auto AngleToTurnsConversionFactor    = 1.0;              // The number of motor rotations per degree
 }
 #pragma endregion
 
 #pragma region ClimbConstants
 namespace ClimbConstants
 {
-    constexpr auto P                               = 5.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                               = 2.0;              // Integral:        No output for integrated error
-    constexpr auto D                               = 0.0;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    constexpr auto S                               = 1.0;              // Static Friction: Add [voltage] output to overcome static friction
-    constexpr auto V                               = 1.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 0.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 100_tps;          // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         =  50_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 =  50_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 110_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto AngleToTurnsConversionFactor    = 100.0;            // The number of rotation per degree
+    constexpr auto AngleToTurnsConversionFactor    = 1.0;              // The number of motor rotations per degree
 
-    constexpr auto MinClimbPosition                = 100_deg;
-    constexpr auto MaxClimbPosition                = 270_deg;
+    constexpr auto MinClimbPosition                = -180_deg;         // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaxClimbPosition                =  180_deg;
 }
 #pragma endregion
 

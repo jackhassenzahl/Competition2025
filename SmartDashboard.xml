@@ -1,5 +1,27 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Climb: Climb" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="451" y="469"/>
+	</widget>
+	<widget field="Climb: Capture" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="437" y="442"/>
+	</widget>
+	<widget field="Climb: Start" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="453" y="413"/>
+	</widget>
+	<widget field="AngleMotor Encoder Position 3" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="497" y="664"/>
+	</widget>
+	<widget field="AngleMotor Encoder Position 2" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="497" y="641"/>
+	</widget>
+	<widget field="AngleMotor Encoder Position 1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="499" y="617"/>
+		<height>20</height>
+	</widget>
+	<widget field="Elevator: HalfMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="416" y="334"/>
+	</widget>
 	<widget field="Chassis: Serpentine " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="304" y="197"/>
 	</widget>
@@ -18,7 +40,7 @@
 		<location x="417" y="366"/>
 	</widget>
 	<widget field="Elevator: Zero" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="444" y="337"/>
+		<location x="442" y="305"/>
 	</widget>
 	<widget field="Chassis: Time " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="336" y="54"/>
@@ -138,6 +160,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="ChassisDriveToAprilTag::Initialize"/>
-	<hidden field="Chassis: Trajectory "/>
 </xml>

@@ -31,9 +31,13 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Chassis: AprilTag ",   new ChassisDriveToAprilTag(1.0_mps, 10_s,  &m_aprilTags, &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Serpentine ", new ChassisDriveSerpentine(1.0_mps,             10_s,    &m_drivetrain));
 
-    frc::SmartDashboard::PutData("Elevator: Zero",       new ElevatorSetHeight(0_m, &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: HalfMeter",   new ElevatorSetHeight(0.5_m, &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: OneMeter",   new ElevatorSetHeight(1_m, &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: Zero",       new ElevatorSetHeight(0_m,   &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: HalfMeter",  new ElevatorSetHeight(0.5_m, &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: OneMeter",   new ElevatorSetHeight(1_m,   &m_elevator));
+
+    frc::SmartDashboard::PutData("Climb: Start",         new ClimbSetAngle(  0_deg, &m_climb));
+    frc::SmartDashboard::PutData("Climb: Capture",       new ClimbSetAngle(-20_deg, &m_climb));
+    frc::SmartDashboard::PutData("Climb: Climb",         new ClimbSetAngle( 50_deg, &m_climb));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();

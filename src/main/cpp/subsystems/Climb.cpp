@@ -4,20 +4,20 @@
 /// @brief Class to support the Climb subsystem.
 Climb::Climb()
 {
-    // Configure the Climb motor
+    // Configure the climb motor
     ConfigureClimbMotor(CanConstants::ClimbMotorCanId);
 }
 #pragma endregion
 
 #pragma region ConfigureClimbMotor
-/// @brief Method to configure the Climb motor using MotionMagic.
-/// @param motorCanId The CAN identifier for the Climb motor.
+/// @brief Method to configure the climb motor using MotionMagic.
+/// @param motorCanId The CAN identifier for the climb motor.
 void Climb::ConfigureClimbMotor(int motorCanId)
 {
-    // Instantiate the Climb motor
+    // Instantiate the climb motor
     m_climbMotor = new ctre::phoenix6::hardware::TalonFX{motorCanId, CanConstants::CanBus};
 
-    // Create the Climb motor configuration
+    // Create the climb motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration climbMotorConfiguration{};
 
     // Add the Motor Output section settings
@@ -57,24 +57,26 @@ void Climb::ConfigureClimbMotor(int motorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure climb motor. Error: " << status.GetName() << std::endl;
+
+    // Set the climb motor control to the default
+    SetAngle(0_deg);
 }
 #pragma endregion
 
 #pragma region SetAngle
 /// @brief Method to set the climb angle.
-/// @param position The setpoint for the climb angle. takes 15 - 180
+/// @param position The setpoint for the climb angle.
 void Climb::SetAngle(units::angle::degree_t angle)
 {
-    // Making sure that the climb doesn't try to go through the robot:
-    if (angle < ClimbConstants::MinClimbPosition)
-       angle = ClimbConstants::MinClimbPosition;
+    // Making sure that the climb doesn't try to go through the robot
+    // if (angle < ClimbConstants::MinClimbPosition)  // TODO: Need to calibrate angle to motor rotations
+    //    angle = ClimbConstants::MinClimbPosition;
 
-    if (angle > ClimbConstants::MaxClimbPosition)
-        angle = ClimbConstants::MaxClimbPosition;
+    // if (angle > ClimbConstants::MaxClimbPosition)
+    //     angle = ClimbConstants::MaxClimbPosition;
 
     // Compute the number of turns based on the specficied angle
-    // units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor);
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / 360.0);
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ClimbConstants::AngleToTurnsConversionFactor);
 
     // Set the climb set position
     m_climbMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));

@@ -32,7 +32,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
     // Set the swerve wheels to zero
-    m_robotContainer->SetSwerveWheelAnglesToZero();
+    //m_robotContainer->SetSwerveWheelAnglesToZero();
 
     // Get the selected autonomous command
     m_autonomousCommand = m_robotContainer->GetAutonomousCommand();
@@ -59,7 +59,7 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
     // Set the swerve wheels to zero
-    m_robotContainer->SetSwerveWheelAnglesToZero();
+    //m_robotContainer->SetSwerveWheelAnglesToZero();
 
     // This makes sure that the autonomous stops running when teleop starts running.
     if (m_autonomousCommand != nullptr)
