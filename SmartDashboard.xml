@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Ultrasonic" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="264" y="303"/>
+	</widget>
 	<widget field="Climb: Climb" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="451" y="469"/>
 	</widget>

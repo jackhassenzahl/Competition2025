@@ -40,6 +40,8 @@ void Drivetrain::Periodic()
     frc::SmartDashboard::PutNumber("Rear Left Angle",      m_rearLeft.GetPosition().angle.Degrees().value());
     frc::SmartDashboard::PutNumber("Rear Right Angle",     m_rearRight.GetPosition().angle.Degrees().value());
 
+    frc::SmartDashboard::PutNumber("Ultrasonic",           GetDistance().value());
+
     // Update the swerve drive odometry
     m_odometry.Update(m_gyro.GetRotation2d(),
                      {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),   // TODO: Order in example if FL, RL, FR, RR?
@@ -112,7 +114,7 @@ void Drivetrain::ResetDriveEncoders()
 void Drivetrain::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates)
 {
     // Normalize the wheel speeds if any individual speed is above the specified maximum
-    m_kinematics.DesaturateWheelSpeeds(&desiredStates, ChassisConstants::MaxSpeed);
+    m_kinematics.DesaturateWheelSpeeds(&desiredStates, DrivetrainConstants::MaxSpeed);
 
     auto [frontLeft, frontRight, rearLeft, rearRight] = desiredStates;
 
@@ -194,4 +196,20 @@ void Drivetrain::SetWheelAnglesToZero()
     m_rearLeft.  SetWheelAngleToForward(SwerveConstants::RearLeftForwardAngle);
     m_rearRight. SetWheelAngleToForward(SwerveConstants::RearRightForwardAngle);
 }
+#pragma endregion
+
+#pragma region GetDistance
+/// @brief Method to get the distance from the ultrasonic sensor.
+/// @return The distance from the ultrasonic sensor.
+units::inch_t Drivetrain::GetDistance()
+{
+    // Get the ultrasonic sensor value
+    auto analogOut = m_ultrasonic.Get();
+
+    // Convert the ultrasonic sensor value to inches
+    auto distance = analogOut * DrivetrainConstants::UltraSonicSlope + DrivetrainConstants::UltraSonicIntercept;
+
+    // Return the distance in inches
+    return (units::inch_t) distance; 
+} 
 #pragma endregion

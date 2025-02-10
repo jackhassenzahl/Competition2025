@@ -53,8 +53,8 @@ namespace CanConstants
 }
 #pragma endregion
 
-#pragma region ChassisConstants
-namespace ChassisConstants
+#pragma region DrivetrainConstants
+namespace DrivetrainConstants
 {
     // Chassis configuration
     constexpr auto TrackWidth                     = 0.6731_m;  // Distance between centers of right and left wheels on robot
@@ -62,6 +62,10 @@ namespace ChassisConstants
 
     constexpr auto MaxSpeed                       = 4.8_mps;
     constexpr auto MaxAngularSpeed                = std::numbers::pi * 2_rad_per_s;
+
+    constexpr auto UltraSonicPort                 =  0;
+    constexpr auto UltraSonicSlope                =  0.2125;
+    constexpr auto UltraSonicIntercept            = -2.1873;
 }
 #pragma endregion
 
@@ -251,7 +255,7 @@ namespace ApriltagConstants
 #pragma region LedConstants
 namespace LedConstants
 {
-    constexpr auto Length      =  40;  // The length of the LED string
+    constexpr auto Length      = 400;  // The length of the LED string
     constexpr auto PwmPort     =   9;
     constexpr auto Brightness  = 0.5;
 

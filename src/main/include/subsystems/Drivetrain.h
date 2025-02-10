@@ -7,6 +7,7 @@
 #include <hal/FRCUsageReporting.h>
 
 #include <frc/ADIS16470_IMU.h>
+#include <frc/AnalogPotentiometer.h>
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Rotation2d.h>
@@ -50,6 +51,8 @@ class Drivetrain : public frc2::SubsystemBase
 
         void                          SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
+        units::inch_t                 GetDistance();
+
         // Swerve module order for kinematics calculations
         //
         //         Front          Translation2d Coordinates
@@ -61,22 +64,24 @@ class Drivetrain : public frc2::SubsystemBase
         //   RL +----------+ RR              |
 
         frc::SwerveDriveKinematics<4> m_kinematics{
-            frc::Translation2d{ ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},   // Front Left
-            frc::Translation2d{ ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2},   // Front Right
-            frc::Translation2d{-ChassisConstants::WheelBase / 2,  ChassisConstants::TrackWidth / 2},   // Rear Left
-            frc::Translation2d{-ChassisConstants::WheelBase / 2, -ChassisConstants::TrackWidth / 2}};  // Rear Right
+            frc::Translation2d{ DrivetrainConstants::WheelBase / 2,  DrivetrainConstants::TrackWidth / 2},   // Front Left
+            frc::Translation2d{ DrivetrainConstants::WheelBase / 2, -DrivetrainConstants::TrackWidth / 2},   // Front Right
+            frc::Translation2d{-DrivetrainConstants::WheelBase / 2,  DrivetrainConstants::TrackWidth / 2},   // Rear Left
+            frc::Translation2d{-DrivetrainConstants::WheelBase / 2, -DrivetrainConstants::TrackWidth / 2}};  // Rear Right
 
     private:
 
-        studica::AHRS m_gyro{studica::AHRS::NavXComType::kMXP_SPI};  // The gyro sensor
+        studica::AHRS               m_gyro{studica::AHRS::NavXComType::kMXP_SPI};  // The gyro sensor
 
-        bool          m_fieldCentricity = true;                      // Field centricity flag
+        bool                        m_fieldCentricity = true;                      // Field centricity flag
 
-        SwerveModule  m_frontLeft;
-        SwerveModule  m_frontRight;
-        SwerveModule  m_rearLeft;
-        SwerveModule  m_rearRight;
+        SwerveModule                m_frontLeft;
+        SwerveModule                m_frontRight;
+        SwerveModule                m_rearLeft;
+        SwerveModule                m_rearRight;
 
         // Odometry class for tracking robot pose for the swerve modules modules
         frc::SwerveDriveOdometry<4> m_odometry;
+
+        frc::AnalogPotentiometer    m_ultrasonic{0, 1000, 0};  // MD 1043: 300 mm (~12 inches) to 5000 mm (~16 feet)
 };
