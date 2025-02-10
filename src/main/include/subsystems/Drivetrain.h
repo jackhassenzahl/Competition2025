@@ -7,6 +7,7 @@
 #include <hal/FRCUsageReporting.h>
 
 #include <frc/ADIS16470_IMU.h>
+#include <frc/AnalogGyro.h>
 #include <frc/AnalogPotentiometer.h>
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/geometry/Pose2d.h>
@@ -53,6 +54,8 @@ class Drivetrain : public frc2::SubsystemBase
 
         units::inch_t                 GetDistance();
 
+        units::degree_t               GetAnalogGyro();
+
         // Swerve module order for kinematics calculations
         //
         //         Front          Translation2d Coordinates
@@ -84,4 +87,6 @@ class Drivetrain : public frc2::SubsystemBase
         frc::SwerveDriveOdometry<4> m_odometry;
 
         frc::AnalogPotentiometer    m_ultrasonic{0, 1000, 0};  // MD 1043: 300 mm (~12 inches) to 5000 mm (~16 feet)
+
+        frc::AnalogGyro             m_analogGyro{1};           // Creates an AnalogGyro
 };

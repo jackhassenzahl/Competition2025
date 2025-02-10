@@ -165,7 +165,7 @@ void SwerveModule::SetWheelAngleToForward(units::angle::radian_t forwardAngle)
     m_driveMotor.SetPosition(0_tr);
 
     frc::SmartDashboard::PutNumber("AngleMotor Encoder Position 1", m_angleMotor.GetEncoder().GetPosition());
-    
+
     // Set the motor angle encoder position to the forward direction
     m_angleMotor.GetEncoder().SetPosition(forwardAngle.value() - GetAbsoluteEncoderAngle().value());
     frc::SmartDashboard::PutNumber("AngleMotor Encoder Position 2", m_angleMotor.GetEncoder().GetPosition());

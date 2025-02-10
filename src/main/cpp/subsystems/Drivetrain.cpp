@@ -42,6 +42,8 @@ void Drivetrain::Periodic()
 
     frc::SmartDashboard::PutNumber("Ultrasonic",           GetDistance().value());
 
+    frc::SmartDashboard::PutNumber("Analog Gyro",          GetAnalogGyro().value());
+
     // Update the swerve drive odometry
     m_odometry.Update(m_gyro.GetRotation2d(),
                      {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),   // TODO: Order in example if FL, RL, FR, RR?
@@ -88,7 +90,7 @@ void Drivetrain::SetX()
     frc::SwerveModuleState frontRightState{0_mps, frc::Rotation2d{-45_deg}};
     frc::SwerveModuleState rearLeftState  {0_mps, frc::Rotation2d{-45_deg}};
     frc::SwerveModuleState rearRightState {0_mps, frc::Rotation2d{ 45_deg}};
-    
+
     m_frontLeft. SetDesiredState(frontLeftState,  "Front Left " );
     m_frontRight.SetDesiredState(frontRightState, "Front Right ");
     m_rearLeft.  SetDesiredState(rearLeftState,   "Rear Left "  );
@@ -210,6 +212,17 @@ units::inch_t Drivetrain::GetDistance()
     auto distance = analogOut * DrivetrainConstants::UltraSonicSlope + DrivetrainConstants::UltraSonicIntercept;
 
     // Return the distance in inches
-    return (units::inch_t) distance; 
-} 
+    return (units::inch_t) distance;
+}
 #pragma endregion
+
+#pragma region GetAnalogGyro
+/// @brief Method to get the analog gyro angle.
+/// @return The analog gyro angle.
+units::degree_t Drivetrain::GetAnalogGyro()
+{
+    // Return the analog gyro angle
+    return units::degree_t{m_analogGyro.GetAngle()};
+}
+#pragma endregion
+

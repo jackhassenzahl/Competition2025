@@ -25,7 +25,7 @@ class Grabber : public frc2::SubsystemBase
         rev::spark::SparkMax                  m_grabberMotor;
         rev::spark::SparkClosedLoopController m_grabberTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder      m_grabberEncoder;
- 
+
         rev::spark::SparkMax                  m_wristMotor;
         rev::spark::SparkClosedLoopController m_wristTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder      m_wristEncoder;
