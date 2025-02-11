@@ -39,6 +39,22 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Climb: Capture",       new ClimbSetAngle(-20_deg, &m_climb));
     frc::SmartDashboard::PutData("Climb: Climb",         new ClimbSetAngle( 50_deg, &m_climb));
 
+    frc::SmartDashboard::PutData("Coral: Ground",        new GrabberPose(CoralPoseConstants::GroundArmAngle,   CoralPoseConstants::GroundElevator,
+                                                                         CoralPoseConstants::GroundWristAngle, CoralPoseConstants::GroundGrabberVelocity,
+                                                                         &m_arm, &m_elevator, &m_grabber));
+    frc::SmartDashboard::PutData("Coral: L1",            new GrabberPose(CoralPoseConstants::L1ArmAngle,       CoralPoseConstants::L1Elevator,
+                                                                         CoralPoseConstants::L1WristAngle,     CoralPoseConstants::L1GrabberVelocity,
+                                                                         &m_arm, &m_elevator, &m_grabber));
+    frc::SmartDashboard::PutData("Coral: L2",            new GrabberPose(CoralPoseConstants::L2ArmAngle,       CoralPoseConstants::L2Elevator,
+                                                                         CoralPoseConstants::L2WristAngle,     CoralPoseConstants::L2GrabberVelocity,
+                                                                         &m_arm, &m_elevator, &m_grabber));
+    frc::SmartDashboard::PutData("Coral: L3",            new GrabberPose(CoralPoseConstants::L3ArmAngle,       CoralPoseConstants::L3Elevator,
+                                                                         CoralPoseConstants::L3WristAngle,     CoralPoseConstants::L3GrabberVelocity,
+                                                                         &m_arm, &m_elevator, &m_grabber));
+    frc::SmartDashboard::PutData("Coral: L4",            new GrabberPose(CoralPoseConstants::L4ArmAngle,       CoralPoseConstants::L4Elevator,
+                                                                         CoralPoseConstants::L4WristAngle,     CoralPoseConstants::L4GrabberVelocity,
+                                                                         &m_arm, &m_elevator, &m_grabber));
+
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 

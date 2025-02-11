@@ -2,7 +2,7 @@
 
 #pragma region ClimbSetAngle
 /// @brief Constructor for the ClimbSetAngle class.
-/// @param setClimbAngleTo The angle to set the climb to.
+/// @param setClimbAngleTo The angle to set the climb.
 /// @param climb The climb subsystem.
 ClimbSetAngle::ClimbSetAngle(units::angle::degree_t setClimbAngleTo, Climb *climb) : m_angle(setClimbAngleTo), m_climb(climb)
 {

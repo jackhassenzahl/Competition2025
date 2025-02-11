@@ -283,3 +283,33 @@ namespace PoseConstants
     extern const frc::TrapezoidProfile<units::radians>::Constraints ThetaControllerConstraints;
 }
 #pragma endregion
+
+#pragma region CoralPoseConstants
+namespace CoralPoseConstants
+{
+    constexpr auto GroundArmAngle        = 0.0_deg;
+    constexpr auto GroundElevator        = 0.0_m;
+    constexpr auto GroundWristAngle      = 0.0_deg;
+    constexpr auto GroundGrabberVelocity = 0.0;
+
+    constexpr auto L1ArmAngle            = 0.0_deg;
+    constexpr auto L1Elevator            = 0.0_m;
+    constexpr auto L1WristAngle          = 0.0_deg;
+    constexpr auto L1GrabberVelocity     = 0.0;
+
+    constexpr auto L2ArmAngle            = 0.0_deg;
+    constexpr auto L2Elevator            = 0.0_m;
+    constexpr auto L2WristAngle          = 0.0_deg;
+    constexpr auto L2GrabberVelocity     = 0.0;
+
+    constexpr auto L3ArmAngle            = 0.0_deg;
+    constexpr auto L3Elevator            = 0.0_m;
+    constexpr auto L3WristAngle          = 0.0_deg;
+    constexpr auto L3GrabberVelocity     = 0.0;
+
+    constexpr auto L4ArmAngle            = 0.0_deg;
+    constexpr auto L4Elevator            = 0.0_m;
+    constexpr auto L4WristAngle          = 0.0_deg;
+    constexpr auto L4GrabberVelocity     = 0.0;
+}
+#pragma endregion

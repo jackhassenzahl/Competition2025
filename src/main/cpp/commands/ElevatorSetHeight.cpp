@@ -2,7 +2,7 @@
 
 #pragma region ElevatorSetHeight
 /// @brief Constructor for the ElevatorSetHeight command.
-/// @param height The height to set the elevator to.
+/// @param height The height to set the elevator.
 /// @param elevator The elevator subsystem.
 ElevatorSetHeight::ElevatorSetHeight(units::length::meter_t height, Elevator *elevator) : m_height(height), m_elevator(elevator)
 {

@@ -45,8 +45,8 @@
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/ClimbSetAngle.h"
 #include "commands/ElevatorSetHeight.h"
-#include "commands/GrabberSetIntakeWheelVelocity.h"
-#include "commands/GrabberSetWristAngle.h"
+#include "commands/GrabberPose.h"
+#include "commands/GrabberSetIntake.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"

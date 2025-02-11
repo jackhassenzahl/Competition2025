@@ -2,7 +2,7 @@
 
 #pragma region ArmSetAngle
 /// @brief The Constructor for the ArmSetAngle class.
-/// @param setArmAngleTo The angle to set the arm to.
+/// @param setArmAngleTo The angle to set the arm.
 /// @param arm The arm subsystem.
 ArmSetAngle::ArmSetAngle(units::angle::degree_t setArmAngleTo, Arm *arm) : m_angle(setArmAngleTo), m_arm(arm)
 {
