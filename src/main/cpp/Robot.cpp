@@ -24,6 +24,10 @@ void Robot::RobotPeriodic()
 {
     // Run the command scheduler
     frc2::CommandScheduler::GetInstance().Run();
+
+    // Get the voltage going into the PDP, in Volts
+    double voltage = m_robotContainer->m_powerDistribution.GetVoltage();
+    frc::SmartDashboard::PutNumber("Voltage", voltage);
 }
 #pragma endregion
 
@@ -32,7 +36,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
     // Set the swerve wheels to zero
-    //m_robotContainer->SetSwerveWheelAnglesToZero();
+    //m_robotContainer->SetSwerveWheelAnglesToZero();  TODO: Replace when CANCoders are installed
 
     // Get the selected autonomous command
     m_autonomousCommand = m_robotContainer->GetAutonomousCommand();

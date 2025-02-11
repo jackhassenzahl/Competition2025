@@ -6,6 +6,7 @@
 #include <frc/XboxController.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
+#include <frc/PowerDistribution.h>
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/button/POVButton.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -74,6 +75,8 @@ class RobotContainer
 
         void                        SetPeriod(units::second_t period);
         units::second_t             GetPeriod();
+
+        frc::PowerDistribution                m_powerDistribution;
 
     private:
 

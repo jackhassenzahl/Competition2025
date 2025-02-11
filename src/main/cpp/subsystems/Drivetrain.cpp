@@ -46,7 +46,7 @@ void Drivetrain::Periodic()
 
     // Update the swerve drive odometry
     m_odometry.Update(m_gyro.GetRotation2d(),
-                     {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),   // TODO: Order in example if FL, RL, FR, RR?
+                     {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                       m_rearLeft.GetPosition(),  m_rearRight.GetPosition()});
 }
 #pragma endregion

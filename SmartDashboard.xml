@@ -1,10 +1,13 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="274" y="244"/>
+	</widget>
 	<widget field="Analog Gyro" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="252" y="272"/>
 	</widget>
 	<widget field="Ultrasonic" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="264" y="303"/>
+		<location x="265" y="299"/>
 	</widget>
 	<widget field="Climb: Climb" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="451" y="469"/>
@@ -166,4 +169,5 @@
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="Period"/>
 </xml>

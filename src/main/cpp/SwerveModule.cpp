@@ -90,8 +90,8 @@ void SwerveModule::ConfigureAngleMotor()
         // PID controller to go through 0 to get to the setpoint i.e. going
         // from 350 degrees to 10 degrees will go through 0 rather than the
         // other direction which is a longer route.
-        .PositionWrappingEnabled(true);
-        //.PositionWrappingInputRange(0, 2 * std::numbers::pi);  TODO: Try these settings
+        .PositionWrappingEnabled(true)
+        .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
     // Write the configuration to the motor controller
     m_angleMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
