@@ -73,10 +73,10 @@ namespace DrivetrainConstants
 namespace SwerveConstants
 {
     // Define the absolute encoder value for forward
-    constexpr auto FrontRightForwardAngle          = -0.191 * 2.0_rad * std::numbers::pi;
-    constexpr auto FrontLeftForwardAngle           = -0.464 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearRightForwardAngle           = -0.064 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearLeftForwardAngle            = -0.022 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontRightForwardAngle          = 0.0 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontLeftForwardAngle           = 0.0 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearRightForwardAngle           = 0.0 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearLeftForwardAngle            = 0.0 * 2.0_rad * std::numbers::pi;
 
     // Drive motor parameters
     constexpr auto DriveMaxAmperage                =     60_A;
@@ -105,18 +105,18 @@ namespace SwerveConstants
 #pragma region ElevatorConstants
 namespace ElevatorConstants
 {
-    constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
-    constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    constexpr auto S                               = 0.0;              // Static Friction: Add [voltage] output to overcome static friction
-    constexpr auto V                               = 0.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
-    constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+    constexpr auto P                               = 2.00;             // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 0.00;             // Integral:        No output for integrated error
+    constexpr auto D                               = 0.10;             // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 0.25;             // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 110_tps;          // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 80_tps;           // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 160_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 1600_tr_per_s_cu;  // Jerk
 
-    constexpr auto PositionToTurnsConversionFactor = 100.0;            // The number of motor rotations per meter
+    constexpr auto PositionToTurnsConversionFactor = 16.0 / (0.05 * std::numbers::pi);//0.14922;   // The number of motor rotations per meter
 }
 #pragma endregion
 
@@ -172,7 +172,7 @@ namespace ClimbConstants
     constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
     constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto AngleToTurnsConversionFactor    = 1.0;              // The number of motor rotations per degree
+    constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;              // The number of motor rotations per degree
 
     constexpr auto MinClimbPosition                = -180_deg;         // Note: Need to calibrate angle to motor rotations
     constexpr auto MaxClimbPosition                =  180_deg;

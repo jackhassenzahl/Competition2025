@@ -24,20 +24,22 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("Chassis: Time ",       new ChassisDriveTime(2_s, 0.5_mps,                       &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: OneMeter",    new ChassisDrivePose(1.0_mps, 1_m, 0_m,  0_deg, 10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters",   new ChassisDrivePose(1.0_mps, 2_m, 0_m,  0_deg, 10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",       new ChassisDrivePose(1.0_mps, 0_m, 0_m, 45_deg, 10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",   new ChassisDriveToAprilTag(1.0_mps, 10_s,  &m_aprilTags, &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Serpentine ", new ChassisDriveSerpentine(1.0_mps,             10_s,    &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Time ",         new ChassisDriveTime(2_s, 0.5_mps,                       &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: OneMeter",      new ChassisDrivePose(1.0_mps, 1_m, 0_m,  0_deg, 10_s,    &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",     new ChassisDrivePose(1.0_mps, 2_m, 0_m,  0_deg, 10_s,    &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",         new ChassisDrivePose(1.0_mps, 0_m, 0_m, 45_deg, 10_s,    &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",     new ChassisDriveToAprilTag(1.0_mps, 10_s,  &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Serpentine ",   new ChassisDriveSerpentine(1.0_mps,             10_s,    &m_drivetrain));
 
-    frc::SmartDashboard::PutData("Elevator: Zero",       new ElevatorSetHeight(0_m,   &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: HalfMeter",  new ElevatorSetHeight(0.5_m, &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: OneMeter",   new ElevatorSetHeight(1_m,   &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: Zero",         new ElevatorSetHeight(0_m,    &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: QuarterMeter", new ElevatorSetHeight(0.25_m, &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: HalfMeter",    new ElevatorSetHeight(0.5_m,  &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: 0.75 Meter",   new ElevatorSetHeight(0.75_m, &m_elevator));
+    frc::SmartDashboard::PutData("Elevator: OneMeter",     new ElevatorSetHeight(1_m,    &m_elevator));
 
     frc::SmartDashboard::PutData("Climb: Start",         new ClimbSetAngle(  0_deg, &m_climb));
-    frc::SmartDashboard::PutData("Climb: Capture",       new ClimbSetAngle(-20_deg, &m_climb));
-    frc::SmartDashboard::PutData("Climb: Climb",         new ClimbSetAngle( 50_deg, &m_climb));
+    frc::SmartDashboard::PutData("Climb: Capture",       new ClimbSetAngle(-80_deg, &m_climb));
+    frc::SmartDashboard::PutData("Climb: Climb",         new ClimbSetAngle( 70_deg, &m_climb));
 
     frc::SmartDashboard::PutData("Coral: Ground",        new GrabberPose(CoralPoseConstants::GroundArmAngle,   CoralPoseConstants::GroundElevator,
                                                                          CoralPoseConstants::GroundWristAngle, CoralPoseConstants::GroundGrabberVelocity,

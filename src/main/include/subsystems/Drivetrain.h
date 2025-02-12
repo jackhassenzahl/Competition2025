@@ -67,10 +67,10 @@ class Drivetrain : public frc2::SubsystemBase
         //   RL +----------+ RR              |
 
         frc::SwerveDriveKinematics<4> m_kinematics{
-            frc::Translation2d{ DrivetrainConstants::WheelBase / 2,  DrivetrainConstants::TrackWidth / 2},   // Front Left
-            frc::Translation2d{ DrivetrainConstants::WheelBase / 2, -DrivetrainConstants::TrackWidth / 2},   // Front Right
-            frc::Translation2d{-DrivetrainConstants::WheelBase / 2,  DrivetrainConstants::TrackWidth / 2},   // Rear Left
-            frc::Translation2d{-DrivetrainConstants::WheelBase / 2, -DrivetrainConstants::TrackWidth / 2}};  // Rear Right
+            frc::Translation2d{ DrivetrainConstants::WheelBase / 2, -DrivetrainConstants::TrackWidth / 2},   // Front Left
+            frc::Translation2d{ DrivetrainConstants::WheelBase / 2,  DrivetrainConstants::TrackWidth / 2},   // Front Right
+            frc::Translation2d{-DrivetrainConstants::WheelBase / 2, -DrivetrainConstants::TrackWidth / 2},   // Rear Left
+            frc::Translation2d{-DrivetrainConstants::WheelBase / 2,  DrivetrainConstants::TrackWidth / 2}};  // Rear Right
 
     private:
 

@@ -76,7 +76,7 @@ void Climb::SetAngle(units::angle::degree_t angle)
     //     angle = ClimbConstants::MaxClimbPosition;
 
     // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ClimbConstants::AngleToTurnsConversionFactor);
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ClimbConstants::AngleToTurnsConversionFactor.value());
 
     // Set the climb set position
     m_climbMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
