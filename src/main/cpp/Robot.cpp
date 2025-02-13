@@ -36,7 +36,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
     // Set the swerve wheels to zero
-    m_robotContainer->SetSwerveWheelAnglesToZero(); // TODO: Replace when CANCoders are installed
+    m_robotContainer->SetSwerveWheelAnglesToZero();
 
     // Get the selected autonomous command
     m_autonomousCommand = m_robotContainer->GetAutonomousCommand();

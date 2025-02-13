@@ -33,8 +33,9 @@ void ChassisDriveToAprilTag::Initialize()
         // Determine if an AprilTag was found
         if (aprilTagInformation.Found == true)
         {
-            frc::SmartDashboard::PutNumber("Pose Y",     aprilTagInformation.Y);
-            frc::SmartDashboard::PutNumber("Pose Z",     aprilTagInformation.Z);
+            frc::SmartDashboard::PutNumber("Distance X", aprilTagInformation.X);
+            frc::SmartDashboard::PutNumber("Distance Y", aprilTagInformation.Y);
+            frc::SmartDashboard::PutNumber("Distance Z", aprilTagInformation.Z);
             frc::SmartDashboard::PutNumber("Rotation X", aprilTagInformation.rotationX);
             frc::SmartDashboard::PutNumber("Rotation Y", aprilTagInformation.rotationY);
             frc::SmartDashboard::PutNumber("Rotation Z", aprilTagInformation.rotationZ);

@@ -41,6 +41,7 @@
 #include "commands/ChassisDriveSerpentine.h"
 #include "commands/ChassisDriveTime.h"
 #include "commands/ChassisDriveToAprilTag.h"
+#include "commands/ChassisDriveToWall.h"
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/ClimbSetAngle.h"

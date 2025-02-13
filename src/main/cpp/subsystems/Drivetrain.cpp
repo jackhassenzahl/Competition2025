@@ -118,13 +118,13 @@ void Drivetrain::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredSt
     // Normalize the wheel speeds if any individual speed is above the specified maximum
     m_kinematics.DesaturateWheelSpeeds(&desiredStates, DrivetrainConstants::MaxSpeed);
 
-    // auto [frontLeft, frontRight, rearLeft, rearRight] = desiredStates;
+    auto [frontLeft, frontRight, rearLeft, rearRight] = desiredStates;
 
     // Set the swerve module states
-    m_frontLeft. SetDesiredState(desiredStates[0], "Front Left " );
-    m_frontRight.SetDesiredState(desiredStates[1], "Front Right ");
-    m_rearLeft.  SetDesiredState(desiredStates[2], "Rear Left "  );
-    m_rearRight. SetDesiredState(desiredStates[3], "Rear Right " );
+    m_frontLeft. SetDesiredState(frontLeft,  "Front Left " );
+    m_frontRight.SetDesiredState(frontRight, "Front Right ");
+    m_rearLeft.  SetDesiredState(rearLeft,   "Rear Left "  );
+    m_rearRight. SetDesiredState(rearRight,  "Rear Right " );
 }
 #pragma endregion
 
