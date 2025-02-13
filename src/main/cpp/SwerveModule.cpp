@@ -76,10 +76,11 @@ void SwerveModule::ConfigureAngleMotor()
     static rev::spark::SparkMaxConfig sparkMaxConfig{};
 
     sparkMaxConfig
+        .Inverted(true)
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(SwerveConstants::AngleMaxAmperage);
+
     sparkMaxConfig.encoder
-        //.Inverted(true)
         .PositionConversionFactor(SwerveConstants::AngleRadiansToMotorRevolutions)
         .VelocityConversionFactor(SwerveConstants::AngleRadiansToMotorRevolutions / 60.0);
     sparkMaxConfig.closedLoop
@@ -167,7 +168,7 @@ void SwerveModule::SetWheelAngleToForward(units::angle::radian_t forwardAngle)
     frc::SmartDashboard::PutNumber("AngleMotor Encoder Position 1", m_angleMotor.GetEncoder().GetPosition());
 
     // Set the motor angle encoder position to the forward direction
-    m_angleMotor.GetEncoder().SetPosition(forwardAngle.value() - GetAbsoluteEncoderAngle().value());
+    m_angleMotor.GetEncoder().SetPosition(GetAbsoluteEncoderAngle().value() - forwardAngle.value());
     frc::SmartDashboard::PutNumber("AngleMotor Encoder Position 2", m_angleMotor.GetEncoder().GetPosition());
 
     m_turnClosedLoopController.SetReference(0.0, rev::spark::SparkMax::ControlType::kPosition);

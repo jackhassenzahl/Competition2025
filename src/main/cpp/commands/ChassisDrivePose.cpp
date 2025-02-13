@@ -12,7 +12,7 @@ ChassisDrivePose::ChassisDrivePose(units::velocity::meters_per_second_t speed, u
                                    m_speed(speed), m_distanceX(distanceX), m_distanceY(distanceY), m_angle(angle),
                                    m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
-   SetName("ChassisDriveToAprilTag");
+   SetName("ChassisDrivePose");
 
     // Declare subsystem dependencies
     AddRequirements(m_drivetrain);
@@ -37,12 +37,26 @@ void ChassisDrivePose::Initialize()
         // Note: GenerateTrajectory will throw an exception if the distance X and Y are zero
         if (fabs(m_distanceX.value()) < 0.001 && fabs(m_distanceY.value()) < 0.001)
            m_distanceX = 0.01_m;
+        
+        auto startPose = m_drivetrain->GetPose();
 
         // Create the trajectory to follow
-        frc::Pose2d endPose{m_distanceX, m_distanceY, m_angle};
+        frc::Pose2d endPose{
+            startPose.X() + m_distanceX, 
+            startPose.Y() + m_distanceY, 
+            startPose.Rotation().Degrees() + m_angle
+            };
+
+        frc::SmartDashboard::PutNumber("StartX", startPose.X().value());
+        frc::SmartDashboard::PutNumber("StartY", startPose.Y().value());
+        frc::SmartDashboard::PutNumber("StartA", startPose.Rotation().Degrees().value());
+
+        frc::SmartDashboard::PutNumber("EndX", endPose.X().value());
+        frc::SmartDashboard::PutNumber("EndY", endPose.Y().value());
+        frc::SmartDashboard::PutNumber("EndA", endPose.Rotation().Degrees().value());
 
         // Create the trajectory to follow
-        auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(m_drivetrain->GetPose(), {}, endPose, trajectoryConfig);
+        auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startPose, {}, endPose, trajectoryConfig);
 
         // Create a profile PID controller
         frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,

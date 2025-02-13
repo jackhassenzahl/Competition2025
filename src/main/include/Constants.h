@@ -73,10 +73,10 @@ namespace DrivetrainConstants
 namespace SwerveConstants
 {
     // Define the absolute encoder value for forward
-    constexpr auto FrontRightForwardAngle          = 0.0 * 2.0_rad * std::numbers::pi;
-    constexpr auto FrontLeftForwardAngle           = 0.0 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearRightForwardAngle           = 0.0 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearLeftForwardAngle            = 0.0 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontRightForwardAngle          = -0.193359 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontLeftForwardAngle           = -0.239014 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearRightForwardAngle           = -0.167772 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearLeftForwardAngle            =  0.259277 * 2.0_rad * std::numbers::pi;
 
     // Drive motor parameters
     constexpr auto DriveMaxAmperage                =     60_A;
@@ -112,11 +112,11 @@ namespace ElevatorConstants
     constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 80_tps;           // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 160_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 = 1600_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 10_tps;           // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 20_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 200_tr_per_s_cu;  // Jerk
 
-    constexpr auto PositionToTurnsConversionFactor = 16.0 / (0.05 * std::numbers::pi);//0.14922;   // The number of motor rotations per meter
+    constexpr auto PositionToTurnsConversionFactor = 16.0 / (0.0475 * 3.0 * std::numbers::pi); // The number of motor rotations per meter
 }
 #pragma endregion
 
@@ -174,8 +174,8 @@ namespace ClimbConstants
 
     constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;              // The number of motor rotations per degree
 
-    constexpr auto MinClimbPosition                = -180_deg;         // Note: Need to calibrate angle to motor rotations
-    constexpr auto MaxClimbPosition                =  180_deg;
+    constexpr auto MinClimbPosition                = -50_deg;         // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaxClimbPosition                =  100_deg;
 }
 #pragma endregion
 
@@ -187,7 +187,7 @@ namespace ControllerConstants
 
     constexpr auto JoystickForwardIndex    =   1;
     constexpr auto JoystickStrafeIndex     =   0;
-    constexpr auto JoystickAngleIndex      =   2;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
+    constexpr auto JoystickAngleIndex      =   4;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
 
     constexpr auto JoystickDeadZone        = 0.05;
     constexpr auto JoystickRotateDeadZone  = 0.15;
