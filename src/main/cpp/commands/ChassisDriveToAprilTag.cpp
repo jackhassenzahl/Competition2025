@@ -14,7 +14,7 @@ ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed,
                                                AprilTags                 *aprilTags,
                                                Drivetrain                *drivetrain) :
                                                m_speed(speed),                     m_distanceOffsetX(distanceOffsetX),
-                                               m_distanceOffsetY(distanceOffsetY), m_angleOffset(angleOffset),                                        
+                                               m_distanceOffsetY(distanceOffsetY), m_angleOffset(angleOffset),
                                                m_timeoutTime(timeoutTime),         m_aprilTags(aprilTags),
                                                m_drivetrain(drivetrain)
 {
@@ -89,10 +89,9 @@ void ChassisDriveToAprilTag::Initialize()
         // Get the robot starting pose
         auto startPose = m_drivetrain->GetPose();
 
-
         // Offset the position based on the specified distances and angle
         auto distanceX   =  (units::meter_t)          aprilTagInformation.Z         - m_distanceOffsetX;
-        auto distanceY   =  (units::meter_t)         -aprilTagInformation.X         + m_distanceOffsetY; 
+        auto distanceY   =  (units::meter_t)         -aprilTagInformation.X         + m_distanceOffsetY + ApriltagConstants::RobotCameraOffset;
         auto angleOffset =  (units::angle::radian_t) -aprilTagInformation.rotationY + m_angleOffset;
 
         // Create the trajectory to follow
@@ -104,13 +103,13 @@ void ChassisDriveToAprilTag::Initialize()
         frc::SmartDashboard::PutNumber("DistanceY",  distanceY.value());
         frc::SmartDashboard::PutNumber("Angle",      units::angle::degree_t(angleOffset).value());
 
-        frc::SmartDashboard::PutNumber("StartX", startPose.X().value());
-        frc::SmartDashboard::PutNumber("StartY", startPose.Y().value());
-        frc::SmartDashboard::PutNumber("StartA", startPose.Rotation().Degrees().value());
+        frc::SmartDashboard::PutNumber("StartX",     startPose.X().value());
+        frc::SmartDashboard::PutNumber("StartY",     startPose.Y().value());
+        frc::SmartDashboard::PutNumber("StartA",     startPose.Rotation().Degrees().value());
 
-        frc::SmartDashboard::PutNumber("EndX", endPose.X().value());
-        frc::SmartDashboard::PutNumber("EndY", endPose.Y().value());
-        frc::SmartDashboard::PutNumber("EndA", endPose.Rotation().Degrees().value());
+        frc::SmartDashboard::PutNumber("EndX",       endPose.X().value());
+        frc::SmartDashboard::PutNumber("EndY",       endPose.Y().value());
+        frc::SmartDashboard::PutNumber("EndA",       endPose.Rotation().Degrees().value());
 
         // Create the trajectory to follow
         auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startPose, {}, endPose, trajectoryConfig);

@@ -249,6 +249,8 @@ namespace ApriltagConstants
     constexpr auto NumberOfBitsCorrected   =   1;
 
     constexpr auto LengthOfTagsInches      = 6.5;
+
+    constexpr auto RobotCameraOffset       = 0.0_m;
 }
 #pragma endregion
 
