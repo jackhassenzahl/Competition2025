@@ -9,7 +9,7 @@ Drivetrain::Drivetrain()
       m_frontRight{SwerveFrontRightDriveMotorCanId, SwerveFrontRightAngleMotorCanId, SwerveFrontRightAngleEncoderCanId},
       m_rearLeft  {SwerveRearLeftDriveMotorCanId,   SwerveRearLeftAngleMotorCanId,   SwerveRearLeftAngleEncoderCanId  },
       m_rearRight {SwerveRearRightDriveMotorCanId,  SwerveRearRightAngleMotorCanId,  SwerveRearRightAngleEncoderCanId },
-      m_odometry  {m_kinematics, frc::Rotation2d(units::radian_t{m_gyro.GetAngle()}),
+      m_odometry  {m_kinematics, m_gyro.GetRotation2d(),
                   {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                    m_rearLeft.GetPosition(),  m_rearRight.GetPosition()}, frc::Pose2d{}}
 {
@@ -42,8 +42,6 @@ void Drivetrain::Periodic()
 
     frc::SmartDashboard::PutNumber("Ultrasonic",           GetDistance().value());
 
-    frc::SmartDashboard::PutNumber("Analog Gyro",          GetAnalogGyro().value());
-
     // Update the swerve drive odometry
     m_odometry.Update(m_gyro.GetRotation2d(),
                      {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
@@ -70,11 +68,9 @@ void Drivetrain::Drive(units::meters_per_second_t  xSpeed,
 
     frc::SmartDashboard::PutNumber("Gyro Rotation", (double) m_gyro.GetRotation2d().Degrees());
 
-    auto reverseGyro = m_gyro.GetRotation2d();
-
     // Determine the swerve module states
     auto states = m_kinematics.ToSwerveModuleStates(m_fieldCentricity ?
-                  frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, reverseGyro) :
+                  frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, m_gyro.GetRotation2d()) :
                   frc::ChassisSpeeds{xSpeed, ySpeed, rotation});
 
     // Set the module states
@@ -131,10 +127,10 @@ void Drivetrain::SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredSt
 #pragma region GetHeading
 /// @brief Method to get the robot heading.
 /// @return The robot heading.
-units::radian_t Drivetrain::GetHeading()
+units::degree_t Drivetrain::GetHeading()
 {
     // Return the robot heading
-    return m_gyro.GetRotation2d().Radians();
+    return m_gyro.GetRotation2d().Degrees();
 }
 #pragma endregion
 
@@ -163,8 +159,8 @@ frc::Pose2d Drivetrain::GetPose()
 void Drivetrain::ResetOdometry(frc::Pose2d pose)
 {
     // Reset the present odometry
-    m_odometry.ResetPosition(GetHeading(), {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
-                                            m_rearLeft.GetPosition(),  m_rearRight.GetPosition()}, pose);
+    m_odometry.ResetPosition(m_gyro.GetRotation2d(), {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+                                                      m_rearLeft.GetPosition(),  m_rearRight.GetPosition()}, pose);
 }
 #pragma endregion
 
@@ -215,14 +211,3 @@ units::inch_t Drivetrain::GetDistance()
     return (units::inch_t) distance;
 }
 #pragma endregion
-
-#pragma region GetAnalogGyro
-/// @brief Method to get the analog gyro angle.
-/// @return The analog gyro angle.
-units::degree_t Drivetrain::GetAnalogGyro()
-{
-    // Return the analog gyro angle
-    return units::degree_t{m_analogGyro.GetAngle()};
-}
-#pragma endregion
-

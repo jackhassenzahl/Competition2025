@@ -1,10 +1,10 @@
 #include "commands/ChassisDriveToWall.h"
 
 #pragma region
-/// @brief Command to drive the chassis to an AprilTag.
+/// @brief Command to drive the chassis to the specified distance from the wall.
 /// @param speed The speed to move the chassis.
+/// @param distanceToWall The distance to move the chassis from the wall.
 /// @param timeoutTime The timeout time for the move.
-/// @param aprilTags The AprilTag subsystem.
 /// @param drivetrain The Drivetrain subsystem.
 ChassisDriveToWall::ChassisDriveToWall(units::meters_per_second_t speed, units::meter_t distanceToWall,
                                        units::time::second_t timeoutTime, Drivetrain *drivetrain) :
@@ -23,56 +23,80 @@ ChassisDriveToWall::ChassisDriveToWall(units::meters_per_second_t speed, units::
 #pragma endregion
 
 #pragma region Initialize
-/// @brief Called just before this Command runs the first time.
+/// @brief Called just before this Command runs.
 void ChassisDriveToWall::Initialize()
 {
-    // Set up config for trajectory
-    frc::TrajectoryConfig trajectoryConfig(m_speed, PoseConstants::MaxAcceleration);
+    try
+    {
+        // Set up config for trajectory
+        frc::TrajectoryConfig trajectoryConfig(m_speed, PoseConstants::MaxAcceleration);
 
-    // Add kinematics to ensure maximum speed is actually obeyed
-    trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
+        // Add kinematics to ensure maximum speed is actually obeyed
+        trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
 
-    // Get the present destince to the wall
-    auto distanceToWall = m_drivetrain->GetDistance();
+        // Determine how far to move towards the wall
+        auto distance = m_drivetrain->GetDistance() - m_distanceToWall;
 
-    // Determine how far to move towards the wall
-    auto distance = distanceToWall - m_distanceToWall;
+        // Ensure the new pose requires an X or Y move
+        // Note: GenerateTrajectory will throw an exception if the distance X and Y are zero
+        if (fabs(distance.value()) < 0.001)
+            distance = 0.01_m;
 
-    // Get the present robot pose
-    auto startingPose = m_drivetrain->GetPose();
+        // Get the robot starting pose
+        auto startPose = m_drivetrain->GetPose();
 
-    // Calculate the end 
-    frc::Pose2d endPose = frc::Pose2d{startingPose.X() + distance, startingPose.Y(), startingPose.Rotation()};
-    
-    // Create the trajectory to follow
-    auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startingPose, {}, endPose, trajectoryConfig);
+        // Create the trajectory to follow
+        frc::Pose2d endPose{startPose.X() + distance,
+                            startPose.Y(),
+                            startPose.Rotation().Degrees()};
 
-    // Create a profile PID controller
-    frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
-                                                                     PoseConstants::ThetaControllerConstraints};
+        frc::SmartDashboard::PutNumber("DistanceX", distance.value());
+        frc::SmartDashboard::PutNumber("DistanceY", 0.0);
+        frc::SmartDashboard::PutNumber("Angle",     0.0);
 
-    // enable continuous input for the profile PID controller
-    profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
+        frc::SmartDashboard::PutNumber("StartX", startPose.X().value());
+        frc::SmartDashboard::PutNumber("StartY", startPose.Y().value());
+        frc::SmartDashboard::PutNumber("StartA", startPose.Rotation().Degrees().value());
 
-    m_swerveControllerCommand = new frc2::SwerveControllerCommand<4>(
-        trajectory,
-        [this]() { return m_drivetrain->GetPose(); },
-        m_drivetrain->m_kinematics,
-        frc::PIDController(PoseConstants::PXController, 0, 0),
-        frc::PIDController(PoseConstants::PYController, 0, 0),
-        profiledPIDController,
-        [this](auto moduleStates) { m_drivetrain->SetModuleStates(moduleStates); },
-        {m_drivetrain}
-    );
+        frc::SmartDashboard::PutNumber("EndX", endPose.X().value());
+        frc::SmartDashboard::PutNumber("EndY", endPose.Y().value());
+        frc::SmartDashboard::PutNumber("EndA", endPose.Rotation().Degrees().value());
 
-    // Reset odometry to the starting pose of the trajectory.
-    m_drivetrain->ResetOdometry(trajectory.InitialPose());
+        // Create the trajectory to follow
+        auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startPose, {}, endPose, trajectoryConfig);
 
-    // Initialize the swerve controller command
-    m_swerveControllerCommand->Initialize();
+        // Create a profile PID controller
+        frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
+                                                                         PoseConstants::ThetaControllerConstraints};
 
-    // Get the start time
-    m_startTime = frc::GetTime();
+        // enable continuous input for the profile PID controller
+        profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
+
+        // Create the swerve controller command
+        m_swerveControllerCommand = new frc2::SwerveControllerCommand<4>(
+            trajectory,
+            [this]() { return m_drivetrain->GetPose(); },
+            m_drivetrain->m_kinematics,
+            frc::PIDController(PoseConstants::PXController, 0, 0),
+            frc::PIDController(PoseConstants::PYController, 0, 0),
+            profiledPIDController,
+            [this](auto moduleStates) { m_drivetrain->SetModuleStates(moduleStates); },
+            {m_drivetrain}
+        );
+
+        // Set odometry to the starting pose of the trajectory.
+        m_drivetrain->ResetOdometry(trajectory.InitialPose());
+
+        // Initialize the swerve controller command
+        m_swerveControllerCommand->Initialize();
+
+        // Get the start time
+        m_startTime = frc::GetTime();
+    }
+    catch(const std::exception& exception)
+    {
+        frc::SmartDashboard::PutString("Debug", exception.what());
+    }
 }
 #pragma endregion
 

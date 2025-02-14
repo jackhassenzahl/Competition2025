@@ -1,5 +1,32 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="786" y="608"/>
+	</widget>
+	<widget field="DistanceY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="766" y="585"/>
+	</widget>
+	<widget field="DistanceX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="765" y="560"/>
+	</widget>
+	<widget field="EndA" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1039" y="607"/>
+	</widget>
+	<widget field="EndY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1039" y="583"/>
+	</widget>
+	<widget field="EndX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1039" y="558"/>
+	</widget>
+	<widget field="StartA" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="909" y="606"/>
+	</widget>
+	<widget field="StartY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="911" y="582"/>
+	</widget>
+	<widget field="StartX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="910" y="558"/>
+	</widget>
 	<widget field="Elevator: 0.75 Meter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="428" y="332"/>
 	</widget>
@@ -27,11 +54,8 @@
 	<widget field="Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="274" y="244"/>
 	</widget>
-	<widget field="Analog Gyro" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="252" y="272"/>
-	</widget>
 	<widget field="Ultrasonic" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="265" y="299"/>
+		<location x="265" y="270"/>
 	</widget>
 	<widget field="Climb: Climb" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="442" y="480"/>
@@ -67,7 +91,7 @@
 		<height>16</height>
 	</widget>
 	<widget field="Gyro Rotation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="242" y="364"/>
+		<location x="245" y="299"/>
 	</widget>
 	<widget field="Elevator: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="432" y="360"/>
@@ -140,7 +164,7 @@
 		<location x="59" y="307"/>
 	</widget>
 	<widget field="Debug" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="495" y="559"/>
+		<location x="16" y="657"/>
 		<width>371</width>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
@@ -194,7 +218,5 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Pose X"/>
-	<hidden field="Pose Z"/>
-	<hidden field="Pose Y"/>
+	<hidden field="Analog Gyro"/>
 </xml>

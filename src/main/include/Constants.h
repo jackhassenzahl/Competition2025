@@ -175,7 +175,7 @@ namespace ClimbConstants
     constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;              // The number of motor rotations per degree
 
     constexpr auto MinClimbPosition                = -50_deg;         // Note: Need to calibrate angle to motor rotations
-    constexpr auto MaxClimbPosition                =  100_deg;
+    constexpr auto MaxClimbPosition                = 100_deg;
 }
 #pragma endregion
 

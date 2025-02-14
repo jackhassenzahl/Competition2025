@@ -8,7 +8,7 @@
 class GrabberSetIntake : public frc2::CommandHelper<frc2::Command, GrabberSetIntake>
 {
     public:
-    
+
         GrabberSetIntake(units::angle::degree_t angle, double velocity, Grabber *grabber);
 
         void Execute()    override;
@@ -19,4 +19,4 @@ class GrabberSetIntake : public frc2::CommandHelper<frc2::Command, GrabberSetInt
         units::angle::degree_t m_angle;
         double                 m_velocity;
         Grabber               *m_grabber;
-};              
+}; 

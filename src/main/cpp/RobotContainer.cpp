@@ -24,13 +24,13 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("Chassis: Time ",          new ChassisDriveTime(2_s, 0.5_mps,                       &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: OneMeter",       new ChassisDrivePose(1.0_mps, 1_m, 0_m,  0_deg, 10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters",      new ChassisDrivePose(1.0_mps, 2_m, 0_m,  0_deg, 10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",          new ChassisDrivePose(1.0_mps, 0_m, 0_m, 45_deg, 10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 10_s,  &m_aprilTags, &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,             10_s,    &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,        10_s,    &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Time ",          new ChassisDriveTime(2_s, 0.5_mps,                                           &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: OneMeter",       new ChassisDrivePose(1.0_mps, 1_m,  0_m,   0_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",      new ChassisDrivePose(1.0_mps, 2_m,  0_m,   0_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",          new ChassisDrivePose(1.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 0.5_m, 0.5_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
 
     frc::SmartDashboard::PutData("Elevator: Zero",          new ElevatorSetHeight(0_m,    &m_elevator));
     frc::SmartDashboard::PutData("Elevator: QuarterMeter",  new ElevatorSetHeight(0.25_m, &m_elevator));

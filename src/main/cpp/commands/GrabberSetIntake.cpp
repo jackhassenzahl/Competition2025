@@ -3,8 +3,8 @@
 #pragma region GrabberSetIntake
 /// @brief Constructor for the GrabberSetIntake class.
 /// @param angle The angle to set the arm.
-/// @param velocity 
-/// @param grabber 
+/// @param velocity The velocity to set the grabber wheels.
+/// @param grabber The grabber subsystem.
 GrabberSetIntake::GrabberSetIntake(units::angle::degree_t angle, double velocity, Grabber *grabber) :
                                    m_angle(angle), m_velocity(velocity), m_grabber(grabber)
 {

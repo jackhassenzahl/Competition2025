@@ -35,7 +35,7 @@ SetLeds::SetLeds(int Mode, units::second_t time, Leds *leds) : m_mode(Mode), m_t
 #pragma endregion
 
 #pragma region Initialize
-/// @brief Called just before this Command runs the first time.
+/// @brief Called just before this Command runs.
 void SetLeds::Initialize()
 {
     // Set the LED mode

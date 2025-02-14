@@ -15,7 +15,7 @@ ChassisSetFieldCentricity::ChassisSetFieldCentricity(bool fieldCentric, Drivetra
 #pragma endregion
 
 #pragma region Initialize
-/// @brief Called just before this Command runs the first time.
+/// @brief Called just before this Command runs.
 void ChassisSetFieldCentricity::Initialize()
 {
     // Set the field centricity

@@ -17,7 +17,7 @@ ChassisDriveTime::ChassisDriveTime(units::second_t time, units::meters_per_secon
 #pragma endregion
 
 #pragma region Initialize
-/// @brief Called just before this Command runs the first time.
+/// @brief Called just before this Command runs.
 void ChassisDriveTime::Initialize()
 {
     // Remember the field centric setting

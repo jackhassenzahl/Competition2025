@@ -6,9 +6,16 @@
 /// @param timeoutTime The timeout time for the move.
 /// @param aprilTags The AprilTag subsystem.
 /// @param drivetrain The Drivetrain subsystem.
-ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed, units::time::second_t timeoutTime,
-                                               AprilTags *aprilTags, Drivetrain *drivetrain) :
-                                               m_speed(speed), m_timeoutTime(timeoutTime), m_aprilTags(aprilTags),
+ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed,
+                                               units::meter_t             distanceOffsetX,
+                                               units::meter_t             distanceOffsetY,
+                                               units::degree_t            angleOffset,
+                                               units::time::second_t      timeoutTime,
+                                               AprilTags                 *aprilTags,
+                                               Drivetrain                *drivetrain) :
+                                               m_speed(speed),                     m_distanceOffsetX(distanceOffsetX),
+                                               m_distanceOffsetY(distanceOffsetY), m_angleOffset(angleOffset),                                        
+                                               m_timeoutTime(timeoutTime),         m_aprilTags(aprilTags),
                                                m_drivetrain(drivetrain)
 {
     // Set the command name
@@ -23,7 +30,29 @@ ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed,
 #pragma endregion
 
 #pragma region Initialize
-/// @brief Called just before this Command runs the first time.
+/// @brief Called just before this Command runs.
+/// @details Initializes the command.
+/// Swerve module order for kinematics calculations
+///
+/// Apriltag Coordinates:
+///
+///    Z - The distance from the camera to the tag.
+///    X - The distance from the camera to the tag in the X direction.
+///    Y - The distance from the camera to the tag in the Y direction.
+///
+///             Camera           Translation2d Coordinates
+///
+///               |                         ^ X
+///               |                         |
+///         ------+------> X       Y <------+-------
+///               |                         |
+///               |                         |
+///               V Y
+///
+/// Translation:  Pose X ->  Z
+///               Pose Y -> -X
+///               Pose A -> -Rotation Y
+
 void ChassisDriveToAprilTag::Initialize()
 {
     try
@@ -52,12 +81,39 @@ void ChassisDriveToAprilTag::Initialize()
         // Add kinematics to ensure maximum speed is actually obeyed
         trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
 
-        // Create the trajectory to follow
-        frc::Pose2d endPose{units::meter_t{aprilTagInformation.X},
-                            units::meter_t{aprilTagInformation.Y},
-                            units::radian_t{aprilTagInformation.rotationZ}};
+        // Ensure the new pose requires an X or Y move
+        // Note: GenerateTrajectory will throw an exception if the distance X and Y are zero
+        if (fabs(aprilTagInformation.X) < 0.001 && fabs(aprilTagInformation.Y) < 0.001)
+            aprilTagInformation.X = 0.01;
 
-        auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(m_drivetrain->GetPose(), {}, endPose, trajectoryConfig);
+        // Get the robot starting pose
+        auto startPose = m_drivetrain->GetPose();
+
+
+        // Offset the position based on the specified distances and angle
+        auto distanceX   =  (units::meter_t)          aprilTagInformation.Z         - m_distanceOffsetX;
+        auto distanceY   =  (units::meter_t)         -aprilTagInformation.X         + m_distanceOffsetY; 
+        auto angleOffset =  (units::angle::radian_t) -aprilTagInformation.rotationY + m_angleOffset;
+
+        // Create the trajectory to follow
+        frc::Pose2d endPose{startPose.X()                  + distanceX,
+                            startPose.Y()                  + distanceY,
+                            startPose.Rotation().Degrees() + angleOffset};
+
+        frc::SmartDashboard::PutNumber("DistanceX",  distanceX.value());
+        frc::SmartDashboard::PutNumber("DistanceY",  distanceY.value());
+        frc::SmartDashboard::PutNumber("Angle",      units::angle::degree_t(angleOffset).value());
+
+        frc::SmartDashboard::PutNumber("StartX", startPose.X().value());
+        frc::SmartDashboard::PutNumber("StartY", startPose.Y().value());
+        frc::SmartDashboard::PutNumber("StartA", startPose.Rotation().Degrees().value());
+
+        frc::SmartDashboard::PutNumber("EndX", endPose.X().value());
+        frc::SmartDashboard::PutNumber("EndY", endPose.Y().value());
+        frc::SmartDashboard::PutNumber("EndA", endPose.Rotation().Degrees().value());
+
+        // Create the trajectory to follow
+        auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startPose, {}, endPose, trajectoryConfig);
 
         // Create a profile PID controller
         frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
@@ -66,6 +122,7 @@ void ChassisDriveToAprilTag::Initialize()
         // enable continuous input for the profile PID controller
         profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
 
+        // Create the swerve controller command
         m_swerveControllerCommand = new frc2::SwerveControllerCommand<4>(
             trajectory,
             [this]() { return m_drivetrain->GetPose(); },
@@ -77,7 +134,7 @@ void ChassisDriveToAprilTag::Initialize()
             {m_drivetrain}
         );
 
-        // Reset odometry to the starting pose of the trajectory.
+        // Set odometry to the starting pose of the trajectory.
         m_drivetrain->ResetOdometry(trajectory.InitialPose());
 
         // Initialize the swerve controller command

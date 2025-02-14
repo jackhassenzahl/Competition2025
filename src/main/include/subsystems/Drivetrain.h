@@ -35,17 +35,17 @@ class Drivetrain : public frc2::SubsystemBase
 
         void                          SetX();                                 // Sets the wheels into an X formation to prevent movement
 
-        void                          ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0.
+        void                          ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0
 
         void                          SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
 
-        units::radian_t               GetHeading();                           // Returns the heading of the robot.
+        units::degree_t               GetHeading();                           // Returns the heading of the robot
 
-        void                          ZeroHeading();                          // Zeroes the heading of the robot.
+        void                          ZeroHeading();                          // Zeroes the heading of the robot
 
-        frc::Pose2d                   GetPose();                              // Returns the currently-estimated pose of the robot.
+        frc::Pose2d                   GetPose();                              // Returns the currently-estimated pose of the robot
 
-        void                          ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose.
+        void                          ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose
 
         void                          SetFieldCentricity(bool fieldCentric);  // Sets the field centricity
         bool                          GetFieldCentricity();                   // Reads the field centricity
@@ -53,8 +53,6 @@ class Drivetrain : public frc2::SubsystemBase
         void                          SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
         units::inch_t                 GetDistance();
-
-        units::degree_t               GetAnalogGyro();
 
         // Swerve module order for kinematics calculations
         //
@@ -88,5 +86,5 @@ class Drivetrain : public frc2::SubsystemBase
 
         frc::AnalogPotentiometer    m_ultrasonic{0, 1000, 0};  // MD 1043: 300 mm (~12 inches) to 5000 mm (~16 feet)
 
-        frc::AnalogGyro             m_analogGyro{1};           // Creates an AnalogGyro
+        //frc::AnalogGyro             m_analogGyro{1};           // Creates an AnalogGyro
 };

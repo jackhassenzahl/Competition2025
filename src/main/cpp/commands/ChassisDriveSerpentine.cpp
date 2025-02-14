@@ -8,7 +8,7 @@
 ChassisDriveSerpentine::ChassisDriveSerpentine(units::velocity::meters_per_second_t speed, units::time::second_t timeoutTime, Drivetrain *drivetrain) :
                                                m_speed(speed), m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
-   SetName("ChassisDriveToAprilTag");
+   SetName("ChassisDriveSerpentine");
 
     // Declare subsystem dependencies
     AddRequirements(m_drivetrain);
@@ -19,7 +19,7 @@ ChassisDriveSerpentine::ChassisDriveSerpentine(units::velocity::meters_per_secon
 #pragma endregion
 
 #pragma region Initialize
-/// @brief Called when the command is initially scheduled.
+/// @brief Called just before this Command runs.
 void ChassisDriveSerpentine::Initialize()
 {
     try

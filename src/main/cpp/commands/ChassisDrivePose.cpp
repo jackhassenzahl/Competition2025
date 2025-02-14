@@ -12,7 +12,8 @@ ChassisDrivePose::ChassisDrivePose(units::velocity::meters_per_second_t speed, u
                                    m_speed(speed), m_distanceX(distanceX), m_distanceY(distanceY), m_angle(angle),
                                    m_timeoutTime(timeoutTime), m_drivetrain(drivetrain)
 {
-   SetName("ChassisDrivePose");
+    // Set the command name
+    SetName("ChassisDrivePose");
 
     // Declare subsystem dependencies
     AddRequirements(m_drivetrain);
@@ -20,9 +21,10 @@ ChassisDrivePose::ChassisDrivePose(units::velocity::meters_per_second_t speed, u
     // Ensure the SwerveControllerCommand is set to nullptr
     m_swerveControllerCommand = nullptr;
 }
+#pragma endregion
 
 #pragma region Initialize
-/// @brief Called when the command is initially scheduled.
+/// @brief Called just before this Command runs.
 void ChassisDrivePose::Initialize()
 {
     try
@@ -36,16 +38,19 @@ void ChassisDrivePose::Initialize()
         // Ensure the new pose requires an X or Y move
         // Note: GenerateTrajectory will throw an exception if the distance X and Y are zero
         if (fabs(m_distanceX.value()) < 0.001 && fabs(m_distanceY.value()) < 0.001)
-           m_distanceX = 0.01_m;
-        
+            m_distanceX = 0.01_m;
+
+        // Get the robot starting pose
         auto startPose = m_drivetrain->GetPose();
 
         // Create the trajectory to follow
-        frc::Pose2d endPose{
-            startPose.X() + m_distanceX, 
-            startPose.Y() + m_distanceY, 
-            startPose.Rotation().Degrees() + m_angle
-            };
+        frc::Pose2d endPose{startPose.X()                  + m_distanceX,
+                            startPose.Y()                  + m_distanceY,
+                            startPose.Rotation().Degrees() + m_angle};
+
+        frc::SmartDashboard::PutNumber("DistanceX", m_distanceX.value());
+        frc::SmartDashboard::PutNumber("DistanceY", m_distanceY.value());
+        frc::SmartDashboard::PutNumber("Angle",     m_angle.value());
 
         frc::SmartDashboard::PutNumber("StartX", startPose.X().value());
         frc::SmartDashboard::PutNumber("StartY", startPose.Y().value());
@@ -77,7 +82,7 @@ void ChassisDrivePose::Initialize()
             {m_drivetrain}
         );
 
-        // Reset odometry to the starting pose of the trajectory.
+        // Set odometry to the starting pose of the trajectory.
         m_drivetrain->ResetOdometry(trajectory.InitialPose());
 
         // Initialize the swerve controller command
