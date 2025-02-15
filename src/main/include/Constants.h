@@ -73,10 +73,10 @@ namespace DrivetrainConstants
 namespace SwerveConstants
 {
     // Define the absolute encoder value for forward
-    constexpr auto FrontRightForwardAngle          = -0.193359 * 2.0_rad * std::numbers::pi;
-    constexpr auto FrontLeftForwardAngle           = -0.239014 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearRightForwardAngle           = -0.167772 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearLeftForwardAngle            =  0.259277 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontRightForwardAngle          = /*-0.193359*/ -0.193604 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontLeftForwardAngle           = /*-0.239014*/ -0.422119 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearRightForwardAngle           = /*-0.167772*/ -0.174561 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearLeftForwardAngle            = /* 0.259277*/  0.268555 * 2.0_rad * std::numbers::pi;
 
     // Drive motor parameters
     constexpr auto DriveMaxAmperage                =     60_A;
@@ -112,9 +112,9 @@ namespace ElevatorConstants
     constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 10_tps;           // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 20_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 = 200_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 80_tps;           // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 160_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 1600_tr_per_s_cu;  // Jerk
 
     constexpr auto PositionToTurnsConversionFactor = 16.0 / (0.0475 * 3.0 * std::numbers::pi); // The number of motor rotations per meter
 }
@@ -187,14 +187,14 @@ namespace ControllerConstants
 
     constexpr auto JoystickForwardIndex    =   1;
     constexpr auto JoystickStrafeIndex     =   0;
-    constexpr auto JoystickAngleIndex      =   4;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
+    constexpr auto JoystickAngleIndex      =   2;  // 4 for xbox controller, 2 for extreme 3d controller(stick controller)
 
     constexpr auto JoystickDeadZone        = 0.05;
-    constexpr auto JoystickRotateDeadZone  = 0.15;
+    constexpr auto JoystickRotateDeadZone  = 0.3;
 
     constexpr auto ExponentForward         = 1.0;
     constexpr auto ExponentStrafe          = 1.0;
-    constexpr auto ExponentAngle           = 1.0;
+    constexpr auto ExponentAngle           = 3.0;
 }
 #pragma endregion
 
@@ -250,7 +250,7 @@ namespace ApriltagConstants
 
     constexpr auto LengthOfTagsInches      = 6.5;
 
-    constexpr auto RobotCameraOffset       = 0.0_m;
+    constexpr auto RobotCameraOffset       = -0.305_m;
 }
 #pragma endregion
 
@@ -273,12 +273,12 @@ namespace LedConstants
 #pragma region PoseConstants
 namespace PoseConstants
 {
-    constexpr auto   MaxSpeed                   = 3_mps;
-    constexpr auto   MaxAcceleration            = 3_mps_sq;
+    constexpr auto   MaxSpeed                   = 4_mps;
+    constexpr auto   MaxAcceleration            = 4_mps_sq;
     constexpr auto   MaxAngularSpeed            = 3.142_rad_per_s;
     constexpr auto   MaxAngularAcceleration     = 3.142_rad_per_s_sq;
 
-    constexpr double PXController               = 0.4;
+    constexpr double PXController               = 0.8;
     constexpr double PYController               = 0.4;
     constexpr double PProfileController         = 0.4;
 

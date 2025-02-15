@@ -28,6 +28,8 @@ void Robot::RobotPeriodic()
     // Get the voltage going into the PDP, in Volts
     double voltage = m_robotContainer->m_powerDistribution.GetVoltage();
     frc::SmartDashboard::PutNumber("Voltage", voltage);
+
+    frc::SmartDashboard::PutNumber("Climb Angle", m_robotContainer->GetClimbAngle().value());
 }
 #pragma endregion
 

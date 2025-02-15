@@ -1,86 +1,79 @@
 <xml version="1.0">
 <dashboard>
-	<widget field="Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="786" y="608"/>
-	</widget>
-	<widget field="DistanceY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="766" y="585"/>
-	</widget>
-	<widget field="DistanceX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="765" y="560"/>
-	</widget>
 	<widget field="EndA" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1039" y="607"/>
+		<location x="756" y="57"/>
 	</widget>
 	<widget field="EndY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1039" y="583"/>
+		<location x="757" y="33"/>
 	</widget>
 	<widget field="EndX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="1039" y="558"/>
+		<location x="752" y="13"/>
 	</widget>
 	<widget field="StartA" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="909" y="606"/>
+		<location x="567" y="61"/>
 	</widget>
 	<widget field="StartY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="911" y="582"/>
+		<location x="559" y="39"/>
 	</widget>
 	<widget field="StartX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="910" y="558"/>
-	</widget>
-	<widget field="Elevator: 0.75 Meter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="428" y="332"/>
-	</widget>
-	<widget field="Elevator: QuarterMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="416" y="273"/>
+		<location x="556" y="16"/>
 	</widget>
 	<widget field="Chassis: Drive to Wall " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="293" y="144"/>
+		<location x="225" y="357"/>
 	</widget>
-	<widget field="Coral: L4" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="534" y="164"/>
+	<widget field="Elevator: 0.75 Meter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="512" y="379"/>
 	</widget>
-	<widget field="Coral: L3" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="533" y="137"/>
-	</widget>
-	<widget field="Coral: L2" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="534" y="109"/>
-	</widget>
-	<widget field="Coral: L1" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="535" y="83"/>
-	</widget>
-	<widget field="Coral: Ground" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="512" y="58"/>
+	<widget field="Elevator: QuarterMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="509" y="321"/>
 	</widget>
 	<widget field="Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="274" y="244"/>
+		<location x="390" y="32"/>
+	</widget>
+	<widget field="Analog Gyro" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="713" y="257"/>
 	</widget>
 	<widget field="Ultrasonic" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="265" y="270"/>
+		<location x="225" y="32"/>
+	</widget>
+	<widget field="Coral: L4" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="390" y="293"/>
+	</widget>
+	<widget field="Coral: L3" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="390" y="261"/>
+	</widget>
+	<widget field="Coral: L2" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="390" y="229"/>
+	</widget>
+	<widget field="Coral: L1" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="390" y="0"/>
+	</widget>
+	<widget field="Coral: Ground" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="226" y="325"/>
 	</widget>
 	<widget field="Climb: Climb" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="442" y="480"/>
+		<location x="226" y="293"/>
 	</widget>
 	<widget field="Climb: Capture" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="430" y="452"/>
+		<location x="226" y="261"/>
 	</widget>
 	<widget field="Climb: Start" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="443" y="425"/>
-	</widget>
-	<widget field="AngleMotor Encoder Position 3" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="497" y="664"/>
-	</widget>
-	<widget field="AngleMotor Encoder Position 2" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="497" y="641"/>
-	</widget>
-	<widget field="AngleMotor Encoder Position 1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="499" y="617"/>
-		<height>20</height>
+		<location x="226" y="229"/>
 	</widget>
 	<widget field="Elevator: HalfMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="434" y="303"/>
+		<location x="525" y="352"/>
+	</widget>
+	<widget field="AngleMotor Encoder Position 3" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="668" y="203"/>
+	</widget>
+	<widget field="AngleMotor Encoder Position 2" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="640" y="170"/>
+	</widget>
+	<widget field="AngleMotor Encoder Position 1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="681" y="121"/>
 	</widget>
 	<widget field="Chassis: Serpentine " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="300" y="176"/>
+		<location x="304" y="197"/>
 	</widget>
 	<widget field="AprilTags Found" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="607" y="447"/>
@@ -91,49 +84,48 @@
 		<height>16</height>
 	</widget>
 	<widget field="Gyro Rotation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="245" y="299"/>
+		<location x="728" y="302"/>
 	</widget>
 	<widget field="Elevator: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="432" y="360"/>
+		<location x="517" y="409"/>
 	</widget>
 	<widget field="Elevator: Zero" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="460" y="244"/>
+		<location x="545" y="292"/>
 	</widget>
 	<widget field="Chassis: Time " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="337" y="3"/>
+		<location x="336" y="54"/>
 	</widget>
 	<widget field="Chassis: AprilTag " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="315" y="117"/>
+		<location x="317" y="165"/>
 	</widget>
 	<widget field="Chassis: Turn " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="332" y="89"/>
+		<location x="334" y="139"/>
 	</widget>
 	<widget field="Chassis: TwoMeters" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="305" y="60"/>
+		<location x="307" y="112"/>
 	</widget>
 	<widget field="Chassis: OneMeter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="313" y="33"/>
+		<location x="314" y="84"/>
 	</widget>
 	<widget field="AprilTag" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="644" y="472"/>
 	</widget>
 	<widget field="Rotation Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="933" y="517"/>
+		<location x="914" y="516"/>
 	</widget>
 	<widget field="Rotation Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="933" y="494"/>
-		<height>20</height>
+		<location x="913" y="492"/>
 	</widget>
 	<widget field="Rotation X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="933" y="471"/>
+		<location x="912" y="469"/>
 	</widget>
-	<widget field="Distance Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+	<widget field="Pose Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="780" y="519"/>
 	</widget>
-	<widget field="Distance Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+	<widget field="Pose Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="780" y="494"/>
 	</widget>
-	<widget field="Distance X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+	<widget field="Pose X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="778" y="470"/>
 	</widget>
 	<widget field="Rear Left Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -164,7 +156,7 @@
 		<location x="59" y="307"/>
 	</widget>
 	<widget field="Debug" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="16" y="657"/>
+		<location x="495" y="559"/>
 		<width>371</width>
 	</widget>
 	<widget field="Autonomous Mode" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
@@ -191,6 +183,7 @@
 	</widget>
 	<widget field="Front Right Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="227" y="448"/>
+		<width>175</width>
 		<height>20</height>
 	</widget>
 	<widget field="Front Right Drive" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -206,7 +199,7 @@
 		<location x="38" y="233"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="672" y="40"/>
+		<location x="989" y="20"/>
 		<width>515</width>
 		<height>389</height>
 		<property name="Camera Choice" value="Detected"/>
@@ -218,5 +211,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Analog Gyro"/>
 </xml>

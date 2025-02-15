@@ -28,7 +28,7 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Chassis: OneMeter",       new ChassisDrivePose(1.0_mps, 1_m,  0_m,   0_deg,        10_s,               &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: TwoMeters",      new ChassisDrivePose(1.0_mps, 2_m,  0_m,   0_deg,        10_s,               &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Turn ",          new ChassisDrivePose(1.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 0.5_m, 0.5_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 1.0_m, 0.0_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
 
@@ -57,6 +57,7 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Coral: L4",               new GrabberPose(CoralPoseConstants::L4ArmAngle,       CoralPoseConstants::L4Elevator,
                                                                             CoralPoseConstants::L4WristAngle,     CoralPoseConstants::L4GrabberVelocity,
                                                                             &m_arm, &m_elevator, &m_grabber));
+
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
@@ -102,9 +103,27 @@ void RobotContainer::ConfigureButtonBindings()
 
     /**************************** Operator Buttons - Chassis Pose ******************************/
 
-    frc2::JoystickButton driveTest{&m_operatorController, XBoxConstants::A};
-    driveTest.WhileTrue(new ChassisDrivePose(0.5_mps, 1_m, 0_m, 0_deg, 10_s, &m_drivetrain));
+    // frc2::JoystickButton driveTest{&m_operatorController, XBoxConstants::A};
+    // driveTest.WhileTrue(new ChassisDrivePose(0.5_mps, 1_m, 0_m, 0_deg, 10_s, &m_drivetrain));
 
+    frc2::JoystickButton L1(&m_operatorController, XBoxConstants::A);
+    L1.OnTrue(GrabberPose(0_deg, 0.25_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton L2(&m_operatorController, XBoxConstants::B);
+    L2.OnTrue(GrabberPose(0_deg, 0.50_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton L3(&m_operatorController, XBoxConstants::X);
+    L3.OnTrue(GrabberPose(0_deg, 0.75_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton L4(&m_operatorController, XBoxConstants::Y);
+    L4.OnTrue(GrabberPose(0_deg, 1.00_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
+    climbUp.OnTrue(ClimbSetAngle(m_climb.GetAngle() + 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
+    climbDown.OnTrue(ClimbSetAngle(m_climb.GetAngle() - 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
     /**************************** Operator Buttons - LEDs **************************************/
 
     frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
@@ -266,3 +285,8 @@ units::second_t RobotContainer::GetPeriod()
     return m_period;
 }
 #pragma endregion
+
+units::angle::degree_t RobotContainer::GetClimbAngle()
+{
+    return m_climb.GetAngle();
+}

@@ -83,3 +83,12 @@ void Climb::SetAngle(units::angle::degree_t angle)
 }
 #pragma endregion
 
+#pragma region GetAngle
+units::angle::degree_t Climb::GetAngle()
+{
+    auto currentAngle = m_climbMotor->GetPosition().GetValueAsDouble();
+    auto angle = (units::angle::degree_t) (currentAngle / ClimbConstants::AngleToTurnsConversionFactor.value());
+
+    return angle;
+}
+#pragma endregion

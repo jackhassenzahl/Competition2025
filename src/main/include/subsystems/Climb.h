@@ -17,6 +17,8 @@ class Climb : public frc2::SubsystemBase
 
         void SetAngle(units::angle::degree_t angle);
 
+        units::angle::degree_t GetAngle();
+
     private:
 
         void ConfigureClimbMotor(int motorCanId);
