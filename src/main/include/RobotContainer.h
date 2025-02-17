@@ -77,9 +77,9 @@ class RobotContainer
         void                        SetPeriod(units::second_t period);
         units::second_t             GetPeriod();
 
-        units::angle::degree_t GetClimbAngle();
+        units::angle::degree_t      GetClimbAngle();
 
-        frc::PowerDistribution                m_powerDistribution;
+        frc::PowerDistribution      m_powerDistribution;
 
     private:
 

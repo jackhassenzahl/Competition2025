@@ -65,11 +65,30 @@ void Arm::ConfigureArmMotor(int motorCanId)
 /// @param position The setpoint for the arm angle. Takes -180 -> 180
 void Arm::SetAngle(units::angle::degree_t angle)
 {
+    // // Making sure that the climb doesn't try to go through the robot
+    // if (angle < ArmConstants::MinimumPosition)  // TODO: Need to calibrate angle to motor rotations
+    //    angle = ArmConstants::MinimumPosition;
+
+    // if (angle > ArmConstants::MaximumPosition)
+    //     angle = ArmConstants::MaximumPosition;
+
     // Compute the number of turns based on the specficied angle
-//    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor);
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / 360.0);
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor.value());
 
     // Set the arm set position
     m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
+}
+#pragma endregion
+
+#pragma region GetAngle
+/// @brief Method to get the arm angle.
+/// @return The climb angle.
+units::angle::degree_t Arm::GetAngle()
+{
+    // Get the current climb motor angle
+    auto currentAngle = m_armMotor->GetPosition().GetValueAsDouble();
+
+    // Return the climb angle
+    return (units::angle::degree_t) (currentAngle / ClimbConstants::AngleToTurnsConversionFactor.value());
 }
 #pragma endregion

@@ -73,10 +73,10 @@ namespace DrivetrainConstants
 namespace SwerveConstants
 {
     // Define the absolute encoder value for forward
-    constexpr auto FrontRightForwardAngle          = /*-0.193359*/ -0.193604 * 2.0_rad * std::numbers::pi;
-    constexpr auto FrontLeftForwardAngle           = /*-0.239014*/ -0.422119 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearRightForwardAngle           = /*-0.167772*/ -0.174561 * 2.0_rad * std::numbers::pi;
-    constexpr auto RearLeftForwardAngle            = /* 0.259277*/  0.268555 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontRightForwardAngle          = -0.193604 * 2.0_rad * std::numbers::pi;
+    constexpr auto FrontLeftForwardAngle           = -0.422119 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearRightForwardAngle           = -0.174561 * 2.0_rad * std::numbers::pi;
+    constexpr auto RearLeftForwardAngle            =  0.268555 * 2.0_rad * std::numbers::pi;
 
     // Drive motor parameters
     constexpr auto DriveMaxAmperage                =     60_A;
@@ -154,7 +154,10 @@ namespace ArmConstants
     constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
     constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto AngleToTurnsConversionFactor    = 1.0;              // The number of motor rotations per degree
+    constexpr auto AngleToTurnsConversionFactor    = 1.0 / 1_deg;      // The number of motor rotations per degree
+
+    constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaximumPosition                 = 100_deg;
 }
 #pragma endregion
 
@@ -172,10 +175,10 @@ namespace ClimbConstants
     constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
     constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;              // The number of motor rotations per degree
+    constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;  // The number of motor rotations per degree
 
-    constexpr auto MinClimbPosition                = -50_deg;         // Note: Need to calibrate angle to motor rotations
-    constexpr auto MaxClimbPosition                = 100_deg;
+    constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaximumPosition                 = 100_deg;
 }
 #pragma endregion
 

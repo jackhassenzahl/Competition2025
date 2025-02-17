@@ -58,7 +58,6 @@ RobotContainer::RobotContainer()
                                                                             CoralPoseConstants::L4WristAngle,     CoralPoseConstants::L4GrabberVelocity,
                                                                             &m_arm, &m_elevator, &m_grabber));
 
-
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
@@ -103,9 +102,6 @@ void RobotContainer::ConfigureButtonBindings()
 
     /**************************** Operator Buttons - Chassis Pose ******************************/
 
-    // frc2::JoystickButton driveTest{&m_operatorController, XBoxConstants::A};
-    // driveTest.WhileTrue(new ChassisDrivePose(0.5_mps, 1_m, 0_m, 0_deg, 10_s, &m_drivetrain));
-
     frc2::JoystickButton L1(&m_operatorController, XBoxConstants::A);
     L1.OnTrue(GrabberPose(0_deg, 0.25_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
@@ -120,10 +116,10 @@ void RobotContainer::ConfigureButtonBindings()
 
     frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
     climbUp.OnTrue(ClimbSetAngle(m_climb.GetAngle() + 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-    
+
     frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
     climbDown.OnTrue(ClimbSetAngle(m_climb.GetAngle() - 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-    
+
     /**************************** Operator Buttons - LEDs **************************************/
 
     frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
@@ -286,7 +282,12 @@ units::second_t RobotContainer::GetPeriod()
 }
 #pragma endregion
 
+#pragma region GetClimbAngle
+/// @brief Method to get the climb angle.
+/// @return The climb angle.
 units::angle::degree_t RobotContainer::GetClimbAngle()
 {
+    // Return the climb angle
     return m_climb.GetAngle();
 }
+#pragma endregion

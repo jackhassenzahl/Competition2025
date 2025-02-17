@@ -68,12 +68,12 @@ void Climb::ConfigureClimbMotor(int motorCanId)
 /// @param position The setpoint for the climb angle.
 void Climb::SetAngle(units::angle::degree_t angle)
 {
-    // Making sure that the climb doesn't try to go through the robot
-    // if (angle < ClimbConstants::MinClimbPosition)  // TODO: Need to calibrate angle to motor rotations
-    //    angle = ClimbConstants::MinClimbPosition;
+    // // Making sure that the climb doesn't try to go through the robot
+    // if (angle < ClimbConstants::MinimumPosition)  // TODO: Need to calibrate angle to motor rotations
+    //    angle = ClimbConstants::MinimumPosition;
 
-    // if (angle > ClimbConstants::MaxClimbPosition)
-    //     angle = ClimbConstants::MaxClimbPosition;
+    // if (angle > ClimbConstants::MaximumPosition)
+    //     angle = ClimbConstants::MaximumPosition;
 
     // Compute the number of turns based on the specficied angle
     units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ClimbConstants::AngleToTurnsConversionFactor.value());
@@ -84,11 +84,14 @@ void Climb::SetAngle(units::angle::degree_t angle)
 #pragma endregion
 
 #pragma region GetAngle
+/// @brief Method to get the climb angle.
+/// @return The climb angle.
 units::angle::degree_t Climb::GetAngle()
 {
+    // Get the current climb motor angle
     auto currentAngle = m_climbMotor->GetPosition().GetValueAsDouble();
-    auto angle = (units::angle::degree_t) (currentAngle / ClimbConstants::AngleToTurnsConversionFactor.value());
 
-    return angle;
+    // Return the climb angle
+    return (units::angle::degree_t) (currentAngle / ClimbConstants::AngleToTurnsConversionFactor.value());
 }
 #pragma endregion

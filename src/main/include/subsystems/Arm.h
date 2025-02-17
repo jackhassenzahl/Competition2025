@@ -14,7 +14,9 @@ class Arm : public frc2::SubsystemBase
 
         Arm();
 
-        void SetAngle(units::angle::degree_t angle);
+        void                   SetAngle(units::angle::degree_t angle);
+
+        units::angle::degree_t GetAngle();
 
     private:
 

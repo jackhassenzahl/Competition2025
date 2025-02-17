@@ -15,7 +15,7 @@ class Climb : public frc2::SubsystemBase
 
         Climb();
 
-        void SetAngle(units::angle::degree_t angle);
+        void                   SetAngle(units::angle::degree_t angle);
 
         units::angle::degree_t GetAngle();
 
