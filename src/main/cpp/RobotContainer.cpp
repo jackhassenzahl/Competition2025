@@ -32,31 +32,15 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
 
-    frc::SmartDashboard::PutData("Elevator: Zero",          new ElevatorSetHeight(0_m,    &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: QuarterMeter",  new ElevatorSetHeight(0.25_m, &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: HalfMeter",     new ElevatorSetHeight(0.5_m,  &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: 0.75 Meter",    new ElevatorSetHeight(0.75_m, &m_elevator));
-    frc::SmartDashboard::PutData("Elevator: OneMeter",      new ElevatorSetHeight(1_m,    &m_elevator));
-
     frc::SmartDashboard::PutData("Climb: Start",            new ClimbSetAngle(  0_deg, &m_climb));
     frc::SmartDashboard::PutData("Climb: Capture",          new ClimbSetAngle(-20_deg, &m_climb));
     frc::SmartDashboard::PutData("Climb: Climb",            new ClimbSetAngle( 50_deg, &m_climb));
 
-    frc::SmartDashboard::PutData("Coral: Ground",           new GrabberPose(CoralPoseConstants::GroundArmAngle,   CoralPoseConstants::GroundElevator,
-                                                                            CoralPoseConstants::GroundWristAngle, CoralPoseConstants::GroundGrabberVelocity,
-                                                                            &m_arm, &m_elevator, &m_grabber));
-    frc::SmartDashboard::PutData("Coral: L1",               new GrabberPose(CoralPoseConstants::L1ArmAngle,       CoralPoseConstants::L1Elevator,
-                                                                            CoralPoseConstants::L1WristAngle,     CoralPoseConstants::L1GrabberVelocity,
-                                                                            &m_arm, &m_elevator, &m_grabber));
-    frc::SmartDashboard::PutData("Coral: L2",               new GrabberPose(CoralPoseConstants::L2ArmAngle,       CoralPoseConstants::L2Elevator,
-                                                                            CoralPoseConstants::L2WristAngle,     CoralPoseConstants::L2GrabberVelocity,
-                                                                            &m_arm, &m_elevator, &m_grabber));
-    frc::SmartDashboard::PutData("Coral: L3",               new GrabberPose(CoralPoseConstants::L3ArmAngle,       CoralPoseConstants::L3Elevator,
-                                                                            CoralPoseConstants::L3WristAngle,     CoralPoseConstants::L3GrabberVelocity,
-                                                                            &m_arm, &m_elevator, &m_grabber));
-    frc::SmartDashboard::PutData("Coral: L4",               new GrabberPose(CoralPoseConstants::L4ArmAngle,       CoralPoseConstants::L4Elevator,
-                                                                            CoralPoseConstants::L4WristAngle,     CoralPoseConstants::L4GrabberVelocity,
-                                                                            &m_arm, &m_elevator, &m_grabber));
+    frc::SmartDashboard::PutData("Coral: Ground",           new GripperPose(GripperPoseEnum::CoralGround, &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L1",               new GripperPose(GripperPoseEnum::CoralL1,     &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L2",               new GripperPose(GripperPoseEnum::CoralL2,     &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L3",               new GripperPose(GripperPoseEnum::CoralL3,     &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L4",               new GripperPose(GripperPoseEnum::CoralL4,     &m_gripper));
 
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
@@ -103,16 +87,16 @@ void RobotContainer::ConfigureButtonBindings()
     /**************************** Operator Buttons - Chassis Pose ******************************/
 
     frc2::JoystickButton L1(&m_operatorController, XBoxConstants::A);
-    L1.OnTrue(GrabberPose(0_deg, 0.25_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    L1.OnTrue(GripperPose(GripperPoseEnum::CoralL1, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::JoystickButton L2(&m_operatorController, XBoxConstants::B);
-    L2.OnTrue(GrabberPose(0_deg, 0.50_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    L2.OnTrue(GripperPose(GripperPoseEnum::CoralL2, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::JoystickButton L3(&m_operatorController, XBoxConstants::X);
-    L3.OnTrue(GrabberPose(0_deg, 0.75_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    L3.OnTrue(GripperPose(GripperPoseEnum::CoralL3, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::JoystickButton L4(&m_operatorController, XBoxConstants::Y);
-    L4.OnTrue(GrabberPose(0_deg, 1.00_m, 0_deg, 0.0, &m_arm, &m_elevator, &m_grabber).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    L4.OnTrue(GripperPose(GripperPoseEnum::CoralL4, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
     climbUp.OnTrue(ClimbSetAngle(m_climb.GetAngle() + 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));

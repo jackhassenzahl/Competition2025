@@ -43,7 +43,7 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleEncoderCanId  = 23;
 
     constexpr auto ArmMotorCanId                     = 30;
-    constexpr auto GrabberMotorCanId                 = 31;
+    constexpr auto GripperMotorCanId                 = 31;
     constexpr auto WristMotorCanId                   = 32;
     constexpr auto ElevatorMotorCanId                = 33;
 
@@ -120,23 +120,23 @@ namespace ElevatorConstants
 }
 #pragma endregion
 
-#pragma region GrabberConstants
-namespace GrabberConstants
+#pragma region GripperConstants
+namespace GripperConstants
 {
     constexpr auto WristP                          = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
     constexpr auto WristI                          = 0.0;              // Integral:        No output for integrated error
     constexpr auto WristD                          = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
 
-    constexpr auto GrabberP                        = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto GrabberI                        = 0.0;              // Integral:        No output for integrated error
-    constexpr auto GrabberD                        = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto GripperP                        = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto GripperI                        = 0.0;              // Integral:        No output for integrated error
+    constexpr auto GripperD                        = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
 
-    constexpr auto GrabberMaxAmperage              =  60;
+    constexpr auto GripperMaxAmperage              =  60;
     constexpr auto WristMaxAmperage                =  60;
 
     constexpr auto WristRadiansToMotorRevolutions  = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
 
-    constexpr auto GrabberMaxRevolutionsPerMinute  = 180; // About 3 revolutions per second
+    constexpr auto GripperMaxRevolutionsPerMinute  = 180; // About 3 revolutions per second
 }
 #pragma endregion
 
@@ -273,8 +273,8 @@ namespace LedConstants
 }
 #pragma endregion
 
-#pragma region PoseConstants
-namespace PoseConstants
+#pragma region ChassisPoseConstants
+namespace ChassisPoseConstants
 {
     constexpr auto   MaxSpeed                   = 4_mps;
     constexpr auto   MaxAcceleration            = 4_mps_sq;
@@ -292,29 +292,69 @@ namespace PoseConstants
 #pragma region CoralPoseConstants
 namespace CoralPoseConstants
 {
-    constexpr auto GroundArmAngle        = 0.0_deg;
-    constexpr auto GroundElevator        = 0.0_m;
-    constexpr auto GroundWristAngle      = 0.0_deg;
-    constexpr auto GroundGrabberVelocity = 0.0;
+    constexpr auto GroundElevator         = 0.0_m;
+    constexpr auto GroundArmAngle         = 0.0_deg;
+    constexpr auto GroundWristAngle       = 0.0_deg;
+    constexpr auto GroundGripperVelocity  = 0.0;
 
-    constexpr auto L1ArmAngle            = 0.0_deg;
-    constexpr auto L1Elevator            = 0.0_m;
-    constexpr auto L1WristAngle          = 0.0_deg;
-    constexpr auto L1GrabberVelocity     = 0.0;
+    constexpr auto StationElevator        = 0.0_m;
+    constexpr auto StationArmAngle        = 0.0_deg;
+    constexpr auto StationWristAngle      = 0.0_deg;
+    constexpr auto StationGripperVelocity = 0.0;
 
-    constexpr auto L2ArmAngle            = 0.0_deg;
-    constexpr auto L2Elevator            = 0.0_m;
-    constexpr auto L2WristAngle          = 0.0_deg;
-    constexpr auto L2GrabberVelocity     = 0.0;
+    constexpr auto L1Elevator             = 0.0_m;
+    constexpr auto L1ArmAngle             = 0.0_deg;
+    constexpr auto L1WristAngle           = 0.0_deg;
+    constexpr auto L1GripperVelocity      = 0.0;
 
-    constexpr auto L3ArmAngle            = 0.0_deg;
-    constexpr auto L3Elevator            = 0.0_m;
-    constexpr auto L3WristAngle          = 0.0_deg;
-    constexpr auto L3GrabberVelocity     = 0.0;
+    constexpr auto L2Elevator             = 0.0_m;
+    constexpr auto L2ArmAngle             = 0.0_deg;
+    constexpr auto L2WristAngle           = 0.0_deg;
+    constexpr auto L2GripperVelocity      = 0.0;
 
-    constexpr auto L4ArmAngle            = 0.0_deg;
-    constexpr auto L4Elevator            = 0.0_m;
-    constexpr auto L4WristAngle          = 0.0_deg;
-    constexpr auto L4GrabberVelocity     = 0.0;
+    constexpr auto L3Elevator             = 0.0_m;
+    constexpr auto L3ArmAngle             = 0.0_deg;
+    constexpr auto L3WristAngle           = 0.0_deg;
+    constexpr auto L3GripperVelocity      = 0.0;
+
+    constexpr auto L4Elevator             = 0.0_m;
+    constexpr auto L4ArmAngle             = 0.0_deg;
+    constexpr auto L4WristAngle           = 0.0_deg;
+    constexpr auto L4GripperVelocity      = 0.0;
+}
+#pragma endregion
+
+#pragma region AlgaePoseConstants
+namespace AlgaePoseConstants
+{
+    constexpr auto GroundElevator          = 0.0_m;
+    constexpr auto GroundArmAngle          = 0.0_deg;
+    constexpr auto GroundWristAngle        = 0.0_deg;
+    constexpr auto GroundGripperVelocity   = 0.0;
+
+    constexpr auto OnCoralElevator          = 0.0_m;
+    constexpr auto OnCoralArmAngle          = 0.0_deg;
+    constexpr auto OnCoralWristAngle        = 0.0_deg;
+    constexpr auto OnCoralGripperVelocity   = 0.0;
+
+    constexpr auto LoElevator               = 0.0_m;
+    constexpr auto LoArmAngle               = 0.0_deg;
+    constexpr auto LoWristAngle             = 0.0_deg;
+    constexpr auto LoGripperVelocity        = 0.0;
+
+    constexpr auto HighElevator             = 0.0_m;
+    constexpr auto HighArmAngle             = 0.0_deg;
+    constexpr auto HighWristAngle           = 0.0_deg;
+    constexpr auto HighGripperVelocity      = 0.0;  
+
+    constexpr auto ProcessorElevator        = 0.0_m;
+    constexpr auto ProcessorArmAngle        = 0.0_deg;
+    constexpr auto ProcessorWristAngle      = 0.0_deg;
+    constexpr auto ProcessorGripperVelocity = 0.0;
+
+    constexpr auto BargeElevator            = 0.0_m;
+    constexpr auto BargeArmAngle            = 0.0_deg;
+    constexpr auto BargeWristAngle          = 0.0_deg;
+    constexpr auto BargeGripperVelocity     = 0.0;       
 }
 #pragma endregion

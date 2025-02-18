@@ -6,7 +6,6 @@
 /// @param drivetrain The Drivetrain subsystem.
 AutonomousComplex::AutonomousComplex(Leds *leds, Drivetrain *drivetrain)
 {
-
     // Add commands to the autonomous complex
     AddCommands(AutonomousLed(leds), AutonomousParallel(leds, drivetrain));
 }

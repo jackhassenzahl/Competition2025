@@ -25,7 +25,7 @@ void ChassisDriveSerpentine::Initialize()
     try
     {
         // Set up config for trajectory
-        frc::TrajectoryConfig trajectoryConfig(m_speed, PoseConstants::MaxAcceleration);
+        frc::TrajectoryConfig trajectoryConfig(m_speed, ChassisPoseConstants::MaxAcceleration);
 
         // Add kinematics to ensure maximum speed is actually obeyed
         trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
@@ -41,8 +41,8 @@ void ChassisDriveSerpentine::Initialize()
             // Pass the config
             trajectoryConfig);
 
-        frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
-                                                                         PoseConstants::ThetaControllerConstraints};
+        frc::ProfiledPIDController<units::radians> profiledPIDController{ChassisPoseConstants::PProfileController, 0, 0,
+                                                                         ChassisPoseConstants::ThetaControllerConstraints};
 
         // enable continuous input for the profile PID controller
         profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
@@ -52,8 +52,8 @@ void ChassisDriveSerpentine::Initialize()
             trajectory,
             [this]() { return m_drivetrain->GetPose(); },
             m_drivetrain->m_kinematics,
-            frc::PIDController(PoseConstants::PXController, 0, 0),
-            frc::PIDController(PoseConstants::PYController, 0, 0),
+            frc::PIDController(ChassisPoseConstants::PXController, 0, 0),
+            frc::PIDController(ChassisPoseConstants::PYController, 0, 0),
             profiledPIDController,
             [this](auto moduleStates) { m_drivetrain->SetModuleStates(moduleStates); },
             {m_drivetrain}

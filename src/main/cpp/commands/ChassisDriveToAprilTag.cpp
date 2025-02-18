@@ -62,12 +62,12 @@ void ChassisDriveToAprilTag::Initialize()
         // Determine if an AprilTag was found
         if (aprilTagInformation.Found == true)
         {
-            frc::SmartDashboard::PutNumber("Distance X", aprilTagInformation.X);
-            frc::SmartDashboard::PutNumber("Distance Y", aprilTagInformation.Y);
-            frc::SmartDashboard::PutNumber("Distance Z", aprilTagInformation.Z);
-            frc::SmartDashboard::PutNumber("Rotation X", aprilTagInformation.rotationX);
-            frc::SmartDashboard::PutNumber("Rotation Y", aprilTagInformation.rotationY);
-            frc::SmartDashboard::PutNumber("Rotation Z", aprilTagInformation.rotationZ);
+            frc::SmartDashboard::PutNumber("AprilTag Dist X", aprilTagInformation.X);
+            frc::SmartDashboard::PutNumber("AprilTag Dist Y", aprilTagInformation.Y);
+            frc::SmartDashboard::PutNumber("AprilTag Dist Z", aprilTagInformation.Z);
+            frc::SmartDashboard::PutNumber("AprilTag Rot X",  aprilTagInformation.rotationX);
+            frc::SmartDashboard::PutNumber("AprilTag Rot Y",  aprilTagInformation.rotationY);
+            frc::SmartDashboard::PutNumber("AprilTag Rot Z",  aprilTagInformation.rotationZ);
         }
         else  // If no AprilTag is found, end the command
         {
@@ -76,7 +76,7 @@ void ChassisDriveToAprilTag::Initialize()
         }
 
         // Set up config for trajectory
-        frc::TrajectoryConfig trajectoryConfig(m_speed, PoseConstants::MaxAcceleration);
+        frc::TrajectoryConfig trajectoryConfig(m_speed, ChassisPoseConstants::MaxAcceleration);
 
         // Add kinematics to ensure maximum speed is actually obeyed
         trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
@@ -99,24 +99,24 @@ void ChassisDriveToAprilTag::Initialize()
                             startPose.Y()                  + distanceY,
                             startPose.Rotation().Degrees() + angleOffset};
 
-        frc::SmartDashboard::PutNumber("DistanceX",  distanceX.value());
-        frc::SmartDashboard::PutNumber("DistanceY",  distanceY.value());
+        frc::SmartDashboard::PutNumber("Distance X",  distanceX.value());
+        frc::SmartDashboard::PutNumber("Distance Y",  distanceY.value());
         frc::SmartDashboard::PutNumber("Angle",      units::angle::degree_t(angleOffset).value());
 
-        frc::SmartDashboard::PutNumber("StartX",     startPose.X().value());
-        frc::SmartDashboard::PutNumber("StartY",     startPose.Y().value());
-        frc::SmartDashboard::PutNumber("StartA",     startPose.Rotation().Degrees().value());
+        frc::SmartDashboard::PutNumber("Start X",     startPose.X().value());
+        frc::SmartDashboard::PutNumber("Start Y",     startPose.Y().value());
+        frc::SmartDashboard::PutNumber("Start A",     startPose.Rotation().Degrees().value());
 
-        frc::SmartDashboard::PutNumber("EndX",       endPose.X().value());
-        frc::SmartDashboard::PutNumber("EndY",       endPose.Y().value());
-        frc::SmartDashboard::PutNumber("EndA",       endPose.Rotation().Degrees().value());
+        frc::SmartDashboard::PutNumber("End X",       endPose.X().value());
+        frc::SmartDashboard::PutNumber("End Y",       endPose.Y().value());
+        frc::SmartDashboard::PutNumber("End A",       endPose.Rotation().Degrees().value());
 
         // Create the trajectory to follow
         auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startPose, {}, endPose, trajectoryConfig);
 
         // Create a profile PID controller
-        frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
-                                                                         PoseConstants::ThetaControllerConstraints};
+        frc::ProfiledPIDController<units::radians> profiledPIDController{ChassisPoseConstants::PProfileController, 0, 0,
+                                                                         ChassisPoseConstants::ThetaControllerConstraints};
 
         // enable continuous input for the profile PID controller
         profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
@@ -126,8 +126,8 @@ void ChassisDriveToAprilTag::Initialize()
             trajectory,
             [this]() { return m_drivetrain->GetPose(); },
             m_drivetrain->m_kinematics,
-            frc::PIDController(PoseConstants::PXController, 0, 0),
-            frc::PIDController(PoseConstants::PYController, 0, 0),
+            frc::PIDController(ChassisPoseConstants::PXController, 0, 0),
+            frc::PIDController(ChassisPoseConstants::PYController, 0, 0),
             profiledPIDController,
             [this](auto moduleStates) { m_drivetrain->SetModuleStates(moduleStates); },
             {m_drivetrain}

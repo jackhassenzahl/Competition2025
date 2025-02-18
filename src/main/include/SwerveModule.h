@@ -29,17 +29,17 @@ class SwerveModule
 {
     public:
 
-        explicit                  SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId);
+        explicit                   SwerveModule(int driveMotorCanId, int angleMotorCanId, int angleEncoderCanId);
 
-        void                      SetDesiredState(frc::SwerveModuleState& state, std::string description);  // Sets the desired state for the module
+        void                       SetDesiredState(frc::SwerveModuleState& state, std::string description);  // Sets the desired state for the module
 
-        frc::SwerveModuleState    GetState();                                            // Returns the current state of the module
+        frc::SwerveModuleState     GetState();                                            // Returns the current state of the module
 
-        frc::SwerveModulePosition GetPosition();                                         // Returns the current position of the module
+        frc::SwerveModulePosition  GetPosition();                                         // Returns the current position of the module
 
-        void                      ResetDriveEncoder();                                   // Zeroes all the  encoders
+        void                       ResetDriveEncoder();                                   // Zeroes all the  encoders
 
-        void                      SetWheelAngleToForward(units::angle::radian_t desiredAngle);
+        void                       SetWheelAngleToForward(units::angle::radian_t desiredAngle);
 
     private:
 

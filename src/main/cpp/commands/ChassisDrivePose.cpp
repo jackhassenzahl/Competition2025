@@ -30,7 +30,7 @@ void ChassisDrivePose::Initialize()
     try
     {
         // Set up config for trajectory
-        frc::TrajectoryConfig trajectoryConfig(m_speed, PoseConstants::MaxAcceleration);
+        frc::TrajectoryConfig trajectoryConfig(m_speed, ChassisPoseConstants::MaxAcceleration);
 
         // Add kinematics to ensure maximum speed is actually obeyed
         trajectoryConfig.SetKinematics(m_drivetrain->m_kinematics);
@@ -48,24 +48,24 @@ void ChassisDrivePose::Initialize()
                             startPose.Y()                  + m_distanceY,
                             startPose.Rotation().Degrees() + m_angle};
 
-        frc::SmartDashboard::PutNumber("DistanceX", m_distanceX.value());
-        frc::SmartDashboard::PutNumber("DistanceY", m_distanceY.value());
+        frc::SmartDashboard::PutNumber("Distance X", m_distanceX.value());
+        frc::SmartDashboard::PutNumber("Distance Y", m_distanceY.value());
         frc::SmartDashboard::PutNumber("Angle",     m_angle.value());
 
-        frc::SmartDashboard::PutNumber("StartX", startPose.X().value());
-        frc::SmartDashboard::PutNumber("StartY", startPose.Y().value());
-        frc::SmartDashboard::PutNumber("StartA", startPose.Rotation().Degrees().value());
+        frc::SmartDashboard::PutNumber("Start X", startPose.X().value());
+        frc::SmartDashboard::PutNumber("Start Y", startPose.Y().value());
+        frc::SmartDashboard::PutNumber("Start A", startPose.Rotation().Degrees().value());
 
-        frc::SmartDashboard::PutNumber("EndX", endPose.X().value());
-        frc::SmartDashboard::PutNumber("EndY", endPose.Y().value());
-        frc::SmartDashboard::PutNumber("EndA", endPose.Rotation().Degrees().value());
+        frc::SmartDashboard::PutNumber("End X", endPose.X().value());
+        frc::SmartDashboard::PutNumber("End Y", endPose.Y().value());
+        frc::SmartDashboard::PutNumber("End A", endPose.Rotation().Degrees().value());
 
         // Create the trajectory to follow
         auto trajectory = frc::TrajectoryGenerator::GenerateTrajectory(startPose, {}, endPose, trajectoryConfig);
 
         // Create a profile PID controller
-        frc::ProfiledPIDController<units::radians> profiledPIDController{PoseConstants::PProfileController, 0, 0,
-                                                                         PoseConstants::ThetaControllerConstraints};
+        frc::ProfiledPIDController<units::radians> profiledPIDController{ChassisPoseConstants::PProfileController, 0, 0,
+                                                                         ChassisPoseConstants::ThetaControllerConstraints};
 
         // enable continuous input for the profile PID controller
         profiledPIDController.EnableContinuousInput(units::radian_t{-std::numbers::pi}, units::radian_t{std::numbers::pi});
@@ -75,8 +75,8 @@ void ChassisDrivePose::Initialize()
             trajectory,
             [this]() { return m_drivetrain->GetPose(); },
             m_drivetrain->m_kinematics,
-            frc::PIDController(PoseConstants::PXController, 0, 0),
-            frc::PIDController(PoseConstants::PYController, 0, 0),
+            frc::PIDController(ChassisPoseConstants::PXController, 0, 0),
+            frc::PIDController(ChassisPoseConstants::PYController, 0, 0),
             profiledPIDController,
             [this](auto moduleStates) { m_drivetrain->SetModuleStates(moduleStates); },
             {m_drivetrain}
