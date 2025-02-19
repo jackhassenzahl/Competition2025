@@ -30,6 +30,11 @@ void Robot::RobotPeriodic()
     frc::SmartDashboard::PutNumber("Voltage", voltage);
 
     frc::SmartDashboard::PutNumber("Climb Angle", m_robotContainer->GetClimbAngle().value());
+    
+    frc::Pose2d pressentPose = m_robotContainer->GetChassisPose();
+    frc::SmartDashboard::PutNumber("Present X", pressentPose.X().value());
+    frc::SmartDashboard::PutNumber("Present Y", pressentPose.Y().value());
+    frc::SmartDashboard::PutNumber("Present A", pressentPose.Rotation().Degrees().value());
 }
 #pragma endregion
 

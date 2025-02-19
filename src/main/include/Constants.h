@@ -81,7 +81,7 @@ namespace SwerveConstants
     // Drive motor parameters
     constexpr auto DriveMaxAmperage                =     60_A;
     constexpr auto DriveMotorReduction             =     6.75;
-    constexpr auto WheelDiameter                   = 0.1016_m;
+    constexpr auto WheelDiameter                   = 0.0961_m;
     constexpr auto WheelCircumference              = WheelDiameter * std::numbers::pi;
     constexpr auto DriveMotorConversion            = WheelCircumference / DriveMotorReduction;
 
@@ -177,6 +177,9 @@ namespace ClimbConstants
 
     constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;  // The number of motor rotations per degree
 
+    constexpr auto CapturePosition                 = -30_deg;
+    constexpr auto ClimbPosition                   =  30_deg;
+
     constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
     constexpr auto MaximumPosition                 = 100_deg;
 }
@@ -197,7 +200,7 @@ namespace ControllerConstants
 
     constexpr auto ExponentForward         = 1.0;
     constexpr auto ExponentStrafe          = 1.0;
-    constexpr auto ExponentAngle           = 3.0;
+    constexpr auto ExponentAngle           = 5.0;
 }
 #pragma endregion
 
@@ -276,14 +279,14 @@ namespace LedConstants
 #pragma region ChassisPoseConstants
 namespace ChassisPoseConstants
 {
-    constexpr auto   MaxSpeed                   = 4_mps;
-    constexpr auto   MaxAcceleration            = 4_mps_sq;
+    constexpr auto   MaxSpeed                   = 3_mps;
+    constexpr auto   MaxAcceleration            = 3_mps_sq;
     constexpr auto   MaxAngularSpeed            = 3.142_rad_per_s;
     constexpr auto   MaxAngularAcceleration     = 3.142_rad_per_s_sq;
 
-    constexpr double PXController               = 0.8;
-    constexpr double PYController               = 0.4;
-    constexpr double PProfileController         = 0.4;
+    constexpr double PXController               = 4.0;
+    constexpr double PYController               = 4.0;
+    constexpr double PProfileController         = 5.0;
 
     extern const frc::TrapezoidProfile<units::radians>::Constraints ThetaControllerConstraints;
 }

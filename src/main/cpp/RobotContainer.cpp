@@ -25,16 +25,16 @@ RobotContainer *RobotContainer::GetInstance()
 RobotContainer::RobotContainer()
 {
     frc::SmartDashboard::PutData("Chassis: Time ",          new ChassisDriveTime(2_s, 0.5_mps,                                           &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: OneMeter",       new ChassisDrivePose(1.0_mps, 1_m,  0_m,   0_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters",      new ChassisDrivePose(1.0_mps, 2_m,  0_m,   0_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",          new ChassisDrivePose(1.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 1.0_m, 0.0_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: OneMeter",       new ChassisDrivePose(2.0_mps, 1_m,  0_m,  90_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",      new ChassisDrivePose(2.0_mps, 2_m,  2_m,   0_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",          new ChassisDrivePose(2.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 0.0_m, 0.0_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
 
     frc::SmartDashboard::PutData("Climb: Start",            new ClimbSetAngle(  0_deg, &m_climb));
-    frc::SmartDashboard::PutData("Climb: Capture",          new ClimbSetAngle(-20_deg, &m_climb));
-    frc::SmartDashboard::PutData("Climb: Climb",            new ClimbSetAngle( 50_deg, &m_climb));
+    frc::SmartDashboard::PutData("Climb: Capture",          new ClimbSetAngle(ClimbConstants::CapturePosition, &m_climb));
+    frc::SmartDashboard::PutData("Climb: Climb",            new ClimbSetAngle(ClimbConstants::ClimbPosition, &m_climb));
 
     frc::SmartDashboard::PutData("Coral: Ground",           new GripperPose(GripperPoseEnum::CoralGround, &m_gripper));
     frc::SmartDashboard::PutData("Coral: L1",               new GripperPose(GripperPoseEnum::CoralL1,     &m_gripper));
@@ -99,10 +99,10 @@ void RobotContainer::ConfigureButtonBindings()
     L4.OnTrue(GripperPose(GripperPoseEnum::CoralL4, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
-    climbUp.OnTrue(ClimbSetAngle(m_climb.GetAngle() + 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    climbUp.OnTrue(ClimbSetAngleOffset(5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
-    climbDown.OnTrue(ClimbSetAngle(m_climb.GetAngle() - 5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    climbDown.OnTrue(ClimbSetAngleOffset(-5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
     /**************************** Operator Buttons - LEDs **************************************/
 
@@ -273,5 +273,14 @@ units::angle::degree_t RobotContainer::GetClimbAngle()
 {
     // Return the climb angle
     return m_climb.GetAngle();
+}
+#pragma endregion
+
+#pragma region GetChassisPose
+/// @brief Method to get the chassis Pose.
+/// @return The chassis Pose.
+frc::Pose2d RobotContainer::GetChassisPose()
+{
+    return m_drivetrain.GetPose();
 }
 #pragma endregion

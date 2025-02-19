@@ -42,6 +42,7 @@
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/ClimbSetAngle.h"
+#include "commands/ClimbSetAngleOffset.h"
 #include "commands/GripperPose.h"
 #include "commands/GripperSetIntake.h"
 #include "commands/SetLeds.h"
@@ -74,6 +75,8 @@ class RobotContainer
         units::second_t             GetPeriod();
 
         units::angle::degree_t      GetClimbAngle();
+
+        frc::Pose2d                 GetChassisPose();
 
         frc::PowerDistribution      m_powerDistribution;
 
