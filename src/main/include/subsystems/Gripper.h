@@ -26,9 +26,8 @@ enum GripperPoseEnum
     AlgaeLo,
     AlgaeHigh,
     AlgaeProcessor,
-    AlgaeBarge  
+    AlgaeBarge
 };
-
 
 class Gripper : public frc2::SubsystemBase
 {

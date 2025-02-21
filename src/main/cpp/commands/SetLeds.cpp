@@ -63,15 +63,6 @@ bool SetLeds::IsFinished()
 }
 #pragma endregion
 
-#pragma region End
-/// @brief Called once after isFinished returns true.
-/// @param interrupted Indicated that the command was interrupted.
-void SetLeds::End(bool interrupted)
-{
-
-}
-#pragma endregion
-
 #pragma region RunsWhenDisabled
 /// @brief Indicates if the command runs when the robot is disabled.
 /// @return True is the command should run when the robot is disabled.

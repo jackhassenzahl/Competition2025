@@ -2,22 +2,22 @@
 
 #include <utility>
 
+#include <frc/filter/SlewRateLimiter.h>
+#include <frc/Joystick.h>
 #include <frc/MathUtil.h>
-#include <frc/XboxController.h>
+#include <frc/PowerDistribution.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
-#include <frc/PowerDistribution.h>
+#include <frc/XboxController.h>
+
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/button/POVButton.h>
-#include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/Command.h>
+#include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/SwerveControllerCommand.h>
-#include <frc2/command/InstantCommand.h>
-
-#include <frc/Joystick.h>
-#include <frc/filter/SlewRateLimiter.h>
 
 // Subsystems
 #include "subsystems/AprilTags.h"
@@ -41,8 +41,6 @@
 #include "commands/ChassisDriveToWall.h"
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
-#include "commands/ClimbSetAngle.h"
-#include "commands/ClimbSetAngleOffset.h"
 #include "commands/GripperPose.h"
 #include "commands/GripperSetIntake.h"
 #include "commands/SetLeds.h"
@@ -73,8 +71,6 @@ class RobotContainer
 
         void                        SetPeriod(units::second_t period);
         units::second_t             GetPeriod();
-
-        units::angle::degree_t      GetClimbAngle();
 
         frc::Pose2d                 GetChassisPose();
 

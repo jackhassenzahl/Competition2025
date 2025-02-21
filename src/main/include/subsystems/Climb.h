@@ -1,9 +1,8 @@
 #pragma once
 
+#include <frc/DigitalInput.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc2/command/CommandPtr.h>
 
-#include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/configs/Configs.hpp>
 
@@ -15,14 +14,14 @@ class Climb : public frc2::SubsystemBase
 
         Climb();
 
-        void                   SetAngle(units::angle::degree_t angle);
-
-        units::angle::degree_t GetAngle();
+        void SetVoltage(units::volt_t voltage);
 
     private:
 
         void ConfigureClimbMotor(int motorCanId);
 
-        ctre::phoenix6::hardware::TalonFX           *m_climbMotor;
-        ctre::phoenix6::controls::MotionMagicVoltage m_motionMagicVoltage{0_tr};
+        ctre::phoenix6::hardware::TalonFX *m_climbMotor;
+
+        frc::DigitalInput                  m_climbLimit  {ClimbConstants::ClimbLimitSwtich};
+        frc::DigitalInput                  m_captureLimit{ClimbConstants::CaptureLimitSwitch};
 };

@@ -164,24 +164,10 @@ namespace ArmConstants
 #pragma region ClimbConstants
 namespace ClimbConstants
 {
-    constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
-    constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    constexpr auto S                               = 0.0;              // Static Friction: Add [voltage] output to overcome static friction
-    constexpr auto V                               = 0.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
-    constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+    constexpr auto ClimbVoltage       = 12_V;
 
-    constexpr auto MotionMagicCruiseVelocity       = 110_tps;          // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
-
-    constexpr auto AngleToTurnsConversionFactor    =  100.0 / 16_deg;  // The number of motor rotations per degree
-
-    constexpr auto CapturePosition                 = -30_deg;
-    constexpr auto ClimbPosition                   =  30_deg;
-
-    constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
-    constexpr auto MaximumPosition                 = 100_deg;
+    constexpr auto ClimbLimitSwtich   = 0;
+    constexpr auto CaptureLimitSwitch = 1;
 }
 #pragma endregion
 
@@ -209,6 +195,38 @@ namespace Extreme3DConstants
 {
     constexpr auto HandleLowerLeft  = 3;
     constexpr auto HandleLowerRight = 4;
+}
+#pragma endregion
+
+#pragma region ControlPanelConstants
+namespace ControlPanelConstants
+{
+    constexpr auto CoralGnd       =  0;
+    constexpr auto CoralStn       =  5;
+    constexpr auto CoralL1        =  1;
+    constexpr auto CoralL2        =  6;
+    constexpr auto CoralL3        =  2;
+    constexpr auto CoralL4        = 15;
+    constexpr auto CoralSelect    = 14;
+
+    constexpr auto AlgaeGnd       = 17;
+    constexpr auto AlgaeCoral     = 19;
+    constexpr auto AlgaeLo        = 16;
+    constexpr auto AlgaeHi        = 18;
+    constexpr auto AlgaeProcessor =  4;
+    constexpr auto AlgaeBarge     =  3;
+
+    constexpr auto Activate       = 0;
+
+    constexpr auto Toggle         = 10;
+
+    constexpr auto ElevatorUp     =  9;
+    constexpr auto ElevatorDown   = 11;
+
+    constexpr auto ClimbUp        = 0;
+    constexpr auto ClimbDown      = 0;
+
+    constexpr auto GripperMotor   = 5;
 }
 #pragma endregion
 
@@ -348,7 +366,7 @@ namespace AlgaePoseConstants
     constexpr auto HighElevator             = 0.0_m;
     constexpr auto HighArmAngle             = 0.0_deg;
     constexpr auto HighWristAngle           = 0.0_deg;
-    constexpr auto HighGripperVelocity      = 0.0;  
+    constexpr auto HighGripperVelocity      = 0.0;
 
     constexpr auto ProcessorElevator        = 0.0_m;
     constexpr auto ProcessorArmAngle        = 0.0_deg;
@@ -358,6 +376,6 @@ namespace AlgaePoseConstants
     constexpr auto BargeElevator            = 0.0_m;
     constexpr auto BargeArmAngle            = 0.0_deg;
     constexpr auto BargeWristAngle          = 0.0_deg;
-    constexpr auto BargeGripperVelocity     = 0.0;       
+    constexpr auto BargeGripperVelocity     = 0.0;
 }
 #pragma endregion

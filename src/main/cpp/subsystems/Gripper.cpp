@@ -5,7 +5,7 @@
 Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
                      m_wristEncoder(m_wristMotor.GetEncoder()),
                      m_wristTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
-                    
+
                      m_gripperMotor(CanConstants::GripperMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
                      m_gripperEncoder(m_wristMotor.GetEncoder()),
                      m_gripperTurnClosedLoopController(m_wristMotor.GetClosedLoopController())
@@ -183,6 +183,8 @@ void Gripper::ConfigGripperMotor()
 #pragma endregion
 
 #pragma region SetPose
+/// @brief Method to set the pose of the gripper.
+/// @param pose The pose to set the gripper.
 void Gripper::SetPose(GripperPoseEnum pose)
 {
     auto elevatorHeight  = 0_m;
@@ -209,7 +211,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             wristAngle      = CoralPoseConstants::StationWristAngle;
             gripperVelocity = CoralPoseConstants::StationGripperVelocity;
             break;
-        }  
+        }
 
         case GripperPoseEnum::CoralL1:
         {
@@ -361,7 +363,7 @@ units::angle::degree_t Gripper::GetArmAngle()
     auto currentAngle = m_armMotor->GetPosition().GetValueAsDouble();
 
     // Return the climb angle
-    return (units::angle::degree_t) (currentAngle / ClimbConstants::AngleToTurnsConversionFactor.value());
+    return (units::angle::degree_t) (currentAngle / ArmConstants::AngleToTurnsConversionFactor.value());
 }
 #pragma endregion
 

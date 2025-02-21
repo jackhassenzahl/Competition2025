@@ -24,24 +24,6 @@ void Climb::ConfigureClimbMotor(int motorCanId)
     ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = climbMotorConfiguration.MotorOutput;
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
 
-    ctre::phoenix6::configs::Slot0Configs &slot0Configs = climbMotorConfiguration.Slot0;
-    slot0Configs.kS = ClimbConstants::S;
-    slot0Configs.kV = ClimbConstants::V;
-    slot0Configs.kA = ClimbConstants::A;
-    slot0Configs.kP = ClimbConstants::P;
-    slot0Configs.kI = ClimbConstants::I;
-    slot0Configs.kD = ClimbConstants::D;
-
-    // // Configure gear ratio
-    // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = ClimbMotorConfiguration.Feedback;
-    // feedbackConfigs.SensorToMechanismRatio = ClimbConstants::SensorToMechanismRatio;
-
-    // Configure Motion Magic
-    ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = climbMotorConfiguration.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = ClimbConstants::MotionMagicCruiseVelocity;
-    motionMagicConfigs.MotionMagicAcceleration   = ClimbConstants::MotionMagicAcceleration;
-    motionMagicConfigs.MotionMagicJerk           = ClimbConstants::MotionMagicJerk;
-
     // Apply the configuration to the drive motor
     ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
     for (int attempt = 0; attempt < CanConstants::MotorConfigurationAttempts; attempt++)
@@ -57,41 +39,24 @@ void Climb::ConfigureClimbMotor(int motorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure climb motor. Error: " << status.GetName() << std::endl;
-
-    // Set the climb motor control to the default
-    SetAngle(0_deg);
 }
 #pragma endregion
 
 #pragma region SetAngle
 /// @brief Method to set the climb angle.
 /// @param position The setpoint for the climb angle.
-void Climb::SetAngle(units::angle::degree_t angle)
+void Climb::SetVoltage(units::volt_t voltage)
 {
-    // // Making sure that the climb doesn't try to go through the robot
-    // if (angle < ClimbConstants::MinimumPosition)  // TODO: Need to calibrate angle to motor rotations
-    //    angle = ClimbConstants::MinimumPosition;
+    // Determine the motor diretion (up or down)
+    if ((voltage > 0_V && m_climbLimit.Get()   == 0) ||
+        (voltage < 0_V && m_captureLimit.Get() == 0))
+    {
+        // Stop the motor
+        m_climbMotor->SetVoltage(0_V);
+        return;
+    }
 
-    // if (angle > ClimbConstants::MaximumPosition)
-    //     angle = ClimbConstants::MaximumPosition;
-
-    // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ClimbConstants::AngleToTurnsConversionFactor.value());
-
-    // Set the climb set position
-    m_climbMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
-}
-#pragma endregion
-
-#pragma region GetAngle
-/// @brief Method to get the climb angle.
-/// @return The climb angle.
-units::angle::degree_t Climb::GetAngle()
-{
-    // Get the current climb motor angle
-    auto currentAngle = m_climbMotor->GetPosition().GetValueAsDouble();
-
-    // Return the climb angle
-    return (units::angle::degree_t) (currentAngle / ClimbConstants::AngleToTurnsConversionFactor.value());
+    // Set the motor voltage
+    m_climbMotor->SetVoltage(voltage);
 }
 #pragma endregion

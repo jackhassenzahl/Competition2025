@@ -32,10 +32,6 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
 
-    frc::SmartDashboard::PutData("Climb: Start",            new ClimbSetAngle(  0_deg, &m_climb));
-    frc::SmartDashboard::PutData("Climb: Capture",          new ClimbSetAngle(ClimbConstants::CapturePosition, &m_climb));
-    frc::SmartDashboard::PutData("Climb: Climb",            new ClimbSetAngle(ClimbConstants::ClimbPosition, &m_climb));
-
     frc::SmartDashboard::PutData("Coral: Ground",           new GripperPose(GripperPoseEnum::CoralGround, &m_gripper));
     frc::SmartDashboard::PutData("Coral: L1",               new GripperPose(GripperPoseEnum::CoralL1,     &m_gripper));
     frc::SmartDashboard::PutData("Coral: L2",               new GripperPose(GripperPoseEnum::CoralL2,     &m_gripper));
@@ -97,12 +93,13 @@ void RobotContainer::ConfigureButtonBindings()
 
     frc2::JoystickButton L4(&m_operatorController, XBoxConstants::Y);
     L4.OnTrue(GripperPose(GripperPoseEnum::CoralL4, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
     frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
-    climbUp.OnTrue(ClimbSetAngleOffset(5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    climbUp.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(ClimbConstants::ClimbVoltage); }, {&m_climb}))
+           .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
 
     frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
-    climbDown.OnTrue(ClimbSetAngleOffset(-5_deg, &m_climb).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    climbDown.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(-ClimbConstants::ClimbVoltage); }, {&m_climb}))
+           .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
 
     /**************************** Operator Buttons - LEDs **************************************/
 
@@ -266,21 +263,12 @@ units::second_t RobotContainer::GetPeriod()
 }
 #pragma endregion
 
-#pragma region GetClimbAngle
-/// @brief Method to get the climb angle.
-/// @return The climb angle.
-units::angle::degree_t RobotContainer::GetClimbAngle()
-{
-    // Return the climb angle
-    return m_climb.GetAngle();
-}
-#pragma endregion
-
 #pragma region GetChassisPose
 /// @brief Method to get the chassis Pose.
 /// @return The chassis Pose.
 frc::Pose2d RobotContainer::GetChassisPose()
 {
+    // Return the chassis pose
     return m_drivetrain.GetPose();
 }
 #pragma endregion

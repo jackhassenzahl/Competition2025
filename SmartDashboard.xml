@@ -1,5 +1,14 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Present A" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="875" y="485"/>
+	</widget>
+	<widget field="Present Y" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="877" y="460"/>
+	</widget>
+	<widget field="Present X" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="877" y="434"/>
+	</widget>
 	<widget field="AprilTag Rot Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="813" y="316"/>
 	</widget>
@@ -49,9 +58,6 @@
 	<widget field="AprilTag" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="484" y="323"/>
 	</widget>
-	<widget field="Climb Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="260" y="78"/>
-	</widget>
 	<widget field="Chassis: Drive to Wall " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="496" y="179"/>
 	</widget>
@@ -75,19 +81,6 @@
 	</widget>
 	<widget field="Coral: Ground" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="688" y="12"/>
-	</widget>
-	<widget field="Climb: Climb" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="844" y="78"/>
-	</widget>
-	<widget field="Climb: Capture" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="832" y="47"/>
-	</widget>
-	<widget field="Climb: Start" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="844" y="18"/>
-	</widget>
-	<widget field="AngleMotor Encoder Position 1" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="613" y="520"/>
-		<height>20</height>
 	</widget>
 	<widget field="Chassis: Serpentine " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="505" y="150"/>
@@ -201,18 +194,5 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="StartX"/>
-	<hidden field="StartY"/>
-	<hidden field="AngleMotor Encoder Position 3"/>
-	<hidden field="AngleMotor Encoder Position 2"/>
-	<hidden field="EndA"/>
-	<hidden field="StartA"/>
-	<hidden field="DistanceX"/>
-	<hidden field="Rotation Y"/>
-	<hidden field="Rotation X"/>
-	<hidden field="DistanceY"/>
-	<hidden field="EndX"/>
-	<hidden field="Rotation Z"/>
-	<hidden field="EndY"/>
-	<hidden field="Distance Z"/>
+	<hidden field="AngleMotor Encoder Position 1"/>
 </xml>

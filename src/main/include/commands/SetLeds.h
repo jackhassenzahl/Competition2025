@@ -15,7 +15,6 @@ class SetLeds : public frc2::CommandHelper<frc2::Command, SetLeds>
 
         void     Initialize()          override;
         bool     IsFinished()          override;
-        void     End(bool interrupted) override;
         bool     RunsWhenDisabled()    const override;
 
     private:
