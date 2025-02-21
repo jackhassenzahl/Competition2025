@@ -216,17 +216,19 @@ namespace ControlPanelConstants
     constexpr auto AlgaeProcessor =  4;
     constexpr auto AlgaeBarge     =  3;
 
-    constexpr auto Activate       = 0;
+    constexpr auto Activate       = 12;
 
     constexpr auto Toggle         = 10;
 
     constexpr auto ElevatorUp     =  9;
     constexpr auto ElevatorDown   = 11;
 
-    constexpr auto ClimbUp        = 0;
-    constexpr auto ClimbDown      = 0;
+    constexpr auto ClimbUp        =  7;
+    constexpr auto ClimbDown      = 13;
 
-    constexpr auto GripperMotor   = 5;
+    constexpr auto GripperMotor   =  5;
+
+    constexpr auto Spare          =  8;
 }
 #pragma endregion
 
@@ -281,8 +283,9 @@ namespace ApriltagConstants
 #pragma region LedConstants
 namespace LedConstants
 {
-    constexpr auto Length      = 400;  // The length of the LED string
     constexpr auto PwmPort     =   9;
+
+    constexpr auto Length      = 400;  // The length of the LED string
     constexpr auto Brightness  = 0.5;
 
     constexpr auto Red         = 255;

@@ -58,6 +58,9 @@
 	<widget field="AprilTag" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="484" y="323"/>
 	</widget>
+	<widget field="Climb Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="260" y="78"/>
+	</widget>
 	<widget field="Chassis: Drive to Wall " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="496" y="179"/>
 	</widget>
@@ -194,5 +197,7 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="AngleMotor Encoder Position 1"/>
+	<hidden field="Climb: Capture"/>
+	<hidden field="Climb: Start"/>
+	<hidden field="Climb: Climb"/>
 </xml>
