@@ -40,8 +40,6 @@ class GripperActivate : public frc2::CommandHelper<frc2::Command, GripperActivat
 
         void Execute() override;
 
-        void End(bool interrupted) override;
-
         bool IsFinished() override;
 
     private:
@@ -56,9 +54,12 @@ class GripperActivate : public frc2::CommandHelper<frc2::Command, GripperActivat
         void AlgaeProcessor();
         void AlgaeBarge();
 
-        GripperState m_state;
-        GripperStateData m_stateData;
+        GripperState          m_state;
+        GripperStateData      m_stateData;
+
         units::time::second_t m_startTime;
-        GripperPoseEnum m_gripperPose;  // The gripper pose
-        Gripper     *m_gripper;      // The Gripper subsystem
+        bool                  m_isFinished = false;
+
+        GripperPoseEnum       m_gripperPose;  // The gripper pose
+        Gripper              *m_gripper;      // The Gripper subsystem
 };

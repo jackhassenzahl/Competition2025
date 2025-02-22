@@ -1,6 +1,6 @@
-
 #include "commands/GripperActivate.h"
 
+#pragma region GripperActivate
 GripperActivate::GripperActivate(Gripper *gripper) : m_gripper(gripper)
 {
 
@@ -10,11 +10,14 @@ GripperActivate::GripperActivate(Gripper *gripper) : m_gripper(gripper)
     // Declare subsystem dependencies
     AddRequirements(m_gripper);
 }
+#pragma endregion
 
+#pragma region Initialize
 // Called when the command is initially scheduled.
 void GripperActivate::Initialize() 
 {
     m_startTime = frc::GetTime();
+    m_isFinished = false;
 
     switch (m_gripper->m_pose)
     {
@@ -85,7 +88,9 @@ void GripperActivate::Initialize()
         }
     }
 }
+#pragma endregion
 
+#pragma region Execute
 // Called repeatedly when this Command is scheduled to run
 void GripperActivate::Execute() 
 {
@@ -137,20 +142,22 @@ void GripperActivate::Execute()
             m_gripper->SetGripperWheelsVelocity(0);
             m_gripper->SetArmAngleOffset(-m_stateData.ArmOffset);
             m_gripper->SetElevatorOffset(-m_stateData.ElevatorOffset);
+            m_isFinished = true;
         }
 
         default:
             break;
     }
 }
+#pragma endregion
 
-// Called once the command ends or is interrupted.
-void GripperActivate::End(bool interrupted) {}
-
+#pragma region IsFinished
 // Returns true when the command should end.
-bool GripperActivate::IsFinished() {
-  return false;
+bool GripperActivate::IsFinished() 
+{
+    return m_isFinished;
 }
+#pragma endregion
 
 #pragma region SettingStateData
 void GripperActivate::CoralGround()
