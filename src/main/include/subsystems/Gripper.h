@@ -38,14 +38,17 @@ class Gripper : public frc2::SubsystemBase
         void                   SetPose(GripperPoseEnum pose);
 
         void                   SetElevatorHeight(units::length::meter_t position);
+        void                   SetElevatorOffset(units::length::meter_t offset);
 
         void                   SetArmAngle(units::angle::degree_t angle);
+        void                   SetArmAngleOffset(units::angle::degree_t offset);
         units::angle::degree_t GetArmAngle();
 
         void                   SetWristAngle(units::angle::degree_t position);
 
         void                   SetGripperWheelsVelocity(double velocity);
 
+        GripperPoseEnum                              m_pose;
     private:
 
         void ConfigureElevatorMotor(int driveMotorCanId);
@@ -66,6 +69,4 @@ class Gripper : public frc2::SubsystemBase
         rev::spark::SparkMax                         m_gripperMotor;
         rev::spark::SparkClosedLoopController        m_gripperTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder             m_gripperEncoder;
-
-        GripperPoseEnum                              m_pose;
 };

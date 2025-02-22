@@ -93,6 +93,13 @@ void RobotContainer::ConfigureButtonBindings()
 
     frc2::JoystickButton L4(&m_operatorController, XBoxConstants::Y);
     L4.OnTrue(GripperPose(GripperPoseEnum::CoralL4, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    frc2::JoystickButton elevatorUp(&m_operatorController, ControlPanelConstants::ElevatorUp);
+    elevatorUp.OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
+    
+    frc2::JoystickButton elevatorDown(&m_operatorController, ControlPanelConstants::ElevatorDown);
+    elevatorDown.OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
+
     frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
     climbUp.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(ClimbConstants::ClimbVoltage); }, {&m_climb}))
            .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
@@ -205,40 +212,42 @@ units::radians_per_second_t RobotContainer::Angle()
     // Get the angle joystick setting
     double joystickAngle = GetDriverController()->GetRawAxis(ControllerConstants::JoystickAngleIndex);
 
-    // Use exponential function to calculate the forward value for better slow speed control
-    joystickAngle = GetExponentialValue(joystickAngle, ControllerConstants::ExponentAngle);
+    // Apply deadband first
+    double deadbandedAngle = frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickRotateDeadZone);
 
-    // Return the rotation speed
-    return -m_rotLimiter.Calculate(frc::ApplyDeadband(joystickAngle, ControllerConstants::JoystickRotateDeadZone)) * DrivetrainConstants::MaxAngularSpeed;
+    // Use exponential function to calculate the angle value for better slow speed control
+    double exponentialAngle = GetExponentialValue(deadbandedAngle, ControllerConstants::ExponentAngle);
+    
+    // Apply smoothing between frames to reduce jerky movement (inline implementation)
+    // Smoothing factor: 0.0-1.0 (higher = more smoothing, 0.3 is a good starting point)
+    constexpr double kSmoothingFactor = 0.3;
+    static double previousAngleInput = 0.0; // Static variable persists between function calls
+    
+    // Calculate smoothed value using previous output and current input
+    double smoothedAngle = kSmoothingFactor * previousAngleInput + (1.0 - kSmoothingFactor) * exponentialAngle;
+    previousAngleInput = smoothedAngle; // Store for next cycle
+
+    // Return the rotation speed with rate limiter applied
+    return units::radians_per_second_t(-m_rotLimiter.Calculate(smoothedAngle) * DrivetrainConstants::MaxAngularSpeed);
 }
+
 #pragma endregion
 
-#pragma region GetExponentialValue
+#pragma region ExponentialValue
 /// @brief Method to convert a joystick value from -1.0 to 1.0 to exponential mode.
 /// @param joystickValue The raw joystick value.
 /// @param exponent The exponential value.
 /// @return The resultant exponential value.
 double RobotContainer::GetExponentialValue(double joystickValue, double exponent)
 {
-    int    direction = 1;
-    double output    = 0.0;
-
-    // Direction is either 1 or -1, based on joystick value
-    if (joystickValue < 0.0)
-    {
-        // Reverse the direction and make the joystick value positive
-        direction      = -1;
-        joystickValue *= -1.0;
-    }
-
-    // Plug joystick value into exponential function
-    output = direction * pow(joystickValue, exponent);
+    int direction = (joystickValue < 0.0) ? -1 : 1;
+    double absValue = std::abs(joystickValue);
+    double output = std::pow(absValue, exponent) * direction;
 
     // Ensure the range of the output
-    if (output < -1.0)  output = -1.0;
-    if (output >  1.0)  output =  1.0;
+    if (output < -1.0) output = -1.0; 
+    if (output > 1.0) output = 1.0;
 
-    // Return the calculated value
     return output;
 }
 #pragma endregion

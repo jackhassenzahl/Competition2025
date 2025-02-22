@@ -334,6 +334,17 @@ void Gripper::SetElevatorHeight(units::length::meter_t position)
 }
 #pragma endregion
 
+#pragma region SetElevatorOffset
+/// @brief Moves the elevator by the given offset
+/// @param offset The Given offset
+void Gripper::SetElevatorOffset(units::length::meter_t offset)
+{
+    // units::length::meter_t position = (units::length::meter_t)(m_elevatorMotor->GetPosition().GetValue().value() / 
+    //                    ElevatorConstants::PositionToTurnsConversionFactor) + offset;
+    // SetElevatorHeight(position);
+}
+#pragma endregion
+
 #pragma region SetArmAngle
 /// @brief Method to set the arm angle.
 /// @param position The setpoint for the arm angle. Takes -180 -> 180
@@ -351,6 +362,15 @@ void Gripper::SetArmAngle(units::angle::degree_t angle)
 
     // Set the arm set position
     m_armMotor->SetControl(m_armMotionMagicVoltage.WithPosition(newPosition).WithSlot(0));
+}
+#pragma endregion
+
+#pragma region SetArmAngle
+/// @brief Method to set the arm angle.
+/// @param position The setpoint for the arm angle. Takes -180 -> 180
+void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
+{
+    SetArmAngle(GetArmAngle() + offset);
 }
 #pragma endregion
 
