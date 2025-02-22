@@ -99,7 +99,7 @@ void RobotContainer::ConfigureButtonBindings()
 
     frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
     climbDown.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(-ClimbConstants::ClimbVoltage); }, {&m_climb}))
-           .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
+             .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
 
     /**************************** Operator Buttons - LEDs **************************************/
 

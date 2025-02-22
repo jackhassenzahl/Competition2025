@@ -67,5 +67,5 @@ class Gripper : public frc2::SubsystemBase
         rev::spark::SparkClosedLoopController        m_gripperTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder             m_gripperEncoder;
 
-        GripperPoseEnum                                 m_pose;
+        GripperPoseEnum                              m_pose;
 };

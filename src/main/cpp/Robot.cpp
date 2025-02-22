@@ -33,6 +33,8 @@ void Robot::RobotPeriodic()
     frc::SmartDashboard::PutNumber("Present X", pressentPose.X().value());
     frc::SmartDashboard::PutNumber("Present Y", pressentPose.Y().value());
     frc::SmartDashboard::PutNumber("Present A", pressentPose.Rotation().Degrees().value());
+
+    frc::SmartDashboard::PutNumber("Analog", m_robotContainer->GetOperatorController()->GetRawAxis(3));
 }
 #pragma endregion
 
