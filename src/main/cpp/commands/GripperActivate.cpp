@@ -125,7 +125,7 @@ void GripperActivate::Execute()
         
         case GripperState::GripperWheelsMove:
         {
-            m_gripper->SetGripperWheelsVelocity(m_stateData.GripperVoltage);
+            m_gripper->SetGripperWheelsVoltage(m_stateData.GripperVoltage);
             m_state = Wait3;
             break;
         }
@@ -139,7 +139,7 @@ void GripperActivate::Execute()
 
         case GripperState::Finish:
         {
-            m_gripper->SetGripperWheelsVelocity(0);
+            m_gripper->SetGripperWheelsVoltage(0_V);
             m_gripper->SetArmAngleOffset(-m_stateData.ArmOffset);
             m_gripper->SetElevatorOffset(-m_stateData.ElevatorOffset);
             m_isFinished = true;

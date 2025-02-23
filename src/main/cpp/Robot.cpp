@@ -14,7 +14,7 @@ void Robot::RobotInit()
     HAL_Report(HALUsageReporting::kResourceType_Framework, HALUsageReporting::kFramework_RobotBuilder);
 
     // Reset the debug message
-    frc::SmartDashboard::PutString("Debug", "RobotInit");
+    // frc::SmartDashboard::PutString("Debug", "RobotInit");
 }
 #pragma endregion
 
@@ -44,6 +44,9 @@ void Robot::AutonomousInit()
 {
     // Set the swerve wheels to zero
     m_robotContainer->SetSwerveWheelAnglesToZero();
+
+    auto startingPosition = m_robotContainer->GetStartPosition();
+    frc::SmartDashboard::PutString("Starting Position", startingPosition);
 
     // Get the selected autonomous command
     m_autonomousCommand = m_robotContainer->GetAutonomousCommand();

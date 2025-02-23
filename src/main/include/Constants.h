@@ -43,8 +43,9 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleEncoderCanId  = 23;
 
     constexpr auto ArmMotorCanId                     = 30;
-    constexpr auto GripperMotorCanId                 = 31;
-    constexpr auto WristMotorCanId                   = 32;
+    constexpr auto GripperMotorCanIdRight            = 31;
+    constexpr auto GripperMotorCanIdLeft             = 32;
+    constexpr auto WristMotorCanId                   = 34;
     constexpr auto ElevatorMotorCanId                = 33;
 
     constexpr auto ClimbMotorCanId                   = 40;
@@ -112,9 +113,9 @@ namespace ElevatorConstants
     constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 80_tps;           // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 160_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 = 1600_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 20_tps;           // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 20_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 400_tr_per_s_cu;  // Jerk
 
     constexpr auto HeightOffset                    = 0.1_m;
 
@@ -157,6 +158,9 @@ namespace ArmConstants
     constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
     constexpr auto AngleToTurnsConversionFactor    = 1.0 / 1_deg;      // The number of motor rotations per degree
+    
+    constexpr auto MotorRevolutionsTo360Degrees    = 20;
+    constexpr auto AngleMaxAmperage                = 20;
 
     constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
     constexpr auto MaximumPosition                 = 100_deg;
@@ -333,7 +337,7 @@ namespace ActivateConstants
     constexpr auto CoralGroundWait1             = 0.0_s;
     constexpr auto CoralGroundArmOffset         = 0.0_deg;
     constexpr auto CoralGroundWait2             = 0.0_s;
-    constexpr auto CoralGroundGripperVoltage    = 0.0;
+    constexpr auto CoralGroundGripperVoltage    = 0.0_V;
     constexpr auto CoralGroundWait3             = 0.0_s;
     constexpr auto CoralGroundElevatorFinish    = 0.0_m;
     constexpr auto CoralGroundArmFinish         = 0.0_deg;
@@ -343,7 +347,7 @@ namespace ActivateConstants
     constexpr auto CoralStationWait1            = 0.0_s;
     constexpr auto CoralStationArmOffset        = 0.0_deg;
     constexpr auto CoralStationWait2            = 0.0_s;
-    constexpr auto CoralStationGripperVoltage   = 0.0;
+    constexpr auto CoralStationGripperVoltage   = 0.0_V;
     constexpr auto CoralStationWait3            = 0.0_s;
     constexpr auto CoralStationElevatorFinish   = 0.0_m;
     constexpr auto CoralStationArmFinish        = 0.0_deg;
@@ -353,7 +357,7 @@ namespace ActivateConstants
     constexpr auto Coral123Wait1                = 0.1_s;
     constexpr auto Coral123ArmOffset            = 0.1_deg;
     constexpr auto Coral123Wait2                = 0.1_s;
-    constexpr auto Coral123GripperVoltage       = 0.1;
+    constexpr auto Coral123GripperVoltage       = 0.1_V;
     constexpr auto Coral123Wait3                = 0.1_s;
     constexpr auto Coral123ElevatorFinish       = 0.1_m;
     constexpr auto Coral123ArmFinish            = 0.1_deg;
@@ -363,7 +367,7 @@ namespace ActivateConstants
     constexpr auto Coral4Wait1                  = 0.0_s;
     constexpr auto Coral4ArmOffset              = 0.0_deg;
     constexpr auto Coral4Wait2                  = 0.0_s;
-    constexpr auto Coral4GripperVoltage         = 0.0;
+    constexpr auto Coral4GripperVoltage         = 0.0_V;
     constexpr auto Coral4Wait3                  = 0.0_s;
     constexpr auto Coral4ElevatorFinish         = 0.0_m;
     constexpr auto Coral4ArmFinish              = 0.0_deg;
@@ -373,7 +377,7 @@ namespace ActivateConstants
     constexpr auto AlgaeGroundWait1             = 0.0_s;
     constexpr auto AlgaeGroundArmOffset         = 0.0_deg;
     constexpr auto AlgaeGroundWait2             = 0.0_s;
-    constexpr auto AlgaeGroundGripperVoltage    = 0.0;
+    constexpr auto AlgaeGroundGripperVoltage    = 0.0_V;
     constexpr auto AlgaeGroundWait3             = 0.0_s;
     constexpr auto AlgaeGroundElevatorFinish    = 0.0_m;
     constexpr auto AlgaeGroundArmFinish         = 0.0_deg;
@@ -383,7 +387,7 @@ namespace ActivateConstants
     constexpr auto AlgaeOnCoralWait1            = 0.0_s;
     constexpr auto AlgaeOnCoralArmOffset        = 0.0_deg;
     constexpr auto AlgaeOnCoralWait2            = 0.0_s;
-    constexpr auto AlgaeOnCoralGripperVoltage   = 0.0;
+    constexpr auto AlgaeOnCoralGripperVoltage   = 0.0_V;
     constexpr auto AlgaeOnCoralWait3            = 0.0_s;
     constexpr auto AlgaeOnCoralElevatorFinish   = 0.0_m;
     constexpr auto AlgaeOnCoralArmFinish        = 0.0_deg;
@@ -393,7 +397,7 @@ namespace ActivateConstants
     constexpr auto AlgaeLoWait1                 = 0.0_s;
     constexpr auto AlgaeLoArmOffset             = 0.0_deg;
     constexpr auto AlgaeLoWait2                 = 0.0_s;
-    constexpr auto AlgaeLoGripperVoltage        = 0.0;
+    constexpr auto AlgaeLoGripperVoltage        = 0.0_V;
     constexpr auto AlgaeLoWait3                 = 0.0_s;
     constexpr auto AlgaeLoElevatorFinish        = 0.0_m;
     constexpr auto AlgaeLoArmFinish             = 0.0_deg;
@@ -403,7 +407,7 @@ namespace ActivateConstants
     constexpr auto AlgaeHighWait1               = 0.0_s;
     constexpr auto AlgaeHighArmOffset           = 0.0_deg;
     constexpr auto AlgaeHighWait2               = 0.0_s;
-    constexpr auto AlgaeHighGripperVoltage      = 0.0;
+    constexpr auto AlgaeHighGripperVoltage      = 0.0_V;
     constexpr auto AlgaeHighWait3               = 0.0_s;
     constexpr auto AlgaeHighElevatorFinish      = 0.0_m;
     constexpr auto AlgaeHighArmFinish           = 0.0_deg;
@@ -413,7 +417,7 @@ namespace ActivateConstants
     constexpr auto AlgaeProcessorWait1          = 0.0_s;
     constexpr auto AlgaeProcessorArmOffset      = 0.0_deg;
     constexpr auto AlgaeProcessorWait2          = 0.0_s;
-    constexpr auto AlgaeProcessorGripperVoltage = 0.0;
+    constexpr auto AlgaeProcessorGripperVoltage = 0.0_V;
     constexpr auto AlgaeProcessorWait3          = 0.0_s;
     constexpr auto AlgaeProcessorElevatorFinish = 0.0_m;
     constexpr auto AlgaeProcessorArmFinish      = 0.0_deg;
@@ -423,7 +427,7 @@ namespace ActivateConstants
     constexpr auto AlgaeBargeWait1              = 0.0_s;
     constexpr auto AlgaeBargeArmOffset          = 0.0_deg;
     constexpr auto AlgaeBargeWait2              = 0.0_s;
-    constexpr auto AlgaeBargeGripperVoltage     = 0.0;
+    constexpr auto AlgaeBargeGripperVoltage     = 0.0_V;
     constexpr auto AlgaeBargeWait3              = 0.0_s;
     constexpr auto AlgaeBargeElevatorFinish     = 0.0_m;
     constexpr auto AlgaeBargeArmFinish          = 0.0_deg;
@@ -436,32 +440,32 @@ namespace CoralPoseConstants
     constexpr auto GroundElevator         = 0.0_m;
     constexpr auto GroundArmAngle         = 0.0_deg;
     constexpr auto GroundWristAngle       = 0.0_deg;
-    constexpr auto GroundGripperVelocity  = 0.0;
+    constexpr auto GroundGripperVoltage   = 0.0_V;
 
     constexpr auto StationElevator        = 0.0_m;
     constexpr auto StationArmAngle        = 0.0_deg;
     constexpr auto StationWristAngle      = 0.0_deg;
-    constexpr auto StationGripperVelocity = 0.0;
+    constexpr auto StationGripperVoltage  = 0.0_V;
 
-    constexpr auto L1Elevator             = 0.0_m;
+    constexpr auto L1Elevator             = 0.1_m;
     constexpr auto L1ArmAngle             = 0.0_deg;
     constexpr auto L1WristAngle           = 0.0_deg;
-    constexpr auto L1GripperVelocity      = 0.0;
+    constexpr auto L1GripperVoltage       = 0.0_V;
 
-    constexpr auto L2Elevator             = 0.0_m;
+    constexpr auto L2Elevator             = 0.2_m;
     constexpr auto L2ArmAngle             = 0.0_deg;
     constexpr auto L2WristAngle           = 0.0_deg;
-    constexpr auto L2GripperVelocity      = 0.0;
+    constexpr auto L2GripperVoltage       = 0.0_V;
 
-    constexpr auto L3Elevator             = 0.0_m;
+    constexpr auto L3Elevator             = 0.3_m;
     constexpr auto L3ArmAngle             = 0.0_deg;
     constexpr auto L3WristAngle           = 0.0_deg;
-    constexpr auto L3GripperVelocity      = 0.0;
+    constexpr auto L3GripperVoltage       = 0.0_V;
 
-    constexpr auto L4Elevator             = 0.0_m;
+    constexpr auto L4Elevator             = 0.4_m;
     constexpr auto L4ArmAngle             = 0.0_deg;
     constexpr auto L4WristAngle           = 0.0_deg;
-    constexpr auto L4GripperVelocity      = 0.0;
+    constexpr auto L4GripperVoltage       = 0.0_V;
 }
 #pragma endregion
 
@@ -471,31 +475,31 @@ namespace AlgaePoseConstants
     constexpr auto GroundElevator          = 0.0_m;
     constexpr auto GroundArmAngle          = 0.0_deg;
     constexpr auto GroundWristAngle        = 0.0_deg;
-    constexpr auto GroundGripperVelocity   = 0.0;
+    constexpr auto GroundGripperVoltage    = 0.0_V;
 
     constexpr auto OnCoralElevator          = 0.0_m;
     constexpr auto OnCoralArmAngle          = 0.0_deg;
     constexpr auto OnCoralWristAngle        = 0.0_deg;
-    constexpr auto OnCoralGripperVelocity   = 0.0;
+    constexpr auto OnCoralGripperVoltage    = 0.0_V;
 
     constexpr auto LoElevator               = 0.0_m;
     constexpr auto LoArmAngle               = 0.0_deg;
     constexpr auto LoWristAngle             = 0.0_deg;
-    constexpr auto LoGripperVelocity        = 0.0;
+    constexpr auto LoGripperVoltage         = 0.0_V;
 
     constexpr auto HighElevator             = 0.0_m;
     constexpr auto HighArmAngle             = 0.0_deg;
     constexpr auto HighWristAngle           = 0.0_deg;
-    constexpr auto HighGripperVelocity      = 0.0;
+    constexpr auto HighGripperVoltage       = 0.0_V;
 
     constexpr auto ProcessorElevator        = 0.0_m;
     constexpr auto ProcessorArmAngle        = 0.0_deg;
     constexpr auto ProcessorWristAngle      = 0.0_deg;
-    constexpr auto ProcessorGripperVelocity = 0.0;
+    constexpr auto ProcessorGripperVoltage  = 0.0_V;
 
     constexpr auto BargeElevator            = 0.0_m;
     constexpr auto BargeArmAngle            = 0.0_deg;
     constexpr auto BargeWristAngle          = 0.0_deg;
-    constexpr auto BargeGripperVelocity     = 0.0;
+    constexpr auto BargeGripperVoltage      = 0.0_V;
 }
 #pragma endregion

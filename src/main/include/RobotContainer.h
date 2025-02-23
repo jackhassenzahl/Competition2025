@@ -33,6 +33,7 @@
 #include "commands/AutonomousLed.h"
 #include "commands/AutonomousParallel.h"
 #include "commands/AutonomousRaceGroup.h"
+#include "commands/AutonomusScoreCoral.h"
 #include "commands/ChassisDrive.h"
 #include "commands/ChassisDrivePose.h"
 #include "commands/ChassisDriveSerpentine.h"
@@ -42,6 +43,7 @@
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/GripperPose.h"
+#include "commands/GripperActivate.h"
 #include "commands/GripperSetIntake.h"
 #include "commands/SetLeds.h"
 
@@ -57,6 +59,8 @@ class RobotContainer
 
         // Method to get a pointer to the selected autonomous command
         frc2::Command              *GetAutonomousCommand();
+
+        std::string                 GetStartPosition();
 
         // Method to set the swerve wheels to starting position based on the absolute encoder
         void                        SetSwerveWheelAnglesToZero();
@@ -112,4 +116,7 @@ class RobotContainer
 
         // Autonomous command chooser
         frc::SendableChooser<frc2::Command*>  m_autonomousChooser;
+
+        // Autonomous starting position command chooser
+        frc::SendableChooser<std::string>  m_startingPositionChooser;
 };

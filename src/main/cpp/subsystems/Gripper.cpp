@@ -2,13 +2,15 @@
 
 #pragma region Gripper
 /// @brief The Constructor for the Gripper class.
-Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
+Gripper::Gripper() : m_armMotor(CanConstants::ArmMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
+                     m_armEncoder(m_armMotor.GetEncoder()),
+                     m_armTurnClosedLoopController(m_armMotor.GetClosedLoopController()),
+
+                     m_wristMotor(CanConstants::WristMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
                      m_wristEncoder(m_wristMotor.GetEncoder()),
                      m_wristTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
 
-                     m_gripperMotor(CanConstants::GripperMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
-                     m_gripperEncoder(m_wristMotor.GetEncoder()),
-                     m_gripperTurnClosedLoopController(m_wristMotor.GetClosedLoopController())
+                     m_gripperMotor(CanConstants::GripperMotorCanIdRight, rev::spark::SparkMax::MotorType::kBrushless)
 {
     // Configure the elevator motor
     ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
@@ -82,49 +84,30 @@ void Gripper::ConfigureElevatorMotor(int motorCanId)
 /// @param motorCanId The CAN identifier for the Arm motor.
 void Gripper::ConfigureArmMotor(int motorCanId)
 {
-    // Instantiate the Arm motor
-    m_armMotor = new ctre::phoenix6::hardware::TalonFX{motorCanId, CanConstants::CanBus};
+    // Configure the angle motor
+    static rev::spark::SparkMaxConfig sparkMaxConfig{};
 
-    // Create the Arm motor configuration
-    ctre::phoenix6::configs::TalonFXConfiguration armMotorConfiguration{};
+    sparkMaxConfig
+        .Inverted(true)
+        .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
+       .SmartCurrentLimit(ArmConstants::AngleMaxAmperage);
 
-    // Add the Motor Output section settings
-    ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = armMotorConfiguration.MotorOutput;
-    motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+    // sparkMaxConfig.encoder
+    //     .PositionConversionFactor()
+    //     .VelocityConversionFactor(SwerveConstants::AngleRadiansToMotorRevolutions / 60.0);
+    sparkMaxConfig.closedLoop
+        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+        .Pid(SwerveConstants::AngleP, SwerveConstants::AngleI, SwerveConstants::AngleD)
+        //.OutputRange(-1, 1)
+        // Enable PID wrap around for the turning motor. This will allow the
+        // PID controller to go through 0 to get to the setpoint i.e. going
+        // from 350 degrees to 10 degrees will go through 0 rather than the
+        // other direction which is a longer route.
+        .PositionWrappingEnabled(true)
+        .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
-    ctre::phoenix6::configs::Slot0Configs &slot0Configs = armMotorConfiguration.Slot0;
-    slot0Configs.kS = ArmConstants::S;
-    slot0Configs.kV = ArmConstants::V;
-    slot0Configs.kA = ArmConstants::A;
-    slot0Configs.kP = ArmConstants::P;
-    slot0Configs.kI = ArmConstants::I;
-    slot0Configs.kD = ArmConstants::D;
-
-    // // Configure gear ratio
-    // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = ArmMotorConfiguration.Feedback;
-    // feedbackConfigs.SensorToMechanismRatio = ArmConstants::SensorToMechanismRatio;
-
-    // Configure Motion Magic
-    ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = armMotorConfiguration.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants::MotionMagicCruiseVelocity;
-    motionMagicConfigs.MotionMagicAcceleration   = ArmConstants::MotionMagicAcceleration;
-    motionMagicConfigs.MotionMagicJerk           = ArmConstants::MotionMagicJerk;
-
-    // Apply the configuration to the drive motor
-    ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
-    for (int attempt = 0; attempt < CanConstants::MotorConfigurationAttempts; attempt++)
-    {
-        // Apply the configuration to the drive motor
-        status = m_armMotor->GetConfigurator().Apply(armMotorConfiguration);
-
-        // Check if the configuration was successful
-        if (status.IsOK())
-           break;
-    }
-
-    // Determine if the last configuration load was successful
-    if (!status.IsOK())
-        std::cout << "***** ERROR: Could not configure arm motor. Error: " << status.GetName() << std::endl;
+    // Write the configuration to the motor controller
+    m_armMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 #pragma endregion
 
@@ -190,7 +173,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
     auto elevatorHeight  = 0_m;
     auto armAngle        = 0_deg;
     auto wristAngle      = 0_deg;
-    auto gripperVelocity = 0.0;
+    auto gripperVoltage  = 0.0_V;
 
     // Determine the pose
     switch (pose)
@@ -200,7 +183,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = CoralPoseConstants::GroundElevator;
             armAngle        = CoralPoseConstants::GroundArmAngle;
             wristAngle      = CoralPoseConstants::GroundWristAngle;
-            gripperVelocity = CoralPoseConstants::GroundGripperVelocity;
+            gripperVoltage  = CoralPoseConstants::GroundGripperVoltage;
             break;
         }
 
@@ -209,7 +192,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = CoralPoseConstants::StationElevator;
             armAngle        = CoralPoseConstants::StationArmAngle;
             wristAngle      = CoralPoseConstants::StationWristAngle;
-            gripperVelocity = CoralPoseConstants::StationGripperVelocity;
+            gripperVoltage  = CoralPoseConstants::StationGripperVoltage;
             break;
         }
 
@@ -218,7 +201,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = CoralPoseConstants::L1Elevator;
             armAngle        = CoralPoseConstants::L1ArmAngle;
             wristAngle      = CoralPoseConstants::L1WristAngle;
-            gripperVelocity = CoralPoseConstants::L1GripperVelocity;
+            gripperVoltage  = CoralPoseConstants::L1GripperVoltage;
             break;
         }
 
@@ -227,7 +210,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = CoralPoseConstants::L2Elevator;
             armAngle        = CoralPoseConstants::L2ArmAngle;
             wristAngle      = CoralPoseConstants::L2WristAngle;
-            gripperVelocity = CoralPoseConstants::L2GripperVelocity;
+            gripperVoltage  = CoralPoseConstants::L2GripperVoltage;
             break;
         }
 
@@ -236,7 +219,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = CoralPoseConstants::L3Elevator;
             armAngle        = CoralPoseConstants::L3ArmAngle;
             wristAngle      = CoralPoseConstants::L3WristAngle;
-            gripperVelocity = CoralPoseConstants::L3GripperVelocity;
+            gripperVoltage  = CoralPoseConstants::L3GripperVoltage;
             break;
         }
 
@@ -245,7 +228,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = CoralPoseConstants::L4Elevator;
             armAngle        = CoralPoseConstants::L4ArmAngle;
             wristAngle      = CoralPoseConstants::L4WristAngle;
-            gripperVelocity = CoralPoseConstants::L4GripperVelocity;
+            gripperVoltage  = CoralPoseConstants::L4GripperVoltage;
             break;
         }
 
@@ -254,7 +237,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = AlgaePoseConstants::GroundElevator;
             armAngle        = AlgaePoseConstants::GroundArmAngle;
             wristAngle      = AlgaePoseConstants::GroundWristAngle;
-            gripperVelocity = AlgaePoseConstants::GroundGripperVelocity;
+            gripperVoltage  = AlgaePoseConstants::GroundGripperVoltage;
             break;
         }
 
@@ -263,7 +246,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = AlgaePoseConstants::OnCoralElevator;
             armAngle        = AlgaePoseConstants::OnCoralArmAngle;
             wristAngle      = AlgaePoseConstants::OnCoralWristAngle;
-            gripperVelocity = AlgaePoseConstants::OnCoralGripperVelocity;
+            gripperVoltage  = AlgaePoseConstants::OnCoralGripperVoltage;
             break;
         }
 
@@ -272,7 +255,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = AlgaePoseConstants::LoElevator;
             armAngle        = AlgaePoseConstants::LoArmAngle;
             wristAngle      = AlgaePoseConstants::LoWristAngle;
-            gripperVelocity = AlgaePoseConstants::LoGripperVelocity;
+            gripperVoltage  = AlgaePoseConstants::LoGripperVoltage;
             break;
         }
 
@@ -281,7 +264,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = AlgaePoseConstants::HighElevator;
             armAngle        = AlgaePoseConstants::HighArmAngle;
             wristAngle      = AlgaePoseConstants::HighWristAngle;
-            gripperVelocity = AlgaePoseConstants::HighGripperVelocity;
+            gripperVoltage  = AlgaePoseConstants::HighGripperVoltage;
             break;
         }
 
@@ -290,7 +273,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = AlgaePoseConstants::ProcessorElevator;
             armAngle        = AlgaePoseConstants::ProcessorArmAngle;
             wristAngle      = AlgaePoseConstants::ProcessorWristAngle;
-            gripperVelocity = AlgaePoseConstants::ProcessorGripperVelocity;
+            gripperVoltage  = AlgaePoseConstants::ProcessorGripperVoltage;
             break;
         }
 
@@ -299,7 +282,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             elevatorHeight  = AlgaePoseConstants::BargeElevator;
             armAngle        = AlgaePoseConstants::BargeArmAngle;
             wristAngle      = AlgaePoseConstants::BargeWristAngle;
-            gripperVelocity = AlgaePoseConstants::BargeGripperVelocity;
+            gripperVoltage  = AlgaePoseConstants::BargeGripperVoltage;
             break;
         }
     }
@@ -316,8 +299,8 @@ void Gripper::SetPose(GripperPoseEnum pose)
     // Set the wrist angle
     SetWristAngle(wristAngle);
 
-    // Set the gripper wheels velocity
-    SetGripperWheelsVelocity(gripperVelocity);
+    // Set the gripper wheels voltage
+    SetGripperWheelsVoltage(gripperVoltage);
 }
 #pragma endregion
 
@@ -357,11 +340,11 @@ void Gripper::SetArmAngle(units::angle::degree_t angle)
     // if (angle > ArmConstants::MaximumPosition)
     //     angle = ArmConstants::MaximumPosition;
 
-    // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor.value());
+    // Convert the position to radians
+    double positionRadian = (angle.value() * std::numbers::pi) / 180.0;
 
-    // Set the arm set position
-    m_armMotor->SetControl(m_armMotionMagicVoltage.WithPosition(newPosition).WithSlot(0));
+    // Set the Wrist set position
+    m_armTurnClosedLoopController.SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
 }
 #pragma endregion
 
@@ -380,7 +363,7 @@ void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
 units::angle::degree_t Gripper::GetArmAngle()
 {
     // Get the current climb motor angle
-    auto currentAngle = m_armMotor->GetPosition().GetValueAsDouble();
+    auto currentAngle = m_armEncoder.GetPosition();
 
     // Return the climb angle
     return (units::angle::degree_t) (currentAngle / ArmConstants::AngleToTurnsConversionFactor.value());
@@ -400,18 +383,12 @@ void Gripper::SetWristAngle(units::angle::degree_t position)
 }
 #pragma endregion
 
-#pragma region SetGripperWheelsVelocity
-/// @brief Method to set the Gripper wheels velocity.
-/// @param velocity The setpoint for the Gripper wheels velocity.
-void Gripper::SetGripperWheelsVelocity(double velocity)
+#pragma region SetGripperWheelsVoltage
+/// @brief Method to set the Gripper wheels voltage.
+/// @param voltage The setpoint for the Gripper wheels voltage.
+void Gripper::SetGripperWheelsVoltage(units::voltage::volt_t voltage)
 {
-    // Make sure the velocity is within the allowable range
-    if (velocity > GripperConstants::GripperMaxRevolutionsPerMinute)
-        velocity = GripperConstants::GripperMaxRevolutionsPerMinute;
-    else if (velocity < -GripperConstants::GripperMaxRevolutionsPerMinute)
-        velocity = -GripperConstants::GripperMaxRevolutionsPerMinute;
-
-    // Set the velocity of the Gripper wheels
-    m_wristTurnClosedLoopController.SetReference(velocity, rev::spark::SparkMax::ControlType::kVelocity);
+    // Set the voltage of the Gripper wheels
+    m_gripperMotor.SetVoltage(voltage);
 }
 #pragma endregion

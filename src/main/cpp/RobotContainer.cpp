@@ -1,4 +1,5 @@
 #include "RobotContainer.h"
+#include <functional>
 
 // Reference to the RobotContainer singleton class
 RobotContainer *RobotContainer::m_robotContainer = NULL;
@@ -48,9 +49,15 @@ RobotContainer::RobotContainer()
     m_autonomousChooser.AddOption("Led Autonomous",          new AutonomousLed(&m_leds));
     m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds, &m_drivetrain));
     m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,  &m_drivetrain));
-
+    
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);
+
+    m_startingPositionChooser.SetDefaultOption("Middle", "M");
+    m_startingPositionChooser.AddOption("Left",  "L");
+    m_startingPositionChooser.AddOption("Right",  "R");
+    
+    frc::SmartDashboard::PutData("Start Position", &m_startingPositionChooser);
 
     // Set the default commands for the subsystems
     m_drivetrain.SetDefaultCommand(ChassisDrive(
@@ -72,38 +79,126 @@ void RobotContainer::ConfigureButtonBindings()
 {
     /**************************** Driver Buttons ***********************************************/
 
+    // Toggle Field Centricity On
     frc2::JoystickButton fieldCentricOn(&m_driverController, Extreme3DConstants::HandleLowerLeft);
     fieldCentricOn.OnTrue(ChassisSetFieldCentricity(true, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
+    // Toggle Field Centricity On
     frc2::JoystickButton fieldCentricOff(&m_driverController, Extreme3DConstants::HandleLowerRight);
     fieldCentricOff.OnTrue(ChassisSetFieldCentricity(false, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
+    // Toggle X mode
     frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhileTrue(new frc2::RunCommand([this] { m_drivetrain.SetX(); }, {&m_drivetrain}));
 
     /**************************** Operator Buttons - Chassis Pose ******************************/
+    // Scoring/Intaking requires positioning, then pressing activate (ex: L1Score then Activate)
 
+    // Elevator/Arm to L1
     frc2::JoystickButton L1(&m_operatorController, XBoxConstants::A);
     L1.OnTrue(GripperPose(GripperPoseEnum::CoralL1, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
+    // Elevator/Arm to L2
     frc2::JoystickButton L2(&m_operatorController, XBoxConstants::B);
     L2.OnTrue(GripperPose(GripperPoseEnum::CoralL2, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
+    // Elevator/Arm to L3
     frc2::JoystickButton L3(&m_operatorController, XBoxConstants::X);
     L3.OnTrue(GripperPose(GripperPoseEnum::CoralL3, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
 
+    // Elevator/Arm to L4
     frc2::JoystickButton L4(&m_operatorController, XBoxConstants::Y);
     L4.OnTrue(GripperPose(GripperPoseEnum::CoralL4, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
     
+    // Move to, and ready to score L1 (does not score)
+    frc2::JoystickButton L1Score(&m_operatorController, ControlPanelConstants::CoralL1);
+    L1Score.OnTrue(AutonomusScoreCoral(
+        GripperPoseEnum::CoralL1,
+        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSelect);},
+        &m_aprilTags,
+        &m_gripper,
+        &m_drivetrain
+    ).ToPtr());
+    
+    // Move to, and ready to score L2 (does not score)
+    frc2::JoystickButton L2Score(&m_operatorController, ControlPanelConstants::CoralL2);
+    L2Score.OnTrue(AutonomusScoreCoral(
+        GripperPoseEnum::CoralL2,
+        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSelect);},
+        &m_aprilTags,
+        &m_gripper,
+        &m_drivetrain
+    ).ToPtr());
+
+    // Move to, and ready to score L3 (does not score)
+    frc2::JoystickButton L3Score(&m_operatorController, ControlPanelConstants::CoralL3);
+    L3Score.OnTrue(AutonomusScoreCoral(
+        GripperPoseEnum::CoralL3,
+        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSelect);},
+        &m_aprilTags,
+        &m_gripper,
+        &m_drivetrain
+    ).ToPtr());
+
+    // Move to, and ready to score L4 (does not score)
+    frc2::JoystickButton L4Score(&m_operatorController, ControlPanelConstants::CoralL4);
+    L4Score.OnTrue(AutonomusScoreCoral(
+        GripperPoseEnum::CoralL4,
+        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSelect);},
+        &m_aprilTags,
+        &m_gripper,
+        &m_drivetrain
+    ).ToPtr());
+
+    // Scores/Intakes Algae/Coral
+    frc2::JoystickButton Activate(&m_operatorController, ControlPanelConstants::Activate);
+    Activate.OnTrue(GripperActivate(&m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    // Positions to intake coral from ground (does not intake)
+    frc2::JoystickButton CoralGround(&m_operatorController, ControlPanelConstants::CoralGnd);
+    CoralGround.OnTrue(GripperPose(GripperPoseEnum::CoralGround, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    // Positions to intake coral from station (does not intake)
+    frc2::JoystickButton CoralStation(&m_operatorController, ControlPanelConstants::CoralStn);
+    CoralStation.OnTrue(GripperPose(GripperPoseEnum::CoralStation, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Positions to intake algae from ground (does not intake)
+    frc2::JoystickButton AlgaeGround(&m_operatorController, ControlPanelConstants::AlgaeGnd);
+    AlgaeGround.OnTrue(GripperPose(GripperPoseEnum::AlgaeGround, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Positions to intake algae from on top of coral (does not intake)
+    frc2::JoystickButton AlgaeOnCoral(&m_operatorController, ControlPanelConstants::AlgaeCoral);
+    AlgaeOnCoral.OnTrue(GripperPose(GripperPoseEnum::AlgaeOnCoral, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Positions to intake algae from between L2 and L3 on the reef
+    frc2::JoystickButton AlgaeLo(&m_operatorController, ControlPanelConstants::AlgaeLo);
+    AlgaeLo.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Positions to intake algae from between L3 and L4 on the reef
+    frc2::JoystickButton AlgaeHigh(&m_operatorController, ControlPanelConstants::AlgaeHi);
+    AlgaeHigh.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Positions to score algae into processor
+    frc2::JoystickButton AlageProcessor(&m_operatorController, ControlPanelConstants::AlgaeProcessor);
+    AlageProcessor.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Positions to score algae onto barge
+    frc2::JoystickButton AlgaeBarge(&m_operatorController, ControlPanelConstants::AlgaeBarge);
+    AlgaeBarge.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    
+    // Manually offsets elevator upwards
     frc2::JoystickButton elevatorUp(&m_operatorController, ControlPanelConstants::ElevatorUp);
     elevatorUp.OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
     
+    // Manually offsets elevator downwards
     frc2::JoystickButton elevatorDown(&m_operatorController, ControlPanelConstants::ElevatorDown);
     elevatorDown.OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
 
+    // Manually offsets climb upwards
     frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
     climbUp.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(ClimbConstants::ClimbVoltage); }, {&m_climb}))
            .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
 
+    // Manually offsets climb downwards
     frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
     climbDown.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(-ClimbConstants::ClimbVoltage); }, {&m_climb}))
              .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
@@ -160,6 +255,16 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 {
     // The selected command will be run in autonomous
     return m_autonomousChooser.GetSelected();
+}
+#pragma endregion
+
+#pragma region GetAutonomousCommand
+/// @brief Method to return a pointer to the autonomous command.
+/// @return Pointer to the autonomous command
+std::string RobotContainer::GetStartPosition()
+{
+    // The selected command will be run in autonomous
+    return m_startingPositionChooser.GetSelected();
 }
 #pragma endregion
 

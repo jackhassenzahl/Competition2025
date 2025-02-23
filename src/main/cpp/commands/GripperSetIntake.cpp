@@ -5,8 +5,8 @@
 /// @param angle The angle to set the arm.
 /// @param velocity The velocity to set the gripper wheels.
 /// @param gripper The gripper subsystem.
-GripperSetIntake::GripperSetIntake(units::angle::degree_t angle, double velocity, Gripper *gripper) :
-                                   m_angle(angle), m_velocity(velocity), m_gripper(gripper)
+GripperSetIntake::GripperSetIntake(units::angle::degree_t angle, units::voltage::volt_t voltage, Gripper *gripper) :
+                                   m_angle(angle), m_voltage(voltage), m_gripper(gripper)
 {
     // Set the command name
     SetName("GripperSetIntake");
@@ -23,8 +23,8 @@ void GripperSetIntake::Execute()
     // Set the gripper angle
     m_gripper->SetWristAngle(m_angle);
 
-    // Set the gripper wheel velocity
-    m_gripper->SetGripperWheelsVelocity(m_velocity);
+    // Set the gripper wheel voltage
+    m_gripper->SetGripperWheelsVoltage(m_voltage);
 }
 #pragma endregion
 

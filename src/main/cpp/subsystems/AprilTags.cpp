@@ -102,7 +102,7 @@ bool AprilTags::GetTag(int id, AprilTagInformation &aprilTagInformation)
 /// @return true to indicate that the AprilTag information is available.
 AprilTagInformation AprilTags::GetClosestTag()
 {
-    frc::SmartDashboard::PutString("Debug", "GetClosestTag");
+    // frc::SmartDashboard::PutString("Debug", "GetClosestTag");
 
     AprilTagInformation aprilTagInformation;
 
