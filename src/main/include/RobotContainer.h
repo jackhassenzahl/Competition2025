@@ -31,6 +31,7 @@
 #include "commands/AutonomousComplex.h"
 #include "commands/AutonomousDoNothing.h"
 #include "commands/AutonomousLed.h"
+#include "commands/AutonomousOneCoral.h"
 #include "commands/AutonomousParallel.h"
 #include "commands/AutonomousRaceGroup.h"
 #include "commands/AutonomusScoreCoral.h"
@@ -42,8 +43,8 @@
 #include "commands/ChassisDriveToWall.h"
 #include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
-#include "commands/GripperPose.h"
 #include "commands/GripperActivate.h"
+#include "commands/GripperPose.h"
 #include "commands/GripperSetIntake.h"
 #include "commands/SetLeds.h"
 
@@ -118,5 +119,5 @@ class RobotContainer
         frc::SendableChooser<frc2::Command*>  m_autonomousChooser;
 
         // Autonomous starting position command chooser
-        frc::SendableChooser<std::string>  m_startingPositionChooser;
+        frc::SendableChooser<std::string>     m_startingPositionChooser;
 };

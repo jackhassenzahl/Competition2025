@@ -48,7 +48,8 @@ class Gripper : public frc2::SubsystemBase
 
         void                   SetGripperWheelsVoltage(units::voltage::volt_t voltage);
 
-        GripperPoseEnum                              m_pose;
+        GripperPoseEnum        GetPose() { return m_pose; }  // Get the Gripper Pose
+
     private:
 
         void ConfigureElevatorMotor(int driveMotorCanId);
@@ -59,13 +60,14 @@ class Gripper : public frc2::SubsystemBase
         ctre::phoenix6::hardware::TalonFX           *m_elevatorMotor;
         ctre::phoenix6::controls::MotionMagicVoltage m_elevatorMotionMagicVoltage{0_tr};
 
-        rev::spark::SparkMax                         m_armMotor;
-        rev::spark::SparkClosedLoopController        m_armTurnClosedLoopController;
-        rev::spark::SparkRelativeEncoder             m_armEncoder;
+        ctre::phoenix6::hardware::TalonFX           *m_armMotor;
+        ctre::phoenix6::controls::MotionMagicVoltage m_motionMagicVoltage{0_tr};
 
         rev::spark::SparkMax                         m_wristMotor;
         rev::spark::SparkClosedLoopController        m_wristTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder             m_wristEncoder;
 
         rev::spark::SparkMax                         m_gripperMotor;
+
+        GripperPoseEnum                              m_pose;
 };

@@ -29,20 +29,20 @@ struct GripperStateData
 
     units::meter_t         ElevatorFinish = 0_m;
     units::angle::degree_t ArmFinish      = 0_deg;
-
 };
 
-class GripperActivate : public frc2::CommandHelper<frc2::Command, GripperActivate> {
+class GripperActivate : public frc2::CommandHelper<frc2::Command, GripperActivate>
+{
     public:
+
         GripperActivate(Gripper *gripper);
 
         void Initialize() override;
-
-        void Execute() override;
-
+        void Execute()    override;
         bool IsFinished() override;
 
     private:
+
         void CoralGround();
         void CoralStation();
         void CoralL123();

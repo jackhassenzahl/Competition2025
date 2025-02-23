@@ -14,7 +14,7 @@ void Robot::RobotInit()
     HAL_Report(HALUsageReporting::kResourceType_Framework, HALUsageReporting::kFramework_RobotBuilder);
 
     // Reset the debug message
-    // frc::SmartDashboard::PutString("Debug", "RobotInit");
+    frc::SmartDashboard::PutString("Debug", "RobotInit");
 }
 #pragma endregion
 

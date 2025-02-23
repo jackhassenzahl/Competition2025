@@ -158,7 +158,7 @@ namespace ArmConstants
     constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
     constexpr auto AngleToTurnsConversionFactor    = 1.0 / 1_deg;      // The number of motor rotations per degree
-    
+
     constexpr auto MotorRevolutionsTo360Degrees    = 20;
     constexpr auto AngleMaxAmperage                = 20;
 
@@ -207,34 +207,34 @@ namespace Extreme3DConstants
 #pragma region ControlPanelConstants
 namespace ControlPanelConstants
 {
-    constexpr auto CoralGnd       =  0;
-    constexpr auto CoralStn       =  5;
-    constexpr auto CoralL1        =  1;
-    constexpr auto CoralL2        =  6;
-    constexpr auto CoralL3        =  2;
-    constexpr auto CoralL4        = 15;
-    constexpr auto CoralSelect    = 14;
+    constexpr auto CoralGnd        =  0;
+    constexpr auto CoralStn        =  5;
+    constexpr auto CoralL1         =  1;
+    constexpr auto CoralL2         =  6;
+    constexpr auto CoralL3         =  2;
+    constexpr auto CoralL4         = 15;
+    constexpr auto CoralSideSelect = 14;
 
-    constexpr auto AlgaeGnd       = 17;
-    constexpr auto AlgaeCoral     = 19;
-    constexpr auto AlgaeLo        = 16;
-    constexpr auto AlgaeHi        = 18;
-    constexpr auto AlgaeProcessor =  4;
-    constexpr auto AlgaeBarge     =  3;
+    constexpr auto AlgaeGnd        = 17;
+    constexpr auto AlgaeCoral      = 19;
+    constexpr auto AlgaeLo         = 16;
+    constexpr auto AlgaeHi         = 18;
+    constexpr auto AlgaeProcessor  =  4;
+    constexpr auto AlgaeBarge      =  3;
 
-    constexpr auto Activate       = 12;
+    constexpr auto Activate        = 12;
 
-    constexpr auto Toggle         = 10;
+    constexpr auto Toggle          = 10;
 
-    constexpr auto ElevatorUp     =  9;
-    constexpr auto ElevatorDown   = 11;
+    constexpr auto ElevatorUp      =  9;
+    constexpr auto ElevatorDown    = 11;
 
-    constexpr auto ClimbUp        =  7;
-    constexpr auto ClimbDown      = 13;
+    constexpr auto ClimbUp         =  7;
+    constexpr auto ClimbDown       = 13;
 
-    constexpr auto GripperMotor   =  5;
+    constexpr auto GripperMotor    =  5;
 
-    constexpr auto Spare          =  8;
+    constexpr auto Spare           =  8;
 }
 #pragma endregion
 
@@ -319,19 +319,10 @@ namespace ChassisPoseConstants
 }
 #pragma endregion
 
-    // units::meter_t         ElevatorOffset = 0_m;
-    // units::time::second_t  Wait1          = 0_s;
-    // units::angle::degree_t ArmOffset      = 0_deg;
-    // units::time::second_t  Wait2          = 0_s;
-    // double                 GripperVoltage = 0;
-    // units::time::second_t  Wait3          = 0_s;
-
-    // units::meter_t         ElevatorFinish = 0_m;
-    // units::angle::degree_t ArmFinish      = 0_deg;
 #pragma region ActivateConstants
 namespace ActivateConstants
 {
-    
+
     // Coral Ground:
     constexpr auto CoralGroundElevatorOffset    = 0.0_m;
     constexpr auto CoralGroundWait1             = 0.0_s;
@@ -341,7 +332,7 @@ namespace ActivateConstants
     constexpr auto CoralGroundWait3             = 0.0_s;
     constexpr auto CoralGroundElevatorFinish    = 0.0_m;
     constexpr auto CoralGroundArmFinish         = 0.0_deg;
-    
+
     // Coral Station:
     constexpr auto CoralStationElevatorOffset   = 0.0_m;
     constexpr auto CoralStationWait1            = 0.0_s;
@@ -361,7 +352,7 @@ namespace ActivateConstants
     constexpr auto Coral123Wait3                = 0.1_s;
     constexpr auto Coral123ElevatorFinish       = 0.1_m;
     constexpr auto Coral123ArmFinish            = 0.1_deg;
-    
+
     // Coral4:
     constexpr auto Coral4ElevatorOffset         = 0.0_m;
     constexpr auto Coral4Wait1                  = 0.0_s;
@@ -371,7 +362,7 @@ namespace ActivateConstants
     constexpr auto Coral4Wait3                  = 0.0_s;
     constexpr auto Coral4ElevatorFinish         = 0.0_m;
     constexpr auto Coral4ArmFinish              = 0.0_deg;
-    
+
     // Algae Ground:
     constexpr auto AlgaeGroundElevatorOffset    = 0.0_m;
     constexpr auto AlgaeGroundWait1             = 0.0_s;
@@ -381,8 +372,8 @@ namespace ActivateConstants
     constexpr auto AlgaeGroundWait3             = 0.0_s;
     constexpr auto AlgaeGroundElevatorFinish    = 0.0_m;
     constexpr auto AlgaeGroundArmFinish         = 0.0_deg;
-    
-    // Algae On Coral:  
+
+    // Algae On Coral:
     constexpr auto AlgaeOnCoralElevatorOffset   = 0.0_m;
     constexpr auto AlgaeOnCoralWait1            = 0.0_s;
     constexpr auto AlgaeOnCoralArmOffset        = 0.0_deg;
@@ -391,7 +382,7 @@ namespace ActivateConstants
     constexpr auto AlgaeOnCoralWait3            = 0.0_s;
     constexpr auto AlgaeOnCoralElevatorFinish   = 0.0_m;
     constexpr auto AlgaeOnCoralArmFinish        = 0.0_deg;
-    
+
     // Algae Lo:
     constexpr auto AlgaeLoElevatorOffset        = 0.0_m;
     constexpr auto AlgaeLoWait1                 = 0.0_s;
@@ -401,7 +392,7 @@ namespace ActivateConstants
     constexpr auto AlgaeLoWait3                 = 0.0_s;
     constexpr auto AlgaeLoElevatorFinish        = 0.0_m;
     constexpr auto AlgaeLoArmFinish             = 0.0_deg;
-    
+
     // Algae High:
     constexpr auto AlgaeHighElevatorOffset      = 0.0_m;
     constexpr auto AlgaeHighWait1               = 0.0_s;
@@ -411,7 +402,7 @@ namespace ActivateConstants
     constexpr auto AlgaeHighWait3               = 0.0_s;
     constexpr auto AlgaeHighElevatorFinish      = 0.0_m;
     constexpr auto AlgaeHighArmFinish           = 0.0_deg;
-    
+
     // Algae Ground:
     constexpr auto AlgaeProcessorElevatorOffset = 0.0_m;
     constexpr auto AlgaeProcessorWait1          = 0.0_s;
@@ -421,7 +412,7 @@ namespace ActivateConstants
     constexpr auto AlgaeProcessorWait3          = 0.0_s;
     constexpr auto AlgaeProcessorElevatorFinish = 0.0_m;
     constexpr auto AlgaeProcessorArmFinish      = 0.0_deg;
-    
+
     // Algae Ground:
     constexpr auto AlgaeBargeElevatorOffset     = 0.0_m;
     constexpr auto AlgaeBargeWait1              = 0.0_s;

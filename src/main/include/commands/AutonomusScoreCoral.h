@@ -11,12 +11,13 @@
 #include "subsystems/AprilTags.h"
 #include <functional>
 
-
-class AutonomusScoreCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup,  AutonomusScoreCoral> {
+class AutonomusScoreCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup,  AutonomusScoreCoral>
+{
     public:
-        explicit AutonomusScoreCoral(GripperPoseEnum gripperPose,
-                                     const std::function<bool ()>& GetJoystickToggle,
-                                     AprilTags*      aprilTags,
-                                     Gripper*        gripper,
-                                     Drivetrain*     drivetrain);
+
+        explicit AutonomusScoreCoral(GripperPoseEnum               gripperPose,
+                                     const std::function<bool ()> &GetJoystickToggle,
+                                     AprilTags                    *aprilTags,
+                                     Gripper                      *gripper,
+                                     Drivetrain                   *drivetrain);
 };
