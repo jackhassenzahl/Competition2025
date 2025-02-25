@@ -17,8 +17,8 @@ Gripper::Gripper() : m_armMotor(CanConstants::ArmMotorCanId, rev::spark::SparkMa
     ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
 
     // Configure the Arm motor
-    //ConfigureArmMotorTalon(CanConstants::ArmMotorCanId); TODO: Use for TalonFx
-    ConfigureArmMotor();
+    ConfigureArmMotorTalon(CanConstants::ArmMotorCanId); // TODO: Use for TalonFx
+    // ConfigureArmMotor();
 
     // Configure the gripper and wrist motors
     ConfigureWristMotor();
@@ -469,7 +469,7 @@ units::angle::degree_t Gripper::GetArmAngle()
 void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
 {
     // Set the arm angle based on the offset
-    SetArmAngle(GetArmAngle() + offset);
+    SetArmAngle(GetArmAngleTalon() + offset);
 }
 #pragma endregion
 

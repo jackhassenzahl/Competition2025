@@ -9,6 +9,9 @@
 #include <rev/SparkMax.h>
 #include <rev/config/SparkMaxConfig.h>
 
+#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/configs/Configs.hpp>
+
 #include "Constants.h"
 
 /// @brief modes for the LED string.

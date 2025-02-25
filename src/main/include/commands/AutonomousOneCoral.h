@@ -2,15 +2,22 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc2/command/SequentialCommandGroup.h>
 
-class AutonomousOneCoral : public frc2::CommandHelper<frc2::Command, AutonomousOneCoral>
+#include "subsystems/Drivetrain.h"
+#include "subsystems/Gripper.h"
+#include "subsystems/AprilTags.h"
+
+#include "commands/ChassisDrivePose.h"
+#include "commands/AutonomusScoreCoral.h"
+#include "commands/GripperActivate.h"
+
+class AutonomousOneCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousOneCoral>
 {
     public:
-
-        AutonomousOneCoral();
-
-        void Initialize()          override;
-        void Execute()             override;
-        void End(bool interrupted) override;
-        bool IsFinished()          override;
+        explicit AutonomousOneCoral(
+            Drivetrain* drivetrain,
+            Gripper* gripper,
+            AprilTags* aprilTags            
+        );
 };
