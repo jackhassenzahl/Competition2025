@@ -437,15 +437,13 @@ units::angle::degree_t Gripper::GetArmAngleTalon()
 }
 #pragma endregion
 
-
-
 #pragma region SetArmAngle
 /// @brief Method to set the Wrist angle.
 /// @param position The setpoint for the Wrist angle.
-void Gripper::SetArmAngle(units::angle::degree_t position)
+void Gripper::SetArmAngle(units::angle::degree_t angle)
 {
     // Convert the position to radians
-    double positionRadian = (position.value() * std::numbers::pi) / 180.0;
+    double positionRadian = (angle.value() * std::numbers::pi) / 180.0;
 
     // Set the Wrist set position
     m_armTurnClosedLoopController.SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
@@ -478,13 +476,26 @@ void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
 #pragma region SetWristAngle
 /// @brief Method to set the Wrist angle.
 /// @param position The setpoint for the Wrist angle.
-void Gripper::SetWristAngle(units::angle::degree_t position)
+void Gripper::SetWristAngle(units::angle::degree_t angle)
 {
     // Convert the position to radians
-    double positionRadian = (position.value() * std::numbers::pi) / 180.0;
+    double positionRadian = (angle.value() * std::numbers::pi) / 180.0;
 
     // Set the Wrist set position
     m_wristTurnClosedLoopController.SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
+}
+#pragma endregion
+
+#pragma region GetWristAngle
+/// @brief Method to get the arm angle.
+/// @return The arm angle.
+units::angle::degree_t Gripper::GetWristAngle()
+{
+    // Get the current arm motor angle
+    double angle = m_wristEncoder.GetPosition() * (180.0 / std::numbers::pi);
+
+    // Return the arm angle
+    return units::angle::degree_t{angle};
 }
 #pragma endregion
 

@@ -47,7 +47,9 @@ class Gripper : public frc2::SubsystemBase
         units::angle::degree_t GetArmAngle();
 
         void                   SetArmAngleOffset(units::angle::degree_t offset);
-        void                   SetWristAngle(units::angle::degree_t position);
+
+        void                   SetWristAngle(units::angle::degree_t angle);
+        units::angle::degree_t GetWristAngle();
 
         void                   SetGripperWheelsVoltage(units::voltage::volt_t voltage);
 
@@ -57,7 +59,7 @@ class Gripper : public frc2::SubsystemBase
 
         void ConfigureElevatorMotor(int driveMotorCanId);
         void ConfigureArmMotorTalon(int driveMotorCanId);
-        void ConfigureArmMotor();        
+        void ConfigureArmMotor();
         void ConfigureWristMotor();
         void ConfigureGripperMotorRight();
         void ConfigureGripperMotorLeft();
