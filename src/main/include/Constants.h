@@ -123,28 +123,21 @@ namespace ElevatorConstants
 }
 #pragma endregion
 
-#pragma region GripperConstants
-namespace GripperConstants
+#pragma region ArmConstants
+namespace ArmConstants
 {
-    constexpr auto WristP                          = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto WristI                          = 0.0;              // Integral:        No output for integrated error
-    constexpr auto WristD                          = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto P                         = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                         = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                         = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
 
-    constexpr auto GripperP                        = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto GripperI                        = 0.0;              // Integral:        No output for integrated error
-    constexpr auto GripperD                        = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto MaxAmperage               =  60;
 
-    constexpr auto GripperMaxAmperage              =  60;
-    constexpr auto WristMaxAmperage                =  60;
-
-    constexpr auto WristRadiansToMotorRevolutions  = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
-
-    constexpr auto GripperMaxRevolutionsPerMinute  = 180; // About 3 revolutions per second
+    constexpr auto RadiansToMotorRevolutions = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
 }
 #pragma endregion
 
-#pragma region ArmConstants
-namespace ArmConstants
+#pragma region ArmConstantsTalon
+namespace ArmConstantsTalon
 {
     constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
     constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
@@ -164,6 +157,28 @@ namespace ArmConstants
 
     constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
     constexpr auto MaximumPosition                 = 100_deg;
+}
+#pragma endregion
+
+#pragma region WristConstants
+namespace WristConstants
+{
+    constexpr auto P                         = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                         = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                         = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto MaxAmperage               =  60;
+    constexpr auto RadiansToMotorRevolutions = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
+}
+#pragma endregion
+
+#pragma region GripperConstants
+namespace GripperConstants
+{
+    constexpr auto GripperP           = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto GripperI           = 0.0;              // Integral:        No output for integrated error
+    constexpr auto GripperD           = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+
+    constexpr auto GripperMaxAmperage =  60;
 }
 #pragma endregion
 
@@ -322,7 +337,6 @@ namespace ChassisPoseConstants
 #pragma region ActivateConstants
 namespace ActivateConstants
 {
-
     // Coral Ground:
     constexpr auto CoralGroundElevatorOffset    = 0.0_m;
     constexpr auto CoralGroundWait1             = 0.0_s;

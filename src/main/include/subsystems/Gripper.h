@@ -40,10 +40,13 @@ class Gripper : public frc2::SubsystemBase
         void                   SetElevatorHeight(units::length::meter_t position);
         void                   SetElevatorOffset(units::length::meter_t offset);
 
+        void                   SetArmAngleTalon(units::angle::degree_t angle);
+        units::angle::degree_t GetArmAngleTalon();
+
         void                   SetArmAngle(units::angle::degree_t angle);
-        void                   SetArmAngleOffset(units::angle::degree_t offset);
         units::angle::degree_t GetArmAngle();
 
+        void                   SetArmAngleOffset(units::angle::degree_t offset);
         void                   SetWristAngle(units::angle::degree_t position);
 
         void                   SetGripperWheelsVoltage(units::voltage::volt_t voltage);
@@ -53,7 +56,8 @@ class Gripper : public frc2::SubsystemBase
     private:
 
         void ConfigureElevatorMotor(int driveMotorCanId);
-        void ConfigureArmMotor(int driveMotorCanId);
+        void ConfigureArmMotorTalon(int driveMotorCanId);
+        void ConfigureArmMotor();        
         void ConfigureWristMotor();
         void ConfigureGripperMotorRight();
         void ConfigureGripperMotorLeft();
@@ -61,8 +65,12 @@ class Gripper : public frc2::SubsystemBase
         ctre::phoenix6::hardware::TalonFX           *m_elevatorMotor;
         ctre::phoenix6::controls::MotionMagicVoltage m_elevatorMotionMagicVoltage{0_tr};
 
-        ctre::phoenix6::hardware::TalonFX           *m_armMotor;
+        ctre::phoenix6::hardware::TalonFX           *m_armMotorTalon;
         ctre::phoenix6::controls::MotionMagicVoltage m_motionMagicVoltage{0_tr};
+
+        rev::spark::SparkMax                         m_armMotor;
+        rev::spark::SparkClosedLoopController        m_armTurnClosedLoopController;
+        rev::spark::SparkRelativeEncoder             m_armEncoder;
 
         rev::spark::SparkMax                         m_wristMotor;
         rev::spark::SparkClosedLoopController        m_wristTurnClosedLoopController;
