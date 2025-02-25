@@ -6,7 +6,8 @@ Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::Spa
                      m_wristEncoder(m_wristMotor.GetEncoder()),
                      m_wristTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
 
-                     m_gripperMotor(CanConstants::GripperMotorCanIdRight, rev::spark::SparkMax::MotorType::kBrushless)
+                     m_gripperMotorRight(CanConstants::GripperMotorCanIdRight, rev::spark::SparkMax::MotorType::kBrushless),
+                     m_gripperMotorLeft(CanConstants::GripperMotorCanIdLeft,   rev::spark::SparkMax::MotorType::kBrushless)
 {
     // Configure the elevator motor
     ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
@@ -15,8 +16,9 @@ Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::Spa
     ConfigureArmMotor(CanConstants::ArmMotorCanId);
 
     // Configure the gripper and wrist motors
-    ConfigWristMotor();
-    ConfigGripperMotor();
+    ConfigureWristMotor();
+    ConfigureGripperMotorRight();
+    ConfigureGripperMotorLeft();
 }
 #pragma endregion
 
@@ -126,9 +128,9 @@ void Gripper::ConfigureArmMotor(int motorCanId)
 }
 #pragma endregion
 
-#pragma region ConfigWristMotor
+#pragma region ConfigureWristMotor
 /// @brief Method to configure the Wrist motor using MotionMagic.
-void Gripper::ConfigWristMotor()
+void Gripper::ConfigureWristMotor()
 {
     // Configure the angle motor
     static rev::spark::SparkMaxConfig sparkMaxConfig{};
@@ -156,9 +158,9 @@ void Gripper::ConfigWristMotor()
 }
 #pragma endregion
 
-#pragma region ConfigGripperMotor
+#pragma region ConfigureGripperMotorRight
 /// @brief Method to configure the Gripper motor using MotionMagic.
-void Gripper::ConfigGripperMotor()
+void Gripper::ConfigureGripperMotorRight()
 {
     // Configure the angle motor
     static rev::spark::SparkMaxConfig sparkMaxConfig{};
@@ -176,7 +178,31 @@ void Gripper::ConfigGripperMotor()
         .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
     // Write the configuration to the motor controller
-    m_gripperMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+    m_gripperMotorRight.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+}
+#pragma endregion
+
+#pragma region ConfigureGripperMotorLeft
+/// @brief Method to configure the Gripper motor using MotionMagic.
+void Gripper::ConfigureGripperMotorLeft()
+{
+    // Configure the angle motor
+    static rev::spark::SparkMaxConfig sparkMaxConfig{};
+
+    sparkMaxConfig
+        .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
+        .SmartCurrentLimit(GripperConstants::GripperMaxAmperage);
+    sparkMaxConfig.encoder
+        .PositionConversionFactor(2.0 * std::numbers::pi)
+        .VelocityConversionFactor(1);
+    sparkMaxConfig.closedLoop
+        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+        .Pid(GripperConstants::GripperP, GripperConstants::GripperI, GripperConstants::GripperD)
+        .PositionWrappingEnabled(true)
+        .PositionWrappingInputRange(0, 2 * std::numbers::pi);
+
+    // Write the configuration to the motor controller
+    m_gripperMotorLeft.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 #pragma endregion
 
@@ -404,6 +430,7 @@ void Gripper::SetWristAngle(units::angle::degree_t position)
 void Gripper::SetGripperWheelsVoltage(units::voltage::volt_t voltage)
 {
     // Set the voltage of the Gripper wheels
-    m_gripperMotor.SetVoltage(voltage);
+    m_gripperMotorRight.SetVoltage(voltage);
+    m_gripperMotorLeft.SetVoltage(voltage);
 }
 #pragma endregion

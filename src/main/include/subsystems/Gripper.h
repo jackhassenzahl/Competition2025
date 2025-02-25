@@ -54,8 +54,9 @@ class Gripper : public frc2::SubsystemBase
 
         void ConfigureElevatorMotor(int driveMotorCanId);
         void ConfigureArmMotor(int driveMotorCanId);
-        void ConfigWristMotor();
-        void ConfigGripperMotor();
+        void ConfigureWristMotor();
+        void ConfigureGripperMotorRight();
+        void ConfigureGripperMotorLeft();
 
         ctre::phoenix6::hardware::TalonFX           *m_elevatorMotor;
         ctre::phoenix6::controls::MotionMagicVoltage m_elevatorMotionMagicVoltage{0_tr};
@@ -67,7 +68,8 @@ class Gripper : public frc2::SubsystemBase
         rev::spark::SparkClosedLoopController        m_wristTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder             m_wristEncoder;
 
-        rev::spark::SparkMax                         m_gripperMotor;
+        rev::spark::SparkMax                         m_gripperMotorRight;
+        rev::spark::SparkMax                         m_gripperMotorLeft;
 
         GripperPoseEnum                              m_pose;
 };

@@ -42,11 +42,11 @@ namespace CanConstants
     constexpr auto SwerveRearRightAngleMotorCanId    = 17;
     constexpr auto SwerveRearRightAngleEncoderCanId  = 23;
 
+    constexpr auto ElevatorMotorCanId                = 33;
     constexpr auto ArmMotorCanId                     = 30;
+    constexpr auto WristMotorCanId                   = 34;
     constexpr auto GripperMotorCanIdRight            = 31;
     constexpr auto GripperMotorCanIdLeft             = 32;
-    constexpr auto WristMotorCanId                   = 34;
-    constexpr auto ElevatorMotorCanId                = 33;
 
     constexpr auto ClimbMotorCanId                   = 40;
 
