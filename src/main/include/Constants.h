@@ -518,3 +518,4 @@ namespace AutonomousConstants
     constexpr auto OneCoralAngleChange      = 0_deg;
     constexpr auto OneCoralTimeOut          = 10_s;
 };
+#pragma endregion
