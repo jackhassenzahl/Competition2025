@@ -132,7 +132,7 @@ namespace ArmConstants
 
     constexpr auto MaxAmperage               =  60;
 
-    constexpr auto RadiansToMotorRevolutions = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
+    constexpr auto RadiansToMotorRevolutions = (2.0 * std::numbers::pi) / 40.0;  // Radians to motor revolutions	
 }
 #pragma endregion
 
@@ -508,3 +508,13 @@ namespace AlgaePoseConstants
     constexpr auto BargeGripperVoltage      = 0.0_V;
 }
 #pragma endregion
+
+#pragma namespace AutonomousConstants
+namespace AutonomousConstants
+{
+    constexpr auto OneCoralSpeed            = 1_mps;
+    constexpr auto OneCoralXDistance        = 1_m;
+    constexpr auto OneCoralYDistance        = 1_m;
+    constexpr auto OneCoralAngleChange      = 0_deg;
+    constexpr auto OneCoralTimeOut          = 10_s;
+};

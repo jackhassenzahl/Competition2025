@@ -12,6 +12,8 @@
 #include "commands/AutonomusScoreCoral.h"
 #include "commands/GripperActivate.h"
 
+#include "Constants.h"
+
 class AutonomousOneCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousOneCoral>
 {
     public:
