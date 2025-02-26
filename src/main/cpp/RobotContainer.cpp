@@ -110,7 +110,7 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Move to, and ready to score L1 (does not score)
     frc2::JoystickButton L1Score(&m_operatorController, ControlPanelConstants::CoralL1);
-    L1Score.OnTrue(AutonomusScoreCoral(
+    L1Score.OnTrue(AprilTagScoreCoral(
         GripperPoseEnum::CoralL1,
         [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
         &m_aprilTags,
@@ -120,7 +120,7 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Move to, and ready to score L2 (does not score)
     frc2::JoystickButton L2Score(&m_operatorController, ControlPanelConstants::CoralL2);
-    L2Score.OnTrue(AutonomusScoreCoral(
+    L2Score.OnTrue(AprilTagScoreCoral(
         GripperPoseEnum::CoralL2,
         [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
         &m_aprilTags,
@@ -130,7 +130,7 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Move to, and ready to score L3 (does not score)
     frc2::JoystickButton L3Score(&m_operatorController, ControlPanelConstants::CoralL3);
-    L3Score.OnTrue(AutonomusScoreCoral(
+    L3Score.OnTrue(AprilTagScoreCoral(
         GripperPoseEnum::CoralL3,
         [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
         &m_aprilTags,
@@ -140,7 +140,7 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Move to, and ready to score L4 (does not score)
     frc2::JoystickButton L4Score(&m_operatorController, ControlPanelConstants::CoralL4);
-    L4Score.OnTrue(AutonomusScoreCoral(
+    L4Score.OnTrue(AprilTagScoreCoral(
         GripperPoseEnum::CoralL4,
         [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
         &m_aprilTags,

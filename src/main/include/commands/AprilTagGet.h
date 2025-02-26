@@ -1,11 +1,11 @@
 #pragma once
 
+#include <iostream>
+
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
 #include "subsystems/AprilTags.h"
-
-#include <iostream>
 
 class AprilTagGet : public frc2::CommandHelper<frc2::Command, AprilTagGet>
 {

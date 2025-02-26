@@ -9,7 +9,7 @@
 #include "subsystems/AprilTags.h"
 
 #include "commands/ChassisDrivePose.h"
-#include "commands/AutonomusScoreCoral.h"
+#include "commands/AprilTagScoreCoral.h"
 #include "commands/GripperActivate.h"
 
 #include "Constants.h"
@@ -17,9 +17,6 @@
 class AutonomousOneCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousOneCoral>
 {
     public:
-        explicit AutonomousOneCoral(
-            Drivetrain* drivetrain,
-            Gripper* gripper,
-            AprilTags* aprilTags            
-        );
+    
+        explicit AutonomousOneCoral(Drivetrain *drivetrain, Gripper *gripper, AprilTags* aprilTags);
 };

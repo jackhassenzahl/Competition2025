@@ -126,19 +126,6 @@ namespace ElevatorConstants
 #pragma region ArmConstants
 namespace ArmConstants
 {
-    constexpr auto P                         = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                         = 0.0;              // Integral:        No output for integrated error
-    constexpr auto D                         = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
-
-    constexpr auto MaxAmperage               =  60;
-
-    constexpr auto RadiansToMotorRevolutions = (2.0 * std::numbers::pi) / 40.0;  // Radians to motor revolutions	
-}
-#pragma endregion
-
-#pragma region ArmConstantsTalon
-namespace ArmConstantsTalon
-{
     constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
     constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
     constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
@@ -509,13 +496,13 @@ namespace AlgaePoseConstants
 }
 #pragma endregion
 
-#pragma namespace AutonomousConstants
+#pragma region AutonomousConstants
 namespace AutonomousConstants
 {
-    constexpr auto OneCoralSpeed            = 1_mps;
-    constexpr auto OneCoralXDistance        = 1_m;
-    constexpr auto OneCoralYDistance        = 1_m;
-    constexpr auto OneCoralAngleChange      = 0_deg;
-    constexpr auto OneCoralTimeOut          = 10_s;
+    constexpr auto OneCoralSpeed       = 1_mps;
+    constexpr auto OneCoralXDistance   = 1_m;
+    constexpr auto OneCoralYDistance   = 1_m;
+    constexpr auto OneCoralAngleChange = 0_deg;
+    constexpr auto OneCoralTimeOut     = 10_s;
 };
 #pragma endregion

@@ -2,11 +2,7 @@
 
 #pragma region Gripper
 /// @brief The Constructor for the Gripper class.
-Gripper::Gripper() : m_armMotor(CanConstants::ArmMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
-                     m_armEncoder(m_wristMotor.GetEncoder()),
-                     m_armTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
-
-                     m_wristMotor(CanConstants::WristMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
+Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::SparkMax::MotorType::kBrushless),
                      m_wristEncoder(m_wristMotor.GetEncoder()),
                      m_wristTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
 
@@ -17,8 +13,7 @@ Gripper::Gripper() : m_armMotor(CanConstants::ArmMotorCanId, rev::spark::SparkMa
     ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
 
     // Configure the Arm motor
-    ConfigureArmMotorTalon(CanConstants::ArmMotorCanId); // TODO: Use for TalonFx
-    // ConfigureArmMotor();
+    ConfigureArmMotor(CanConstants::ArmMotorCanId);
 
     // Configure the gripper and wrist motors
     ConfigureWristMotor();
@@ -51,10 +46,6 @@ void Gripper::ConfigureElevatorMotor(int motorCanId)
     slot0Configs.kI = ElevatorConstants::I;
     slot0Configs.kD = ElevatorConstants::D;
 
-    // // Configure gear ratio
-    // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = elevatorMotorConfiguration.Feedback;
-    // feedbackConfigs.SensorToMechanismRatio = ElevatorConstants::SensorToMechanismRatio;
-
     // Configure Motion Magic
     ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = elevatorMotorConfiguration.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = ElevatorConstants::MotionMagicCruiseVelocity;
@@ -82,13 +73,13 @@ void Gripper::ConfigureElevatorMotor(int motorCanId)
 }
 #pragma endregion
 
-#pragma region ConfigureArmMotorTalon
+#pragma region ConfigureArmMotor
 /// @brief Method to configure the Arm motor using MotionMagic.
 /// @param motorCanId The CAN identifier for the Arm motor.
-void Gripper::ConfigureArmMotorTalon(int motorCanId)
+void Gripper::ConfigureArmMotor(int motorCanId)
 {
     // Instantiate the Arm motor
-    m_armMotorTalon = new ctre::phoenix6::hardware::TalonFX{motorCanId, CanConstants::CanBus};
+    m_armMotor = new ctre::phoenix6::hardware::TalonFX{motorCanId, CanConstants::CanBus};
 
     // Create the Arm motor configuration
     ctre::phoenix6::configs::TalonFXConfiguration armMotorConfiguration{};
@@ -98,12 +89,12 @@ void Gripper::ConfigureArmMotorTalon(int motorCanId)
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = armMotorConfiguration.Slot0;
-    slot0Configs.kS = ArmConstantsTalon::S;
-    slot0Configs.kV = ArmConstantsTalon::V;
-    slot0Configs.kA = ArmConstantsTalon::A;
-    slot0Configs.kP = ArmConstantsTalon::P;
-    slot0Configs.kI = ArmConstantsTalon::I;
-    slot0Configs.kD = ArmConstantsTalon::D;
+    slot0Configs.kS = ArmConstants::S;
+    slot0Configs.kV = ArmConstants::V;
+    slot0Configs.kA = ArmConstants::A;
+    slot0Configs.kP = ArmConstants::P;
+    slot0Configs.kI = ArmConstants::I;
+    slot0Configs.kD = ArmConstants::D;
 
     // // Configure gear ratio
     // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = ArmMotorConfiguration.Feedback;
@@ -111,16 +102,16 @@ void Gripper::ConfigureArmMotorTalon(int motorCanId)
 
     // Configure Motion Magic
     ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = armMotorConfiguration.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstantsTalon::MotionMagicCruiseVelocity;
-    motionMagicConfigs.MotionMagicAcceleration   = ArmConstantsTalon::MotionMagicAcceleration;
-    motionMagicConfigs.MotionMagicJerk           = ArmConstantsTalon::MotionMagicJerk;
+    motionMagicConfigs.MotionMagicCruiseVelocity = ArmConstants::MotionMagicCruiseVelocity;
+    motionMagicConfigs.MotionMagicAcceleration   = ArmConstants::MotionMagicAcceleration;
+    motionMagicConfigs.MotionMagicJerk           = ArmConstants::MotionMagicJerk;
 
     // Apply the configuration to the drive motor
     ctre::phoenix::StatusCode status = ctre::phoenix::StatusCode::StatusCodeNotInitialized;
     for (int attempt = 0; attempt < CanConstants::MotorConfigurationAttempts; attempt++)
     {
         // Apply the configuration to the drive motor
-        status = m_armMotorTalon->GetConfigurator().Apply(armMotorConfiguration);
+        status = m_armMotor->GetConfigurator().Apply(armMotorConfiguration);
 
         // Check if the configuration was successful
         if (status.IsOK())
@@ -130,36 +121,6 @@ void Gripper::ConfigureArmMotorTalon(int motorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure arm motor. Error: " << status.GetName() << std::endl;
-}
-#pragma endregion
-
-#pragma region ConfigureArmMotor
-/// @brief Method to configure the Arm motor using MotionMagic.
-void Gripper::ConfigureArmMotor()
-{
-    // Configure the arm motor
-    static rev::spark::SparkMaxConfig sparkMaxConfig{};
-
-    sparkMaxConfig
-        .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(ArmConstants::MaxAmperage);
-    sparkMaxConfig.encoder
-        //.Inverted(true)Arm
-        .PositionConversionFactor(ArmConstants::RadiansToMotorRevolutions)
-        .VelocityConversionFactor(ArmConstants::RadiansToMotorRevolutions / 60.0);
-    sparkMaxConfig.closedLoop
-        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        .Pid(ArmConstants::P, ArmConstants::I, ArmConstants::D)
-        //.OutputRange(-1, 1)
-        // Enable PID wrap around for the turning motor. This will allow the
-        // PID controller to go through 0 to get to the setpoint i.e. going
-        // from 350 degrees to 10 degrees will go through 0 rather than the
-        // other direction which is a longer route.
-        .PositionWrappingEnabled(true)
-        .PositionWrappingInputRange(0, 2 * std::numbers::pi);
-
-    // Write the configuration to the motor controller
-    m_armMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 #pragma endregion
 
@@ -404,10 +365,10 @@ void Gripper::SetElevatorOffset(units::length::meter_t offset)
 }
 #pragma endregion
 
-#pragma region SetArmAngleTalon
+#pragma region SetArmAngle
 /// @brief Method to set the arm angle.
 /// @param position The setpoint for the arm angle. Takes -180 -> 180
-void Gripper::SetArmAngleTalon(units::angle::degree_t angle)
+void Gripper::SetArmAngle(units::angle::degree_t angle)
 {
     // // Making sure that the climb doesn't try to go through the robot
     // if (angle < ArmConstants::MinimumPosition)  // TODO: Need to calibrate angle to motor rotations
@@ -417,36 +378,10 @@ void Gripper::SetArmAngleTalon(units::angle::degree_t angle)
     //     angle = ArmConstants::MaximumPosition;
 
     // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstantsTalon::AngleToTurnsConversionFactor.value());
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor.value());
 
     // Set the arm set position
-    m_armMotorTalon->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
-}
-#pragma endregion
-
-#pragma region GetArmAngleTalon
-/// @brief Method to get the arm angle.
-/// @return The arm angle.
-units::angle::degree_t Gripper::GetArmAngleTalon()
-{
-    // Get the current arm motor angle
-    auto currentAngle = m_armMotorTalon->GetPosition().GetValueAsDouble();
-
-    // Return the arm angle
-    return (units::angle::degree_t) (currentAngle /ArmConstantsTalon::AngleToTurnsConversionFactor.value());
-}
-#pragma endregion
-
-#pragma region SetArmAngle
-/// @brief Method to set the Wrist angle.
-/// @param position The setpoint for the Wrist angle.
-void Gripper::SetArmAngle(units::angle::degree_t angle)
-{
-    // Convert the position to radians
-    double positionRadian = (angle.value() * std::numbers::pi) / 180.0;
-
-    // Set the Wrist set position
-    m_armTurnClosedLoopController.SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
+    m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
 }
 #pragma endregion
 
@@ -456,10 +391,10 @@ void Gripper::SetArmAngle(units::angle::degree_t angle)
 units::angle::degree_t Gripper::GetArmAngle()
 {
     // Get the current arm motor angle
-    double angle = m_armEncoder.GetPosition() * (180.0 / std::numbers::pi);
+    auto currentAngle = m_armMotor->GetPosition().GetValueAsDouble();
 
     // Return the arm angle
-    return units::angle::degree_t{angle};
+    return (units::angle::degree_t) (currentAngle /ArmConstants::AngleToTurnsConversionFactor.value());
 }
 #pragma endregion
 
@@ -469,7 +404,7 @@ units::angle::degree_t Gripper::GetArmAngle()
 void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
 {
     // Set the arm angle based on the offset
-    SetArmAngle(GetArmAngleTalon() + offset);
+    SetArmAngle(GetArmAngle() + offset);
 }
 #pragma endregion
 

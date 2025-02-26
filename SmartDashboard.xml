@@ -1,7 +1,10 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Start Position" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="214" y="57"/>
+	</widget>
 	<widget field="Analog" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="280" y="104"/>
+		<location x="372" y="92"/>
 	</widget>
 	<widget field="Present A" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="875" y="485"/>
@@ -65,10 +68,10 @@
 		<location x="496" y="179"/>
 	</widget>
 	<widget field="Voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="272" y="24"/>
+		<location x="366" y="17"/>
 	</widget>
 	<widget field="Ultrasonic" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="264" y="52"/>
+		<location x="357" y="42"/>
 	</widget>
 	<widget field="Coral: L4" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="712" y="125"/>
@@ -97,7 +100,7 @@
 		<height>16</height>
 	</widget>
 	<widget field="Gyro Rotation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="241" y="78"/>
+		<location x="336" y="67"/>
 	</widget>
 	<widget field="Chassis: Time " type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="535" y="11"/>
@@ -197,5 +200,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Climb Angle"/>
 </xml>

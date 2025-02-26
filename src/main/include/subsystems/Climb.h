@@ -1,10 +1,10 @@
 #pragma once
 
-#include <frc/DigitalInput.h>
-#include <frc2/command/SubsystemBase.h>
-
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/configs/Configs.hpp>
+
+#include <frc/DigitalInput.h>
+#include <frc2/command/SubsystemBase.h>
 
 #include "Constants.h"
 

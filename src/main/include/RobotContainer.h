@@ -28,13 +28,13 @@
 
 // Commands
 #include "commands/AprilTagGet.h"
+#include "commands/AprilTagScoreCoral.h"
 #include "commands/AutonomousComplex.h"
 #include "commands/AutonomousDoNothing.h"
 #include "commands/AutonomousLed.h"
 #include "commands/AutonomousOneCoral.h"
 #include "commands/AutonomousParallel.h"
 #include "commands/AutonomousRaceGroup.h"
-#include "commands/AutonomusScoreCoral.h"
 #include "commands/ChassisDrive.h"
 #include "commands/ChassisDrivePose.h"
 #include "commands/ChassisDriveSerpentine.h"
