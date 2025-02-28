@@ -124,6 +124,7 @@ void Gripper::ConfigureArmMotor(int motorCanId)
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure arm motor. Error: " << status.GetName() << std::endl;
 
+    // Start the control at zero degrees
     SetArmAngle(0_deg);
 }
 #pragma endregion
@@ -140,6 +141,10 @@ void Gripper::ConfigureWristMotor()
         .SmartCurrentLimit(WristConstants::MaxAmperage);
     // sparkMaxConfig.encoder
     //     .Inverted(false);
+    sparkMaxConfig.closedLoop.maxMotion
+        .MaxVelocity(WristConstants::MaximumVelocity)
+        .MaxAcceleration(WristConstants::MaximumAcceleration)
+        .AllowedClosedLoopError(WristConstants::AllowedError);
     sparkMaxConfig.closedLoop
         .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         .Pid(WristConstants::P, WristConstants::I, WristConstants::D)
@@ -154,6 +159,7 @@ void Gripper::ConfigureWristMotor()
     // Write the configuration to the motor controller
     m_wristMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 
+    // Start the control at zero degrees
     SetWristAngle(0_deg);
 }
 #pragma endregion
@@ -398,11 +404,18 @@ void Gripper::SetArmAngle(units::angle::degree_t angle)
     // Show the target arm angle
     frc::SmartDashboard::PutNumber("Arm Target", angle.value());
 
+    // Making sure that the climb doesn't try to go through the robot
+    if (angle < ArmConstants::MinimumPosition)
+       angle = ArmConstants::MinimumPosition;
+
+    if (angle > ArmConstants::MaximumPosition)
+        angle = ArmConstants::MaximumPosition;
+
     // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / ArmConstants::AngleToTurnsConversionFactor.value());
+    units::angle::turn_t position = (units::angle::turn_t) (angle.value() / ArmConstants::AngleToTurnsConversionFactor.value());
 
     // Set the arm set position
-    m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
+    m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(position).WithSlot(0));
 }
 #pragma endregion
 
@@ -437,11 +450,18 @@ void Gripper::SetWristAngle(units::angle::degree_t angle)
     // Show the target wrist angle
     frc::SmartDashboard::PutNumber("Wrist Target", angle.value());
 
+    // Making sure that the climb doesn't try to go through the robot
+    if (angle < WristConstants::MinimumPosition)
+       angle = WristConstants::MinimumPosition;
+
+    if (angle > WristConstants::MaximumPosition)
+        angle = WristConstants::MaximumPosition;
+	
     // Converting angle to motor rotations
     double position = angle.value() / WristConstants::AngleToTurnsConversionFactor.value();
 
     // Set the Wrist set position
-    m_wristTurnClosedLoopController.SetReference(position, rev::spark::SparkMax::ControlType::kPosition);
+    m_wristTurnClosedLoopController.SetReference(position, rev::spark::SparkMax::ControlType::kMAXMotionPositionControl);
 }
 #pragma endregion
 

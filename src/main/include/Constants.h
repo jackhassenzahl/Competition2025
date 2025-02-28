@@ -144,8 +144,8 @@ namespace ArmConstants
 
     constexpr auto AngleMaxAmperage                = 20;
 
-    constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
-    constexpr auto MaximumPosition                 = 100_deg;
+    constexpr auto MinimumPosition                 =   0_deg;          // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaximumPosition                 = 120_deg;
 
     constexpr auto AngleOffset                     = 5_deg;
 }
@@ -154,13 +154,21 @@ namespace ArmConstants
 #pragma region WristConstants
 namespace WristConstants
 {
-    constexpr auto P                             = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                             = 0.0;              // Integral:        No output for integrated error
-    constexpr auto D                             = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto P                             = 1.0;              // Proportional
+    constexpr auto I                             = 0.1;              // Integral
+    constexpr auto D                             = 0.5;              // Differential
+
+    constexpr auto MaximumVelocity               = 200.0;            // Rotations per minute (RPM)
+    constexpr auto MaximumAcceleration           = 400.0;            // Acceleration
+    constexpr auto AllowedError                  = 0.05;             // Allowed error for the pid controller (smaller values are more accurate)
 
     constexpr auto MaxAmperage                   =  60;
     constexpr auto AngleToTurnsConversionFactor  = 360_deg / 20;     // 20 to 1 gear box
-    constexpr auto AngleOffset                   = 5_deg;
+
+    constexpr auto MinimumPosition               = -10_deg;          // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaximumPosition               = 100_deg;
+
+    constexpr auto AngleOffset                   =   5_deg;
 }
 #pragma endregion
 

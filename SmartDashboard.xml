@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Wheels Input" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="220" y="304"/>
+	</widget>
 	<widget field="ArmFinish" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="699" y="632"/>
 	</widget>
@@ -101,9 +104,6 @@
 	</widget>
 	<widget field="Start Position" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="214" y="57"/>
-	</widget>
-	<widget field="Analog" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="249" y="306"/>
 	</widget>
 	<widget field="Present A" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="875" y="485"/>
@@ -284,5 +284,7 @@
 </dashboard>
 <live-window>
 </live-window>
+	<hidden field="Wrist position"/>
+	<hidden field="Analog"/>
 	<hidden field="Algae: Lo"/>
 </xml>

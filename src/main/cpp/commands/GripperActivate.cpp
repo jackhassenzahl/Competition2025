@@ -112,52 +112,44 @@ void GripperActivate::Execute()
         case GripperState::ElevatorMove:
         {
             m_gripper->SetElevatorOffset(m_stateData.ElevatorOffset);
-            m_state = Wait1;
-            break;
-        }
-
-        case GripperState::Wait1:
-        {
-            if (frc::GetTime() > m_stateData.Wait1)
-                m_state = ArmMove;
+            m_state = ArmMove;
             break;
         }
 
         case GripperState::ArmMove:
         {
-            m_gripper->SetArmAngleOffset(m_stateData.ArmOffset);
-            m_state = Wait2;
-            break;
-        }
-
-        case GripperState::Wait2:
-        {
-            if (frc::GetTime() > m_stateData.Wait2)
+            if (frc::GetTime() > m_stateData.Wait1)
+            {
+                m_state = ArmMove;
+                m_gripper->SetArmAngleOffset(m_stateData.ArmOffset);
                 m_state = GripperWheelsMove;
+            }
             break;
         }
 
         case GripperState::GripperWheelsMove:
         {
-            m_gripper->SetGripperWheelsVoltage(m_stateData.GripperVoltage);
-            m_state = Wait3;
-            break;
-        }
-
-        case GripperState::Wait3:
-        {
-            if (frc::GetTime() > m_stateData.Wait3)
+            if (frc::GetTime() > m_stateData.Wait2)
+            {
+                m_state = GripperWheelsMove;
+                m_gripper->SetGripperWheelsVoltage(m_stateData.GripperVoltage);
                 m_state = Finish;
+            }
             break;
         }
 
         case GripperState::Finish:
         {
-            m_gripper->SetGripperWheelsVoltage(0_V);
-            m_gripper->SetArmAngleOffset(-m_stateData.ArmOffset);
-            m_gripper->SetElevatorOffset(-m_stateData.ElevatorOffset);
-            m_state      = Complete;
-            m_isFinished = true;
+            if (frc::GetTime() > m_stateData.Wait3)
+            {
+                m_state = Finish;
+                m_gripper->SetGripperWheelsVoltage(0_V);
+                m_gripper->SetArmAngleOffset(-m_stateData.ArmOffset);
+                m_gripper->SetElevatorOffset(-m_stateData.ElevatorOffset);
+                m_state      = Complete;
+                m_isFinished = true;
+            }
+			break;
         }
 
         default:

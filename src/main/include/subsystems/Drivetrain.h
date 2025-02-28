@@ -85,6 +85,4 @@ class Drivetrain : public frc2::SubsystemBase
         frc::SwerveDriveOdometry<4> m_odometry;
 
         frc::AnalogPotentiometer    m_ultrasonic{0, 1000, 0};  // MD 1043: 300 mm (~12 inches) to 5000 mm (~16 feet)
-
-        //frc::AnalogGyro             m_analogGyro{1};           // Creates an AnalogGyro
 };

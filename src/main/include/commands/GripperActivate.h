@@ -10,11 +10,8 @@
 enum GripperState
 {
     ElevatorMove,
-    Wait1,
     ArmMove,
-    Wait2,
     GripperWheelsMove,
-    Wait3,
     Finish,
     Complete
 };
