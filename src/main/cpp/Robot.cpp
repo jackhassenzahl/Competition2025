@@ -4,9 +4,6 @@
 /// @brief Method called when the robot class is instantiated.
 void Robot::RobotInit()
 {
-    // Get the timed robot cycle period and store it in the container
-    m_robotContainer->SetPeriod(GetPeriod());
-
     // Enable LiveWindow in test mode
     EnableLiveWindowInTest(true);
 
@@ -26,15 +23,23 @@ void Robot::RobotPeriodic()
     frc2::CommandScheduler::GetInstance().Run();
 
     // Get the voltage going into the PDP, in Volts
-    double voltage = m_robotContainer->m_powerDistribution.GetVoltage();
+    double voltage = m_robotContainer->GetPowerDistribution()->GetVoltage();
     frc::SmartDashboard::PutNumber("Voltage", voltage);
 
+    // Show the present chassis pose
     frc::Pose2d pressentPose = m_robotContainer->GetChassisPose();
     frc::SmartDashboard::PutNumber("Present X", pressentPose.X().value());
     frc::SmartDashboard::PutNumber("Present Y", pressentPose.Y().value());
     frc::SmartDashboard::PutNumber("Present A", pressentPose.Rotation().Degrees().value());
 
+    // Show the control panel Gripper wheels potentiometer value
     frc::SmartDashboard::PutNumber("Analog", m_robotContainer->GetOperatorController()->GetRawAxis(3));
+
+    // Show the Gripper pose positions
+    frc::SmartDashboard::PutNumber("Elevator", m_robotContainer->GetGripper()->GetElevatorHeight().value());
+    frc::SmartDashboard::PutNumber("Arm",      m_robotContainer->GetGripper()->GetArmAngle().to<double>());
+    frc::SmartDashboard::PutNumber("Wrist",    m_robotContainer->GetGripper()->GetWristAngle().value());
+    frc::SmartDashboard::PutNumber("Wheels",   m_robotContainer->GetGripper()->GetGripperWheelsVoltage().value());
 }
 #pragma endregion
 

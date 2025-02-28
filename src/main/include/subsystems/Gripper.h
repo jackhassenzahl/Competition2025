@@ -23,7 +23,7 @@ enum GripperPoseEnum
 
     AlgaeGround,
     AlgaeOnCoral,
-    AlgaeLo,
+    AlgaeLow,
     AlgaeHigh,
     AlgaeProcessor,
     AlgaeBarge
@@ -39,16 +39,18 @@ class Gripper : public frc2::SubsystemBase
 
         void                   SetElevatorHeight(units::length::meter_t position);
         void                   SetElevatorOffset(units::length::meter_t offset);
+        units::length::meter_t GetElevatorHeight();
 
         void                   SetArmAngle(units::angle::degree_t angle);
+        void                   SetArmAngleOffset(units::angle::degree_t offset);
         units::angle::degree_t GetArmAngle();
 
-        void                   SetArmAngleOffset(units::angle::degree_t offset);
-
         void                   SetWristAngle(units::angle::degree_t angle);
+        void                   SetWristAngleOffset(units::angle::degree_t angle);
         units::angle::degree_t GetWristAngle();
 
         void                   SetGripperWheelsVoltage(units::voltage::volt_t voltage);
+        units::voltage::volt_t GetGripperWheelsVoltage();
 
         GripperPoseEnum        GetPose() { return m_pose; }  // Get the Gripper Pose
 
@@ -74,4 +76,6 @@ class Gripper : public frc2::SubsystemBase
         rev::spark::SparkMax                         m_gripperMotorLeft;
 
         GripperPoseEnum                              m_pose;
+
+        units::voltage::volt_t                       m_gripperVoltage = 0_V;
 };

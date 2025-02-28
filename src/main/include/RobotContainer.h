@@ -1,5 +1,6 @@
 #pragma once
 
+#pragma region Includes
 #include <utility>
 
 #include <frc/filter/SlewRateLimiter.h>
@@ -41,7 +42,6 @@
 #include "commands/ChassisDriveTime.h"
 #include "commands/ChassisDriveToAprilTag.h"
 #include "commands/ChassisDriveToWall.h"
-#include "commands/ChassisSetFieldCentricity.h"
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/GripperActivate.h"
 #include "commands/GripperPose.h"
@@ -49,6 +49,7 @@
 #include "commands/SetLeds.h"
 
 #include "Constants.h"
+#pragma endregion
 
 /// @brief Class to instantiate the robot subsystems and commands along with the operator controls
 class RobotContainer
@@ -74,12 +75,11 @@ class RobotContainer
         units::meters_per_second_t  Strafe();
         units::radians_per_second_t Angle();
 
-        void                        SetPeriod(units::second_t period);
-        units::second_t             GetPeriod();
-
         frc::Pose2d                 GetChassisPose();
 
-        frc::PowerDistribution      m_powerDistribution;
+        Gripper                    *GetGripper();
+
+        frc::PowerDistribution     *GetPowerDistribution();
 
     private:
 
@@ -88,6 +88,12 @@ class RobotContainer
 
         // Method to bind the joystick controls to the robot commands
         void   ConfigureButtonBindings();
+
+        void   ConfigureDriverControls();
+        void   ConfigureCoralPoseControls();
+        void   ConfigureAlgaePoseControls();
+        void   ConfigureGripperControls();
+        void   ConfigureClimberControls();
 
         double GetExponentialValue(double joystickValue, double exponent);
 
@@ -100,8 +106,6 @@ class RobotContainer
         Drivetrain                            m_drivetrain;
         Gripper                               m_gripper;
         Leds                                  m_leds;
-
-        units::second_t                       m_period;
 
         // Joysticks
         frc::Joystick                         m_driverController{ControllerConstants::DriverControllerUsbPort};
@@ -120,4 +124,6 @@ class RobotContainer
 
         // Autonomous starting position command chooser
         frc::SendableChooser<std::string>     m_startingPositionChooser;
+
+        frc::PowerDistribution                m_powerDistribution;
 };

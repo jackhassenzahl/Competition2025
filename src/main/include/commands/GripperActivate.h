@@ -15,7 +15,8 @@ enum GripperState
     Wait2,
     GripperWheelsMove,
     Wait3,
-    Finish
+    Finish,
+    Complete
 };
 
 struct GripperStateData
@@ -49,7 +50,7 @@ class GripperActivate : public frc2::CommandHelper<frc2::Command, GripperActivat
         void CoralL4();
         void AlgaeGround();
         void AlgaeOnCoral();
-        void AlgaeLo();
+        void AlgaeLow();
         void AlgaeHigh();
         void AlgaeProcessor();
         void AlgaeBarge();

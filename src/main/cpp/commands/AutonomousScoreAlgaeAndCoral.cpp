@@ -9,7 +9,7 @@ AutonomousScoreAlgaeAndCoral::AutonomousScoreAlgaeAndCoral(Drivetrain *drivetrai
     AddCommands(
         AutonomousOneCoral(drivetrain, gripper, aprilTags), // Do all the coral stuff
         AprilTagGrabAlgae(GripperPoseEnum::AlgaeHigh, aprilTags, gripper, drivetrain), // Grab the Algae
-        ChassisDrivePose(AlgaeAndCoralSpeed, AlgaeAndCoralXDistance, AlgaeAndCoralYDistance, 
+        ChassisDrivePose(AlgaeAndCoralSpeed, AlgaeAndCoralXDistance, AlgaeAndCoralYDistance,
                          AlgaeAndCoralAngleChange, AlgaeAndCoralTimeOut, drivetrain), // Drive To Barge
         GripperPose(GripperPoseEnum::AlgaeBarge, gripper), // Get the robot in position to shoot algae
         GripperActivate(gripper) // Shoot the algae into the barge

@@ -17,8 +17,11 @@ GripperActivate::GripperActivate(Gripper *gripper) : m_gripper(gripper)
 /// @brief Called just before this Command runs.
 void GripperActivate::Initialize()
 {
+    m_state      = GripperState::ElevatorMove;
     m_startTime  = frc::GetTime();
     m_isFinished = false;
+
+    frc::SmartDashboard::PutNumber("Gripper Pose", m_gripper->GetPose());
 
     // Determine the action based on the present gripper pose
     switch (m_gripper->GetPose())
@@ -61,9 +64,9 @@ void GripperActivate::Initialize()
             break;
         }
 
-        case GripperPoseEnum::AlgaeLo:
+        case GripperPoseEnum::AlgaeLow:
         {
-            AlgaeLo();
+            AlgaeLow();
             break;
         }
 
@@ -86,9 +89,16 @@ void GripperActivate::Initialize()
         }
         default:
         {
-
+            m_state      = Complete;
+            m_isFinished = true;
         }
     }
+
+    frc::SmartDashboard::PutNumber("ElevatorOffset", m_stateData.ElevatorOffset.value());
+    frc::SmartDashboard::PutNumber("ArmOffset",      m_stateData.ArmOffset.value());
+    frc::SmartDashboard::PutNumber("GripperVoltage", m_stateData.GripperVoltage.value());
+    frc::SmartDashboard::PutNumber("ElevatorFinish", m_stateData.ElevatorFinish.value());
+    frc::SmartDashboard::PutNumber("ArmFinish",      m_stateData.ArmFinish.value());
 }
 #pragma endregion
 
@@ -116,13 +126,14 @@ void GripperActivate::Execute()
         case GripperState::ArmMove:
         {
             m_gripper->SetArmAngleOffset(m_stateData.ArmOffset);
+            m_state = Wait2;
             break;
         }
 
         case GripperState::Wait2:
         {
             if (frc::GetTime() > m_stateData.Wait2)
-                m_state = ArmMove;
+                m_state = GripperWheelsMove;
             break;
         }
 
@@ -145,11 +156,15 @@ void GripperActivate::Execute()
             m_gripper->SetGripperWheelsVoltage(0_V);
             m_gripper->SetArmAngleOffset(-m_stateData.ArmOffset);
             m_gripper->SetElevatorOffset(-m_stateData.ElevatorOffset);
+            m_state      = Complete;
             m_isFinished = true;
         }
 
         default:
-            break;
+        {
+            m_state      = Complete;
+            m_isFinished = true;
+        }
     }
 }
 #pragma endregion
@@ -241,7 +256,7 @@ void GripperActivate::AlgaeOnCoral()
     m_stateData.ArmFinish      = ActivateConstants::AlgaeOnCoralArmFinish;
 }
 
-void GripperActivate::AlgaeLo()
+void GripperActivate::AlgaeLow()
 {
     m_stateData.ElevatorOffset = ActivateConstants::AlgaeLoElevatorOffset;
     m_stateData.Wait1          = m_startTime + ActivateConstants::AlgaeLoWait1;

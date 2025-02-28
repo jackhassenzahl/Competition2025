@@ -19,6 +19,6 @@
 class AutonomousScoreAlgaeAndCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousScoreAlgaeAndCoral>
 {
     public:
-    
+
         explicit AutonomousScoreAlgaeAndCoral(Drivetrain *drivetrain, Gripper *gripper, AprilTags* aprilTags);
 };

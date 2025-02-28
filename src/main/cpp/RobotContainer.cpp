@@ -24,22 +24,41 @@ RobotContainer *RobotContainer::GetInstance()
 /// @brief Method to configure the robot and SmartDashboard configuration.
 RobotContainer::RobotContainer()
 {
-    frc::SmartDashboard::PutData("Chassis: Time ",          new ChassisDriveTime(2_s, 0.5_mps,                                           &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: OneMeter",       new ChassisDrivePose(2.0_mps, 1_m,  0_m,  90_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters",      new ChassisDrivePose(2.0_mps, 2_m,  2_m,   0_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",          new ChassisDrivePose(2.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",      new ChassisDriveToAprilTag(1.0_mps, 0.0_m, 0.0_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Serpentine ",    new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Drive to Wall ", new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
-
-    frc::SmartDashboard::PutData("Coral: Ground",           new GripperPose(GripperPoseEnum::CoralGround, &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L1",               new GripperPose(GripperPoseEnum::CoralL1,     &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L2",               new GripperPose(GripperPoseEnum::CoralL2,     &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L3",               new GripperPose(GripperPoseEnum::CoralL3,     &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L4",               new GripperPose(GripperPoseEnum::CoralL4,     &m_gripper));
-
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
+
+    frc::SmartDashboard::PutData("Chassis: Time ",           new ChassisDriveTime(2_s, 0.5_mps,                                           &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: OneMeter",        new ChassisDrivePose(2.0_mps, 1_m,  0_m,  90_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",       new ChassisDrivePose(2.0_mps, 2_m,  2_m,   0_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",           new ChassisDrivePose(2.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",       new ChassisDriveToAprilTag(1.0_mps, 0.0_m, 0.0_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Serpentine ",     new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Drive to Wall ",  new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
+
+    frc::SmartDashboard::PutData("Elevator Jog Up",          new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset( ElevatorConstants::HeightOffset); }));
+    frc::SmartDashboard::PutData("Elevator Jog Down",        new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset); }));
+
+    frc::SmartDashboard::PutData("Arm Jog Positive",         new frc2::InstantCommand([this] { m_gripper.SetArmAngleOffset( ArmConstants::AngleOffset);}));
+    frc::SmartDashboard::PutData("Arm Jog Negative",         new frc2::InstantCommand([this] { m_gripper.SetArmAngleOffset(-ArmConstants::AngleOffset);}));
+
+    frc::SmartDashboard::PutData("Wrist Jog Positive",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset( WristConstants::AngleOffset);}));
+    frc::SmartDashboard::PutData("Wrist Jog Negative",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset(-WristConstants::AngleOffset);}));
+
+    frc::SmartDashboard::PutData("Coral: Ground",            new GripperPose(GripperPoseEnum::CoralGround,    &m_gripper));
+    frc::SmartDashboard::PutData("Coral: Station",           new GripperPose(GripperPoseEnum::CoralStation,   &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L1",                new GripperPose(GripperPoseEnum::CoralL1,        &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L2",                new GripperPose(GripperPoseEnum::CoralL2,        &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L3",                new GripperPose(GripperPoseEnum::CoralL3,        &m_gripper));
+    frc::SmartDashboard::PutData("Coral: L4",                new GripperPose(GripperPoseEnum::CoralL4,        &m_gripper));
+
+    frc::SmartDashboard::PutData("Algae: Ground",            new GripperPose(GripperPoseEnum::AlgaeGround,    &m_gripper));
+    frc::SmartDashboard::PutData("Algae: Coral",             new GripperPose(GripperPoseEnum::AlgaeOnCoral,   &m_gripper));
+    frc::SmartDashboard::PutData("Algae: Low",               new GripperPose(GripperPoseEnum::AlgaeLow,       &m_gripper));
+    frc::SmartDashboard::PutData("Algae: High",              new GripperPose(GripperPoseEnum::AlgaeHigh,      &m_gripper));
+    frc::SmartDashboard::PutData("Algae: Processor",         new GripperPose(GripperPoseEnum::AlgaeProcessor, &m_gripper));
+    frc::SmartDashboard::PutData("Algae: Barge",             new GripperPose(GripperPoseEnum::AlgaeBarge,     &m_gripper));
+
+    frc::SmartDashboard::PutData("Gripper: Activate",        new GripperActivate(&m_gripper));
 
     // Configure the autonomous command chooser
     m_autonomousChooser.SetDefaultOption("Do Nothing",       new AutonomousDoNothing());
@@ -59,12 +78,12 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Start Position", &m_startingPositionChooser);
 
     // Set the default commands for the subsystems
-    m_drivetrain.SetDefaultCommand(ChassisDrive(
-        [this] { return Forward(); },
-        [this] { return Strafe();  },
-        [this] { return Angle();   },
-        &m_drivetrain));
+    m_drivetrain.SetDefaultCommand(ChassisDrive([this] { return Forward(); },
+                                                [this] { return Strafe();  },
+                                                [this] { return Angle();   },
+                                                &m_drivetrain));
 
+    // Set the LED default command
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
 
     // Set the swerve wheels to zero
@@ -76,154 +95,138 @@ RobotContainer::RobotContainer()
 /// @brief Method to bind the joystick controls to the robot commands.
 void RobotContainer::ConfigureButtonBindings()
 {
-    /**************************** Driver Buttons ***********************************************/
+    // Configure the driver controls
+    ConfigureDriverControls();
 
-    // Toggle Field Centricity On
-    frc2::JoystickButton fieldCentricOn(&m_driverController, Extreme3DConstants::HandleLowerLeft);
-    fieldCentricOn.OnTrue(ChassisSetFieldCentricity(true, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    // Toggle Field Centricity On
-    frc2::JoystickButton fieldCentricOff(&m_driverController, Extreme3DConstants::HandleLowerRight);
-    fieldCentricOff.OnTrue(ChassisSetFieldCentricity(false, &m_drivetrain).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    // Toggle X mode
-    frc2::JoystickButton(&m_driverController, frc::XboxController::Button::kX).WhileTrue(new frc2::RunCommand([this] { m_drivetrain.SetX(); }, {&m_drivetrain}));
-
-    /**************************** Operator Buttons - Chassis Pose ******************************/
-    // Scoring/Intaking requires positioning, then pressing activate (ex: L1Score then Activate)
-
-    // Elevator/Arm to L1
-    frc2::JoystickButton L1(&m_operatorController, XBoxConstants::A);
-    L1.OnTrue(GripperPose(GripperPoseEnum::CoralL1, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    // Elevator/Arm to L2
-    frc2::JoystickButton L2(&m_operatorController, XBoxConstants::B);
-    L2.OnTrue(GripperPose(GripperPoseEnum::CoralL2, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    // Elevator/Arm to L3
-    frc2::JoystickButton L3(&m_operatorController, XBoxConstants::X);
-    L3.OnTrue(GripperPose(GripperPoseEnum::CoralL3, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    // Elevator/Arm to L4
-    frc2::JoystickButton L4(&m_operatorController, XBoxConstants::Y);
-    L4.OnTrue(GripperPose(GripperPoseEnum::CoralL4, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    // Move to, and ready to score L1 (does not score)
-    frc2::JoystickButton L1Score(&m_operatorController, ControlPanelConstants::CoralL1);
-    L1Score.OnTrue(AprilTagScoreCoral(
-        GripperPoseEnum::CoralL1,
-        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
-        &m_aprilTags,
-        &m_gripper,
-        &m_drivetrain
-    ).ToPtr());
-
-    // Move to, and ready to score L2 (does not score)
-    frc2::JoystickButton L2Score(&m_operatorController, ControlPanelConstants::CoralL2);
-    L2Score.OnTrue(AprilTagScoreCoral(
-        GripperPoseEnum::CoralL2,
-        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
-        &m_aprilTags,
-        &m_gripper,
-        &m_drivetrain
-    ).ToPtr());
-
-    // Move to, and ready to score L3 (does not score)
-    frc2::JoystickButton L3Score(&m_operatorController, ControlPanelConstants::CoralL3);
-    L3Score.OnTrue(AprilTagScoreCoral(
-        GripperPoseEnum::CoralL3,
-        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
-        &m_aprilTags,
-        &m_gripper,
-        &m_drivetrain
-    ).ToPtr());
-
-    // Move to, and ready to score L4 (does not score)
-    frc2::JoystickButton L4Score(&m_operatorController, ControlPanelConstants::CoralL4);
-    L4Score.OnTrue(AprilTagScoreCoral(
-        GripperPoseEnum::CoralL4,
-        [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
-        &m_aprilTags,
-        &m_gripper,
-        &m_drivetrain
-    ).ToPtr());
+    // Configure the operator controls
+    ConfigureCoralPoseControls();
+    ConfigureAlgaePoseControls();
+    ConfigureGripperControls();
+    ConfigureClimberControls();
 
     // Scores/Intakes Algae/Coral
-    frc2::JoystickButton Activate(&m_operatorController, ControlPanelConstants::Activate);
-    Activate.OnTrue(GripperActivate(&m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::Activate)
+        .OnTrue(GripperActivate(&m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+}
+#pragma endregion
 
-    // Positions to intake coral from ground (does not intake)
-    frc2::JoystickButton CoralGround(&m_operatorController, ControlPanelConstants::CoralGnd);
-    CoralGround.OnTrue(GripperPose(GripperPoseEnum::CoralGround, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+#pragma region ConfigureDriverControls
+/// @brief Method to bind the driver joystick controls to the robot commands.
+void RobotContainer::ConfigureDriverControls()
+{
+    // Drive to position using the AprilTag
 
-    // Positions to intake coral from station (does not intake)
-    frc2::JoystickButton CoralStation(&m_operatorController, ControlPanelConstants::CoralStn);
-    CoralStation.OnTrue(GripperPose(GripperPoseEnum::CoralStation, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    // Use the trigger to activate the operation
 
-    // Positions to intake algae from ground (does not intake)
-    frc2::JoystickButton AlgaeGround(&m_operatorController, ControlPanelConstants::AlgaeGnd);
-    AlgaeGround.OnTrue(GripperPose(GripperPoseEnum::AlgaeGround, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    // L1Score.OnTrue(AprilTagScoreCoral(GripperPoseEnum::CoralL1,
+    //                                   [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
+    //                                   &m_aprilTags, &m_gripper, &m_drivetrain).ToPtr());
 
-    // Positions to intake algae from on top of coral (does not intake)
-    frc2::JoystickButton AlgaeOnCoral(&m_operatorController, ControlPanelConstants::AlgaeCoral);
-    AlgaeOnCoral.OnTrue(GripperPose(GripperPoseEnum::AlgaeOnCoral, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    // Reset the gyro angle
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleUpperLeft)
+        .OnTrue(new frc2::InstantCommand([this] { m_drivetrain.ZeroHeading(); }, {&m_drivetrain}));
 
-    // Positions to intake algae from between L2 and L3 on the reef
-    frc2::JoystickButton AlgaeLo(&m_operatorController, ControlPanelConstants::AlgaeLo);
-    AlgaeLo.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    // Set field centricity on
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleLowerLeft)
+        .OnTrue(new frc2::InstantCommand([this] { m_drivetrain.SetFieldCentricity(true); }, {&m_drivetrain}));
 
-    // Positions to intake algae from between L3 and L4 on the reef
-    frc2::JoystickButton AlgaeHigh(&m_operatorController, ControlPanelConstants::AlgaeHi);
-    AlgaeHigh.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    // Set field centricity off
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleLowerRight)
+        .OnTrue(new frc2::InstantCommand([this] { m_drivetrain.SetFieldCentricity(false); }, {&m_drivetrain}));
 
-    // Positions to score algae into processor
-    frc2::JoystickButton AlageProcessor(&m_operatorController, ControlPanelConstants::AlgaeProcessor);
-    AlageProcessor.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    // Toggle X mode
+    frc2::JoystickButton (&m_driverController, frc::XboxController::Button::kX)
+        .WhileTrue(new frc2::RunCommand([this] { m_drivetrain.SetX(); }, {&m_drivetrain}));
+}
+#pragma endregion
 
-    // Positions to score algae onto barge
-    frc2::JoystickButton AlgaeBarge(&m_operatorController, ControlPanelConstants::AlgaeBarge);
-    AlgaeBarge.OnTrue(GripperPose(GripperPoseEnum::AlgaeLo, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+#pragma region ConfigureCoralPoseControls
+/// @brief Method to bind the operator control panel scoring/intaking positioning, then pressing activate (ex: L1Score then Activate).
+void RobotContainer::ConfigureCoralPoseControls()
+{
+    // Define an array of button mappings for coral poses
+    struct CoralPoseMapping
+    {
+        int             button;
+        GripperPoseEnum pose;
+    };
 
+    CoralPoseMapping coralPoses[] =
+    {
+        {ControlPanelConstants::CoralGnd, GripperPoseEnum::CoralGround},
+        {ControlPanelConstants::CoralStn, GripperPoseEnum::CoralStation},
+        {ControlPanelConstants::CoralL1,  GripperPoseEnum::CoralL1},
+        {ControlPanelConstants::CoralL2,  GripperPoseEnum::CoralL2},
+        {ControlPanelConstants::CoralL3,  GripperPoseEnum::CoralL3},
+        {ControlPanelConstants::CoralL4,  GripperPoseEnum::CoralL4}
+    };
+
+    // Iterate through the array and bind the buttons to the corresponding poses
+    for (const auto& mapping : coralPoses)
+    {
+        frc2::JoystickButton (&m_operatorController, mapping.button)
+            .OnTrue(GripperPose(mapping.pose, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    }
+}
+#pragma endregion
+
+#pragma region ConfigureAlgaePoseControls
+/// @brief Method to bind the operator control panel scoring/intaking positioning, then pressing activate (ex: L1Score then Activate).
+void RobotContainer::ConfigureAlgaePoseControls()
+{
+    // Define an array of button mappings for algae poses
+    struct AlgaePoseMapping
+    {
+        int             button;
+        GripperPoseEnum pose;
+    };
+
+    AlgaePoseMapping algaePoses[] =
+    {
+        {ControlPanelConstants::AlgaeGnd,       GripperPoseEnum::AlgaeGround},
+        {ControlPanelConstants::AlgaeCoral,     GripperPoseEnum::AlgaeOnCoral},
+        {ControlPanelConstants::AlgaeLow,       GripperPoseEnum::AlgaeLow},
+        {ControlPanelConstants::AlgaeHigh,      GripperPoseEnum::AlgaeHigh},
+        {ControlPanelConstants::AlgaeProcessor, GripperPoseEnum::AlgaeProcessor},
+        {ControlPanelConstants::AlgaeBarge,     GripperPoseEnum::AlgaeBarge}
+    };
+
+    // Iterate through the array and bind the buttons to the corresponding poses
+    for (const auto& mapping : algaePoses)
+    {
+        frc2::JoystickButton (&m_operatorController, mapping.button)
+            .OnTrue(GripperPose(mapping.pose, &m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    }
+}
+#pragma endregion
+
+#pragma region ConfigureGripperControls
+/// @brief Method to bind the operator control panel gripper controls.
+void RobotContainer::ConfigureGripperControls()
+{
     // Manually offsets elevator upwards
-    frc2::JoystickButton elevatorUp(&m_operatorController, ControlPanelConstants::ElevatorUp);
-    elevatorUp.OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
+    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorUp)
+        .OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
 
     // Manually offsets elevator downwards
-    frc2::JoystickButton elevatorDown(&m_operatorController, ControlPanelConstants::ElevatorDown);
-    elevatorDown.OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
+    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorDown)
+        .OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
+}
+#pragma endregion
 
+#pragma region ConfigureClimberControls
+/// @brief Method to bind the operator control panel climb controls.
+void RobotContainer::ConfigureClimberControls()
+{
     // Manually offsets climb upwards
-    frc2::JoystickButton climbUp(&m_operatorController, XBoxConstants::RightBumper);
-    climbUp.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(ClimbConstants::ClimbVoltage); }, {&m_climb}))
-           .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
+    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ClimbUp)
+        .WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(ClimbConstants::ClimbVoltage); }, {&m_climb}))
+        .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
 
     // Manually offsets climb downwards
-    frc2::JoystickButton climbDown(&m_operatorController, XBoxConstants::LeftBumper);
-    climbDown.WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(-ClimbConstants::ClimbVoltage); }, {&m_climb}))
-             .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
-
-    /**************************** Operator Buttons - LEDs **************************************/
-
-    frc2::JoystickButton setLedsOff(&m_operatorController, XBoxConstants::LeftStickButton);
-    setLedsOff.OnTrue(SetLeds(LedMode::Off, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::JoystickButton setLedsStrobe(&m_operatorController, XBoxConstants::RightStickButton);
-    setLedsStrobe.OnTrue(SetLeds(LedMode::Strobe, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::JoystickButton setLedsShootingAnimation{&m_operatorController, XBoxConstants::Y};
-    setLedsShootingAnimation.OnTrue(SetLeds(LedMode::ShootingAnimation, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::POVButton setLedsSolidGreen{&m_operatorController, XBoxConstants::Pov_0};
-    setLedsSolidGreen.OnTrue(SetLeds(LedMode::SolidGreen, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::POVButton setLedsSolidRed{&m_operatorController, XBoxConstants::Pov_90};
-    setLedsSolidRed.OnTrue(SetLeds(LedMode::SolidRed, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::POVButton setLedsHvaColors{&m_operatorController, XBoxConstants::Pov_180};
-    setLedsHvaColors.OnTrue(SetLeds(LedMode::HvaColors, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::POVButton setLedsRainbow{&m_operatorController, XBoxConstants::Pov_270};
-    setLedsRainbow.OnTrue(SetLeds(LedMode::Rainbow, &m_leds).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ClimbDown)
+        .WhileTrue(new frc2::RunCommand([this] { m_climb.SetVoltage(-ClimbConstants::ClimbVoltage); }, {&m_climb}))
+        .OnFalse(new frc2::InstantCommand([this] { m_climb.SetVoltage(0_V); }, {&m_climb}));
 }
 #pragma endregion
 
@@ -329,7 +332,7 @@ units::radians_per_second_t RobotContainer::Angle()
 
     // Calculate smoothed value using previous output and current input
     double smoothedAngle = kSmoothingFactor * previousAngleInput + (1.0 - kSmoothingFactor) * exponentialAngle;
-    previousAngleInput = smoothedAngle; // Store for next cycle
+    previousAngleInput   = smoothedAngle; // Store for next cycle
 
     // Return the rotation speed with rate limiter applied
     return units::radians_per_second_t(-m_rotLimiter.Calculate(smoothedAngle) * DrivetrainConstants::MaxAngularSpeed);
@@ -356,26 +359,6 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 }
 #pragma endregion
 
-#pragma region SetPeriod
-/// @brief Method to set the timed robot period.
-/// @param period The period to set.
-void RobotContainer::SetPeriod(units::second_t period)
-{
-    // Set the period
-    m_period = period;
-}
-#pragma endregion
-
-#pragma region GetPeriod
-/// @brief Method to get the timed robot period.
-/// @return The timed robot period.
-units::second_t RobotContainer::GetPeriod()
-{
-    // Return the timed robot period
-    return m_period;
-}
-#pragma endregion
-
 #pragma region GetChassisPose
 /// @brief Method to get the chassis Pose.
 /// @return The chassis Pose.
@@ -383,5 +366,24 @@ frc::Pose2d RobotContainer::GetChassisPose()
 {
     // Return the chassis pose
     return m_drivetrain.GetPose();
+}
+#pragma endregion
+
+#pragma region GetGripper
+/// @brief Method to return a pointer to the gripper subsystem.
+/// @return Pointer to the gripper subsystem.
+Gripper *RobotContainer::GetGripper()
+{
+    // Return the pointer to the gripper
+    return &m_gripper;
+}
+#pragma endregion
+
+#pragma region GetPowerDistribution
+/// @brief Method to return a pointer to the power distribution panel.
+frc::PowerDistribution *RobotContainer::GetPowerDistribution()
+{
+    // Return the pointer to the power distribution panel
+    return &m_powerDistribution;
 }
 #pragma endregion

@@ -15,10 +15,15 @@ Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::Spa
     // Configure the Arm motor
     ConfigureArmMotor(CanConstants::ArmMotorCanId);
 
-    // Configure the gripper and wrist motors
+    // Configure the wrist motor
     ConfigureWristMotor();
+
+    // Configure the gripper wheel motors
     ConfigureGripperMotorRight();
     ConfigureGripperMotorLeft();
+
+    // Set the gripper wheels voltage
+    SetGripperWheelsVoltage(0_V);
 }
 #pragma endregion
 
@@ -286,7 +291,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
             break;
         }
 
-        case GripperPoseEnum::AlgaeLo:
+        case GripperPoseEnum::AlgaeLow:
         {
             elevatorHeight  = AlgaePoseConstants::LoElevator;
             armAngle        = AlgaePoseConstants::LoArmAngle;
@@ -345,6 +350,15 @@ void Gripper::SetPose(GripperPoseEnum pose)
 /// @param position The setpoint for the elevator height.
 void Gripper::SetElevatorHeight(units::length::meter_t position)
 {
+    // Limit the elevator height
+    if (position < ElevatorConstants::MinimumPosition)
+        position = ElevatorConstants::MinimumPosition;
+    else if (position > ElevatorConstants::MaximumPosition)
+        position = ElevatorConstants::MaximumPosition;
+
+    // Show the target elevator height
+    frc::SmartDashboard::PutNumber("Elevator Target", position.value());
+
     // Compute the number of turns based on the specficied position
     units::angle::turn_t newPosition = (units::angle::turn_t) (position.value() * ElevatorConstants::PositionToTurnsConversionFactor);
 
@@ -358,9 +372,21 @@ void Gripper::SetElevatorHeight(units::length::meter_t position)
 /// @param offset The Given offset
 void Gripper::SetElevatorOffset(units::length::meter_t offset)
 {
-    units::length::meter_t position = (units::length::meter_t)(m_elevatorMotor->GetPosition().GetValue().value() /
-                        ElevatorConstants::PositionToTurnsConversionFactor) + offset;
-    SetElevatorHeight(position);
+    // Set the elevator height based on the offset
+    SetElevatorHeight(GetElevatorHeight() + offset);
+}
+#pragma endregion
+
+#pragma region GetElevatorHeight
+/// @brief Method to get the elevator height.
+/// @return The elevator height.
+units::length::meter_t Gripper::GetElevatorHeight()
+{
+    // Get the current elevator motor position
+    auto currentPosition = m_elevatorMotor->GetPosition().GetValueAsDouble();
+
+    // Return the elevator height
+    return (units::length::meter_t) (currentPosition / ElevatorConstants::PositionToTurnsConversionFactor);
 }
 #pragma endregion
 
@@ -369,18 +395,24 @@ void Gripper::SetElevatorOffset(units::length::meter_t offset)
 /// @param position The setpoint for the arm angle. Takes -180 -> 180
 void Gripper::SetArmAngle(units::angle::degree_t angle)
 {
-    // // Making sure that the climb doesn't try to go through the robot
-    // if (angle < ArmConstants::MinimumPosition)  // TODO: Need to calibrate angle to motor rotations
-    //    angle = ArmConstants::MinimumPosition;
-
-    // if (angle > ArmConstants::MaximumPosition)
-    //     angle = ArmConstants::MaximumPosition;
+    // Show the target arm angle
+    frc::SmartDashboard::PutNumber("Arm Target", angle.value());
 
     // Compute the number of turns based on the specficied angle
     units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / ArmConstants::AngleToTurnsConversionFactor.value());
 
     // Set the arm set position
     m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
+}
+#pragma endregion
+
+#pragma region SetArmAngleOffset
+/// @brief Method to set the arm angle.
+/// @param position The setpoint for the arm angle. Takes -180 -> 180
+void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
+{
+    // Set the arm angle based on the offset
+    SetArmAngle(GetArmAngle() + offset);
 }
 #pragma endregion
 
@@ -397,27 +429,29 @@ units::angle::degree_t Gripper::GetArmAngle()
 }
 #pragma endregion
 
-#pragma region SetArmAngleOffset
-/// @brief Method to set the arm angle.
-/// @param position The setpoint for the arm angle. Takes -180 -> 180
-void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
-{
-    // Set the arm angle based on the offset
-    SetArmAngle(GetArmAngle() + offset);
-}
-#pragma endregion
-
 #pragma region SetWristAngle
 /// @brief Method to set the Wrist angle.
 /// @param position The setpoint for the Wrist angle.
 void Gripper::SetWristAngle(units::angle::degree_t angle)
 {
+    // Show the target wrist angle
+    frc::SmartDashboard::PutNumber("Wrist Target", angle.value());
+
     // Converting angle to motor rotations
     double position = angle.value() / WristConstants::AngleToTurnsConversionFactor.value();
 
-    frc::SmartDashboard::PutNumber("Wrist Value", position);
     // Set the Wrist set position
     m_wristTurnClosedLoopController.SetReference(position, rev::spark::SparkMax::ControlType::kPosition);
+}
+#pragma endregion
+
+#pragma region SetWristAngleOffset
+/// @brief Method to set the Wrist angle.
+/// @param position The setpoint for the Wrist angle.
+void Gripper::SetWristAngleOffset(units::angle::degree_t angle)
+{
+    // Set the wrist angle based on the offset
+    SetWristAngle(GetWristAngle() + angle);
 }
 #pragma endregion
 
@@ -439,8 +473,23 @@ units::angle::degree_t Gripper::GetWristAngle()
 /// @param voltage The setpoint for the Gripper wheels voltage.
 void Gripper::SetGripperWheelsVoltage(units::voltage::volt_t voltage)
 {
+    // Show the target gripper wheels voltage
+    frc::SmartDashboard::PutNumber("Wheels Target", voltage.value());
+
+    // Remember the gripper wheel voltage
+    m_gripperVoltage = voltage;
+
     // Set the voltage of the Gripper wheels
     m_gripperMotorRight.SetVoltage(voltage);
     m_gripperMotorLeft.SetVoltage(voltage);
+}
+#pragma endregion
+
+#pragma region GetGripperWheelsVoltage
+/// @brief Method to get the Gripper wheels voltage.
+/// @return The Gripper wheels voltage.
+units::voltage::volt_t Gripper::GetGripperWheelsVoltage()
+{
+    return m_gripperVoltage;
 }
 #pragma endregion

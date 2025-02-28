@@ -7,7 +7,7 @@ AprilTagGrabAlgae::AprilTagGrabAlgae(GripperPoseEnum               gripperPose,
                                        Drivetrain                   *drivetrain)
 {
     AddCommands(
-        ChassisDriveToAprilTag(1.0_mps, 0.0_m, 0.0_m, 0.0_deg, 10.0_s, aprilTags, drivetrain), 
+        ChassisDriveToAprilTag(1.0_mps, 0.0_m, 0.0_m, 0.0_deg, 10.0_s, aprilTags, drivetrain),
         GripperPose(gripperPose, gripper),
         GripperActivate(gripper)
     );
