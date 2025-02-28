@@ -113,13 +113,13 @@ namespace ElevatorConstants
     constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
     constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
 
-    constexpr auto MotionMagicCruiseVelocity       = 20_tps;           // Rotations per second cruise
-    constexpr auto MotionMagicAcceleration         = 20_tr_per_s_sq;  // Acceleration
-    constexpr auto MotionMagicJerk                 = 400_tr_per_s_cu;  // Jerk
+    constexpr auto MotionMagicCruiseVelocity       = 40_tps;           // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 80_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 800_tr_per_s_cu;  // Jerk
 
     constexpr auto HeightOffset                    = 0.1_m;
 
-    constexpr auto PositionToTurnsConversionFactor = 16.0 / (0.0475 * 3.0 * std::numbers::pi); // The number of motor rotations per meter
+    constexpr auto PositionToTurnsConversionFactor = 64.0 / (0.06378 * 3.0 * std::numbers::pi); // The number of motor rotations per meter
 }
 #pragma endregion
 
@@ -137,9 +137,8 @@ namespace ArmConstants
     constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
     constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
 
-    constexpr auto AngleToTurnsConversionFactor    = 1.0 / 1_deg;      // The number of motor rotations per degree
+    constexpr auto AngleToTurnsConversionFactor    = 360_deg / 36;      // 36 to 1 gear box
 
-    constexpr auto MotorRevolutionsTo360Degrees    = 20;
     constexpr auto AngleMaxAmperage                = 20;
 
     constexpr auto MinimumPosition                 = -50_deg;          // Note: Need to calibrate angle to motor rotations
@@ -150,11 +149,11 @@ namespace ArmConstants
 #pragma region WristConstants
 namespace WristConstants
 {
-    constexpr auto P                         = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto I                         = 0.0;              // Integral:        No output for integrated error
-    constexpr auto D                         = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
-    constexpr auto MaxAmperage               =  60;
-    constexpr auto RadiansToMotorRevolutions = 2.0 * std::numbers::pi;  // Radians to motor revolutions	
+    constexpr auto P                             = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                             = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                             = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto MaxAmperage                   =  60;
+    constexpr auto AngleToTurnsConversionFactor  = 360_deg / 20;     // 20 to 1 gear box
 }
 #pragma endregion
 
@@ -434,30 +433,30 @@ namespace CoralPoseConstants
     constexpr auto GroundWristAngle       = 0.0_deg;
     constexpr auto GroundGripperVoltage   = 0.0_V;
 
-    constexpr auto StationElevator        = 0.0_m;
-    constexpr auto StationArmAngle        = 0.0_deg;
+    constexpr auto StationElevator        = 0.5_m;
+    constexpr auto StationArmAngle        = 45.0_deg;
     constexpr auto StationWristAngle      = 0.0_deg;
     constexpr auto StationGripperVoltage  = 0.0_V;
 
-    constexpr auto L1Elevator             = 0.1_m;
-    constexpr auto L1ArmAngle             = 0.0_deg;
-    constexpr auto L1WristAngle           = 0.0_deg;
+    constexpr auto L1Elevator             = 0.5_m;
+    constexpr auto L1ArmAngle             = 45.0_deg;
+    constexpr auto L1WristAngle           = 90.0_deg;
     constexpr auto L1GripperVoltage       = 0.0_V;
 
-    constexpr auto L2Elevator             = 0.2_m;
-    constexpr auto L2ArmAngle             = 0.0_deg;
-    constexpr auto L2WristAngle           = 0.0_deg;
+    constexpr auto L2Elevator             = 1.0_m;
+    constexpr auto L2ArmAngle             = 50.0_deg;
+    constexpr auto L2WristAngle           = 90.0_deg;
     constexpr auto L2GripperVoltage       = 0.0_V;
 
-    constexpr auto L3Elevator             = 0.3_m;
-    constexpr auto L3ArmAngle             = 0.0_deg;
-    constexpr auto L3WristAngle           = 0.0_deg;
-    constexpr auto L3GripperVoltage       = 0.0_V;
+    constexpr auto L3Elevator             = 1.5_m;
+    constexpr auto L3ArmAngle             = 55.0_deg;
+    constexpr auto L3WristAngle           = 90.0_deg;
+    constexpr auto L3GripperVoltage       = 1.0_V;
 
-    constexpr auto L4Elevator             = 0.4_m;
-    constexpr auto L4ArmAngle             = 0.0_deg;
-    constexpr auto L4WristAngle           = 0.0_deg;
-    constexpr auto L4GripperVoltage       = 0.0_V;
+    constexpr auto L4Elevator             = 1.5_m;
+    constexpr auto L4ArmAngle             = 60.0_deg;
+    constexpr auto L4WristAngle           = 90.0_deg;
+    constexpr auto L4GripperVoltage       = -1.0_V;
 }
 #pragma endregion
 

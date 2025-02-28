@@ -87,6 +87,7 @@ void Gripper::ConfigureArmMotor(int motorCanId)
     // Add the Motor Output section settings
     ctre::phoenix6::configs::MotorOutputConfigs &motorOutputConfigs = armMotorConfiguration.MotorOutput;
     motorOutputConfigs.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+    motorOutputConfigs.Inverted = true;
 
     ctre::phoenix6::configs::Slot0Configs &slot0Configs = armMotorConfiguration.Slot0;
     slot0Configs.kS = ArmConstants::S;
@@ -95,10 +96,6 @@ void Gripper::ConfigureArmMotor(int motorCanId)
     slot0Configs.kP = ArmConstants::P;
     slot0Configs.kI = ArmConstants::I;
     slot0Configs.kD = ArmConstants::D;
-
-    // // Configure gear ratio
-    // ctre::phoenix6::configs::FeedbackConfigs &feedbackConfigs = ArmMotorConfiguration.Feedback;
-    // feedbackConfigs.SensorToMechanismRatio = ArmConstants::SensorToMechanismRatio;
 
     // Configure Motion Magic
     ctre::phoenix6::configs::MotionMagicConfigs &motionMagicConfigs = armMotorConfiguration.MotionMagic;
@@ -121,6 +118,8 @@ void Gripper::ConfigureArmMotor(int motorCanId)
     // Determine if the last configuration load was successful
     if (!status.IsOK())
         std::cout << "***** ERROR: Could not configure arm motor. Error: " << status.GetName() << std::endl;
+
+    SetArmAngle(0_deg);
 }
 #pragma endregion
 
@@ -134,10 +133,8 @@ void Gripper::ConfigureWristMotor()
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(WristConstants::MaxAmperage);
-    sparkMaxConfig.encoder
-        //.Inverted(true)
-        .PositionConversionFactor(WristConstants::RadiansToMotorRevolutions)
-        .VelocityConversionFactor(WristConstants::RadiansToMotorRevolutions / 60.0);
+    // sparkMaxConfig.encoder
+    //     .Inverted(false);
     sparkMaxConfig.closedLoop
         .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         .Pid(WristConstants::P, WristConstants::I, WristConstants::D)
@@ -151,6 +148,8 @@ void Gripper::ConfigureWristMotor()
 
     // Write the configuration to the motor controller
     m_wristMotor.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+
+    SetWristAngle(0_deg);
 }
 #pragma endregion
 
@@ -378,7 +377,7 @@ void Gripper::SetArmAngle(units::angle::degree_t angle)
     //     angle = ArmConstants::MaximumPosition;
 
     // Compute the number of turns based on the specficied angle
-    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() * ArmConstants::AngleToTurnsConversionFactor.value());
+    units::angle::turn_t newPosition = (units::angle::turn_t) (angle.value() / ArmConstants::AngleToTurnsConversionFactor.value());
 
     // Set the arm set position
     m_armMotor->SetControl(m_motionMagicVoltage.WithPosition(newPosition).WithSlot(0));
@@ -394,7 +393,7 @@ units::angle::degree_t Gripper::GetArmAngle()
     auto currentAngle = m_armMotor->GetPosition().GetValueAsDouble();
 
     // Return the arm angle
-    return (units::angle::degree_t) (currentAngle /ArmConstants::AngleToTurnsConversionFactor.value());
+    return (units::angle::degree_t) (currentAngle * ArmConstants::AngleToTurnsConversionFactor.value());
 }
 #pragma endregion
 
@@ -413,11 +412,12 @@ void Gripper::SetArmAngleOffset(units::angle::degree_t offset)
 /// @param position The setpoint for the Wrist angle.
 void Gripper::SetWristAngle(units::angle::degree_t angle)
 {
-    // Convert the position to radians
-    double positionRadian = (angle.value() * std::numbers::pi) / 180.0;
+    // Converting angle to motor rotations
+    double position = angle.value() / WristConstants::AngleToTurnsConversionFactor.value();
 
+    frc::SmartDashboard::PutNumber("Wrist Value", position);
     // Set the Wrist set position
-    m_wristTurnClosedLoopController.SetReference(positionRadian, rev::spark::SparkMax::ControlType::kPosition);
+    m_wristTurnClosedLoopController.SetReference(position, rev::spark::SparkMax::ControlType::kPosition);
 }
 #pragma endregion
 
@@ -427,7 +427,7 @@ void Gripper::SetWristAngle(units::angle::degree_t angle)
 units::angle::degree_t Gripper::GetWristAngle()
 {
     // Get the current arm motor angle
-    double angle = m_wristEncoder.GetPosition() * (180.0 / std::numbers::pi);
+    double angle = m_wristEncoder.GetPosition() * WristConstants::AngleToTurnsConversionFactor.value();
 
     // Return the arm angle
     return units::angle::degree_t{angle};
