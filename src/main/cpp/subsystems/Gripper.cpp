@@ -173,15 +173,15 @@ void Gripper::ConfigureGripperMotorRight()
 
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(GripperConstants::GripperMaxAmperage);
-    sparkMaxConfig.encoder
-        .PositionConversionFactor(2.0 * std::numbers::pi)
-        .VelocityConversionFactor(1);
-    sparkMaxConfig.closedLoop
-        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        .Pid(GripperConstants::GripperP, GripperConstants::GripperI, GripperConstants::GripperD)
-        .PositionWrappingEnabled(true)
-        .PositionWrappingInputRange(0, 2 * std::numbers::pi);
+        .SmartCurrentLimit(GripperConstants::MaximumAmperage);
+    // sparkMaxConfig.encoder
+    //     .PositionConversionFactor(2.0 * std::numbers::pi)
+    //     .VelocityConversionFactor(1);
+    // sparkMaxConfig.closedLoop
+    //     .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+    //     .Pid(GripperConstants::P, GripperConstants::I, GripperConstants::D)
+    //     .PositionWrappingEnabled(true)
+    //     .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
     // Write the configuration to the motor controller
     m_gripperMotorRight.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
@@ -197,15 +197,15 @@ void Gripper::ConfigureGripperMotorLeft()
 
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(GripperConstants::GripperMaxAmperage);
-    sparkMaxConfig.encoder
-        .PositionConversionFactor(2.0 * std::numbers::pi)
-        .VelocityConversionFactor(1);
-    sparkMaxConfig.closedLoop
-        .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-        .Pid(GripperConstants::GripperP, GripperConstants::GripperI, GripperConstants::GripperD)
-        .PositionWrappingEnabled(true)
-        .PositionWrappingInputRange(0, 2 * std::numbers::pi);
+        .SmartCurrentLimit(GripperConstants::MaximumAmperage);
+    // sparkMaxConfig.encoder
+    //     .PositionConversionFactor(2.0 * std::numbers::pi)
+    //     .VelocityConversionFactor(1);
+    // sparkMaxConfig.closedLoop
+    //     .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+    //     .Pid(GripperConstants::P, GripperConstants::I, GripperConstants::D)
+    //     .PositionWrappingEnabled(true)
+    //     .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
     // Write the configuration to the motor controller
     m_gripperMotorLeft.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);

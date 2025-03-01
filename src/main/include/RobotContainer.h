@@ -45,7 +45,6 @@
 #include "commands/ChassisSetSwerveWheelAnglesToZero.h"
 #include "commands/GripperActivate.h"
 #include "commands/GripperPose.h"
-#include "commands/GripperSetIntake.h"
 #include "commands/SetLeds.h"
 
 #include "Constants.h"
@@ -74,6 +73,8 @@ class RobotContainer
         units::meters_per_second_t  Forward();
         units::meters_per_second_t  Strafe();
         units::radians_per_second_t Angle();
+
+        units::voltage::volt_t      PotentiometerWheelVoltage();
 
         frc::Pose2d                 GetChassisPose();
 

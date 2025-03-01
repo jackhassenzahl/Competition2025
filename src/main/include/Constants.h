@@ -176,11 +176,15 @@ namespace WristConstants
 #pragma region GripperConstants
 namespace GripperConstants
 {
-    constexpr auto GripperP           = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
-    constexpr auto GripperI           = 0.0;              // Integral:        No output for integrated error
-    constexpr auto GripperD           = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto P                = 1.0;  // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                = 0.0;  // Integral:        No output for integrated error
+    constexpr auto D                = 0.1;  // Differential     A velocity error of 1 rps results in 0.5 V output
 
-    constexpr auto GripperMaxAmperage =  60;
+    constexpr auto MaximumAmperage  =  60;
+
+    constexpr auto MeanAnalogInput  = 0.1;
+
+    constexpr auto AnalogConversion = 12.0;
 }
 #pragma endregion
 
@@ -227,6 +231,7 @@ namespace Extreme3DConstants
 #pragma region ControlPanelConstants
 namespace ControlPanelConstants
 {
+    // Digital Inputs
     constexpr auto CoralGnd        =  0;
     constexpr auto CoralStn        =  5;
     constexpr auto CoralL1         =  1;
@@ -252,9 +257,10 @@ namespace ControlPanelConstants
     constexpr auto ClimbUp         =  7;
     constexpr auto ClimbDown       = 13;
 
-    constexpr auto GripperMotor    =  5;
-
     constexpr auto Spare           =  8;
+
+    // Analog Inputs
+    constexpr auto GripperMotor    =  5;
 }
 #pragma endregion
 

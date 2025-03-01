@@ -83,11 +83,28 @@ RobotContainer::RobotContainer()
                                                 [this] { return Angle();   },
                                                 &m_drivetrain));
 
+    // Set the default command for the gripper wheels
+    m_gripper.SetDefaultCommand(frc2::InstantCommand([this] { m_gripper
+        .SetGripperWheelsVoltage(PotentiometerWheelVoltage()); }, {&m_gripper}));
+
     // Set the LED default command
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
 
     // Set the swerve wheels to zero
     SetSwerveWheelAnglesToZero();
+}
+#pragma endregion
+
+#pragma region PotentiometerWheelVoltage
+/// @brief Method to get the potentiometer wheel voltage.
+/// @return The potentiometer wheel voltage.
+units::voltage::volt_t RobotContainer::PotentiometerWheelVoltage()
+{
+   // Read the wheel voltage potentiometer
+    auto potentiometer = m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput;
+
+    // Convert to a voltage
+    return units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
 }
 #pragma endregion
 

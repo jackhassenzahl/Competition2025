@@ -19,5 +19,5 @@ class GripperPose : public frc2::CommandHelper<frc2::Command, GripperPose>
     private:
 
         GripperPoseEnum m_gripperPose;  // The gripper pose
-        Gripper     *m_gripper;      // The Gripper subsystem
+        Gripper        *m_gripper;      // The Gripper subsystem
 };
