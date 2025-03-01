@@ -50,9 +50,10 @@ class Gripper : public frc2::SubsystemBase
         units::angle::degree_t GetWristAngle();
 
         void                   SetGripperWheelsVoltage(units::voltage::volt_t voltage);
+        void                   SetGripperWheelsVoltage(std::function<units::volt_t()> getVoltage);
         units::voltage::volt_t GetGripperWheelsVoltage();
 
-        GripperPoseEnum        GetPose() { return m_pose; }  // Get the Gripper Pose
+        GripperPoseEnum        GetPose() { return m_gripperPose; }  // Get the Gripper Pose
 
     private:
 
@@ -75,7 +76,7 @@ class Gripper : public frc2::SubsystemBase
         rev::spark::SparkMax                         m_gripperMotorRight;
         rev::spark::SparkMax                         m_gripperMotorLeft;
 
-        GripperPoseEnum                              m_pose;
+        GripperPoseEnum                              m_gripperPose;
 
         units::voltage::volt_t                       m_gripperVoltage = 0_V;
 };

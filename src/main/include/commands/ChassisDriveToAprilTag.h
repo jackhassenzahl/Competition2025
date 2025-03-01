@@ -11,6 +11,19 @@
 #include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
 
+struct ChassDriveAprilTagParameters
+{
+    bool                       ValidPose;
+    bool                       ReefRightSide;
+    units::meters_per_second_t Speed;
+    units::meter_t             DistanceOffsetX;
+    units::meter_t             DistanceOffsetY;
+    units::degree_t            AngleOffset;
+    units::time::second_t      TimeoutTime;
+    AprilTags                 *aprilTags;
+    Drivetrain                *drivetrain;
+};
+
 class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, ChassisDriveToAprilTag>
 {
     public:
@@ -22,6 +35,8 @@ class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, Chassis
                                         units::time::second_t      timeoutTime,
                                         AprilTags                 *aprilTags,
                                         Drivetrain                *drivetrain);
+
+        explicit ChassisDriveToAprilTag(std::function<ChassDriveAprilTagParameters()> getParameters);
 
         void     Initialize()          override;
         void     Execute()             override;

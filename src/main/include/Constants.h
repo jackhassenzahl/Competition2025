@@ -520,6 +520,34 @@ namespace AlgaePoseConstants
 }
 #pragma endregion
 
+#pragma region
+namespace AprilTagToPoseConstants
+{
+    constexpr auto ChassisSpeed                  = 1.0_mps;
+    constexpr auto TimeoutTime                   = 10_s;
+
+    constexpr auto CoralStationDistanceOffsetX   = 0.0_m;
+    constexpr auto CoralStationDistanceOffsetY   = 0.0_m;
+    constexpr auto CoralStationAngleOffset       = 0.0_deg;
+
+    constexpr auto CoralReefDistanceOffsetX      = 0.0_m;
+    constexpr auto CoralReefDistanceOffsetY      = 0.0_m;
+    constexpr auto CoralReefAngleOffset          = 0.0_deg;
+
+    constexpr auto AlgaeReefDistanceOffsetX      = 0.0_m;
+    constexpr auto AlgaeReefDistanceOffsetY      = 0.0_m;
+    constexpr auto AlgaeReefAngleOffset          = 0.0_deg;
+
+    constexpr auto AlgaeProcessorDistanceOffsetX = 0.0_m;
+    constexpr auto AlgaeProcessorDistanceOffsetY = 0.0_m;
+    constexpr auto AlgaeProcessorAngleOffset     = 0.0_deg;
+
+    constexpr auto AlgaelBargeDistanceOffsetX    = 0.0_m;
+    constexpr auto AlgaelBargeDistanceOffsetY    = 0.0_m;
+    constexpr auto AlgaelBargeAngleOffset        = 0.0_deg;
+}
+#pragma endregion
+
 #pragma region AutonomousConstants
 namespace AutonomousConstants
 {

@@ -85,26 +85,13 @@ RobotContainer::RobotContainer()
 
     // Set the default command for the gripper wheels
     m_gripper.SetDefaultCommand(frc2::InstantCommand([this] { m_gripper
-        .SetGripperWheelsVoltage(PotentiometerWheelVoltage()); }, {&m_gripper}));
+        .SetGripperWheelsVoltage([this] { return PotentiometerWheelVoltage(); }); }, {&m_gripper}));
 
     // Set the LED default command
     m_leds.SetDefaultCommand(SetLeds(LedMode::Off, &m_leds));
 
     // Set the swerve wheels to zero
     SetSwerveWheelAnglesToZero();
-}
-#pragma endregion
-
-#pragma region PotentiometerWheelVoltage
-/// @brief Method to get the potentiometer wheel voltage.
-/// @return The potentiometer wheel voltage.
-units::voltage::volt_t RobotContainer::PotentiometerWheelVoltage()
-{
-   // Read the wheel voltage potentiometer
-    auto potentiometer = m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput;
-
-    // Convert to a voltage
-    return units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
 }
 #pragma endregion
 
@@ -132,12 +119,12 @@ void RobotContainer::ConfigureButtonBindings()
 void RobotContainer::ConfigureDriverControls()
 {
     // Drive to position using the AprilTag
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleTrigger)
+        .OnTrue(new ChassisDriveToAprilTag([this] { return GetChassisDriveToAprilTagParameters(); }));
 
     // Use the trigger to activate the operation
-
-    // L1Score.OnTrue(AprilTagScoreCoral(GripperPoseEnum::CoralL1,
-    //                                   [this]()->bool { return m_operatorController.GetRawButtonPressed(ControlPanelConstants::CoralSideSelect);},
-    //                                   &m_aprilTags, &m_gripper, &m_drivetrain).ToPtr());
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleTrigger)
+        .OnTrue(new GripperActivate(&m_gripper));
 
     // Reset the gyro angle
     frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleUpperLeft)
@@ -376,6 +363,19 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 }
 #pragma endregion
 
+#pragma region PotentiometerWheelVoltage
+/// @brief Method to get the potentiometer wheel voltage.
+/// @return The potentiometer wheel voltage.
+units::voltage::volt_t RobotContainer::PotentiometerWheelVoltage()
+{
+   // Read the wheel voltage potentiometer
+    auto potentiometer = m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput;
+
+    // Convert to a voltage
+    return units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
+}
+#pragma endregion
+
 #pragma region GetChassisPose
 /// @brief Method to get the chassis Pose.
 /// @return The chassis Pose.
@@ -383,6 +383,95 @@ frc::Pose2d RobotContainer::GetChassisPose()
 {
     // Return the chassis pose
     return m_drivetrain.GetPose();
+}
+#pragma endregion
+
+#pragma region GetChassisDriveToAprilTagParameters
+/// @brief  Method to return the parameters for the ChassisDriveToAprilTag command.
+/// @return The parameters for the ChassisDriveToAprilTag command.
+///
+///     bool                       ValidPose;
+///     bool                       ReefRightSide;
+///     units::meters_per_second_t Speed;
+///     units::meter_t             DistanceOffsetX;
+///     units::meter_t             DistanceOffsetY;
+///     units::degree_t            AngleOffset;
+///     units::time::second_t      TimeoutTime;
+///     AprilTags                 *aprilTags;
+///     Drivetrain                *drivetrain;
+ChassDriveAprilTagParameters RobotContainer::GetChassisDriveToAprilTagParameters()
+{
+    ChassDriveAprilTagParameters parameters;
+
+    // Assume the pose is valid
+    parameters.ValidPose  = true;
+
+    // Determine the side of the reef
+    m_operatorController.GetRawButton(ControlPanelConstants::CoralSideSelect) ?
+                                      parameters.ReefRightSide = true : parameters.ReefRightSide = false;
+
+    // Set the remaining parameters that are not set in the case statement
+    parameters.Speed           = AprilTagToPoseConstants::ChassisSpeed;        // Speed of the chassis
+    parameters.TimeoutTime     = AprilTagToPoseConstants::TimeoutTime;           // Time-out time for the command
+    parameters.aprilTags       = &m_aprilTags;   // AprilTag subsystem
+    parameters.drivetrain      = &m_drivetrain;  // Drivetrain subsystem
+
+    switch (m_gripper.GetPose())
+    {
+        case GripperPoseEnum::CoralStation:  // Drive to the coral station
+        {
+            parameters.DistanceOffsetX = AprilTagToPoseConstants::CoralStationDistanceOffsetX;
+            parameters.DistanceOffsetY = AprilTagToPoseConstants::CoralStationDistanceOffsetY;
+            parameters.AngleOffset     = AprilTagToPoseConstants::CoralStationAngleOffset;
+            break;
+        }
+
+        case GripperPoseEnum::CoralL1:
+        case GripperPoseEnum::CoralL2:
+        case GripperPoseEnum::CoralL3:
+        case GripperPoseEnum::CoralL4:
+        {
+            // Drive to the coral reef
+            parameters.DistanceOffsetX = AprilTagToPoseConstants::CoralReefDistanceOffsetX;
+            parameters.DistanceOffsetY = AprilTagToPoseConstants::CoralReefDistanceOffsetY;
+            parameters.AngleOffset     = AprilTagToPoseConstants::CoralReefAngleOffset;
+            break;
+        }
+
+        case GripperPoseEnum::AlgaeLow:
+        case GripperPoseEnum::AlgaeHigh:
+        {
+            parameters.DistanceOffsetX = AprilTagToPoseConstants::AlgaeReefDistanceOffsetX;
+            parameters.DistanceOffsetY = AprilTagToPoseConstants::AlgaeReefDistanceOffsetY;
+            parameters.AngleOffset     = AprilTagToPoseConstants::AlgaeReefAngleOffset;
+            break;
+        }
+
+        case GripperPoseEnum::AlgaeProcessor:
+        {
+            parameters.DistanceOffsetX = AprilTagToPoseConstants::AlgaeProcessorDistanceOffsetX;
+            parameters.DistanceOffsetY = AprilTagToPoseConstants::AlgaeProcessorDistanceOffsetY;
+            parameters.AngleOffset     = AprilTagToPoseConstants::AlgaeProcessorAngleOffset;
+            break;
+        }
+
+        case GripperPoseEnum::AlgaeBarge:
+        {
+            parameters.DistanceOffsetX = AprilTagToPoseConstants::AlgaelBargeDistanceOffsetX;
+            parameters.DistanceOffsetY = AprilTagToPoseConstants::AlgaelBargeDistanceOffsetY;
+            parameters.AngleOffset     = AprilTagToPoseConstants::AlgaelBargeAngleOffset;
+            break;
+        }
+
+        default:  // Not a valid pose to drive to an april tag
+        {
+            parameters.ValidPose       = true;
+            break;
+        }
+    }
+
+    // Return the parameters
+    return parameters;
 }
 #pragma endregion
 

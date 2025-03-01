@@ -1,6 +1,6 @@
 #include "commands/ChassisDriveToAprilTag.h"
 
-#pragma region
+#pragma region ChassisDriveToAprilTag
 /// @brief Command to drive the chassis to an AprilTag.
 /// @param speed The speed to move the chassis.
 /// @param timeoutTime The timeout time for the move.
@@ -26,6 +26,29 @@ ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed,
 
     // Ensure the SwerveControllerCommand is set to nullptr
     m_swerveControllerCommand = nullptr;
+}
+#pragma endregion
+
+#pragma region ChassisDriveToAprilTag
+/// @brief Construct a ChassisDriveToAprilTag command using a lambda function to get the parameters.
+/// @param getParmeters The lambda function to get the parameters.
+ChassisDriveToAprilTag::ChassisDriveToAprilTag(std::function<ChassDriveAprilTagParameters()> getParmeters)
+{
+    // Get the drive to april tag parameters
+    auto pramemters = getParmeters();
+
+    // Determine if the pose is valid
+    if (pramemters.ValidPose == true)
+    {
+        // Call the main constructor
+        ChassisDriveToAprilTag(pramemters.Speed, pramemters.DistanceOffsetX, pramemters.DistanceOffsetY, pramemters.AngleOffset,
+                               pramemters.TimeoutTime, pramemters.aprilTags, pramemters.drivetrain);
+    }
+    else
+    {
+        // End the command
+        End(true);
+    }
 }
 #pragma endregion
 

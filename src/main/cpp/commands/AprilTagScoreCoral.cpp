@@ -1,5 +1,4 @@
 #include "commands/AprilTagScoreCoral.h"
-#include "commands/ChassisDriveToAprilTag.h"
 
 AprilTagScoreCoral::AprilTagScoreCoral(GripperPoseEnum               gripperPose,
                                        const std::function<bool ()> &GetJoystickToggle,
@@ -9,7 +8,17 @@ AprilTagScoreCoral::AprilTagScoreCoral(GripperPoseEnum               gripperPose
 {
     // Get the state of the joystick toggle
     if (GetJoystickToggle())
-        AddCommands(ChassisDriveToAprilTag(1.0_mps, -1.0_m, 0.0_m, 0.0_deg, 10.0_s, aprilTags, drivetrain), GripperPose(gripperPose, gripper));
+        AddCommands(ChassisDriveToAprilTag(AprilTagToPoseConstants::ChassisSpeed,
+                                           AprilTagToPoseConstants::CoralReefDistanceOffsetX,
+                                           AprilTagToPoseConstants::CoralReefDistanceOffsetY,
+                                           AprilTagToPoseConstants::CoralReefAngleOffset,
+                                           AprilTagToPoseConstants::TimeoutTime,
+                                           aprilTags, drivetrain), GripperPose(gripperPose, gripper));
     else
-        AddCommands(ChassisDriveToAprilTag(1.0_mps,  1.0_m, 0.0_m, 0.0_deg, 10.0_s, aprilTags, drivetrain), GripperPose(gripperPose, gripper));
+        AddCommands(ChassisDriveToAprilTag(AprilTagToPoseConstants::ChassisSpeed,
+                                          -AprilTagToPoseConstants::CoralReefDistanceOffsetX,
+                                           AprilTagToPoseConstants::CoralReefDistanceOffsetY,
+                                           AprilTagToPoseConstants::CoralReefAngleOffset,
+                                           AprilTagToPoseConstants::TimeoutTime,
+                                           aprilTags, drivetrain), GripperPose(gripperPose, gripper));
 }

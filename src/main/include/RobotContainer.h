@@ -56,31 +56,33 @@ class RobotContainer
     public:
 
         // Method that returns a pointer to the singleton instance of the RobotContainer class
-        static RobotContainer      *GetInstance();
+        static RobotContainer       *GetInstance();
 
         // Method to get a pointer to the selected autonomous command
-        frc2::Command              *GetAutonomousCommand();
+        frc2::Command               *GetAutonomousCommand();
 
-        std::string                 GetStartPosition();
+        std::string                  GetStartPosition();
 
         // Method to set the swerve wheels to starting position based on the absolute encoder
-        void                        SetSwerveWheelAnglesToZero();
+        void                         SetSwerveWheelAnglesToZero();
 
         // Methods to get a reference to the robot joysticks
-        frc::Joystick              *GetDriverController();
-        frc::XboxController        *GetOperatorController();
+        frc::Joystick               *GetDriverController();
+        frc::XboxController         *GetOperatorController();
 
-        units::meters_per_second_t  Forward();
-        units::meters_per_second_t  Strafe();
-        units::radians_per_second_t Angle();
+        units::meters_per_second_t   Forward();
+        units::meters_per_second_t   Strafe();
+        units::radians_per_second_t  Angle();
 
-        units::voltage::volt_t      PotentiometerWheelVoltage();
+        units::voltage::volt_t       PotentiometerWheelVoltage();
 
-        frc::Pose2d                 GetChassisPose();
+        frc::Pose2d                  GetChassisPose();
 
-        Gripper                    *GetGripper();
+        ChassDriveAprilTagParameters GetChassisDriveToAprilTagParameters();
 
-        frc::PowerDistribution     *GetPowerDistribution();
+        Gripper                     *GetGripper();
+
+        frc::PowerDistribution      *GetPowerDistribution();
 
     private:
 

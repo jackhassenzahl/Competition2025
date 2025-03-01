@@ -335,7 +335,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
     }
 
     // Remember the pose
-    m_pose = pose;
+    m_gripperPose = pose;
 
     // Set the elevator height
     SetElevatorHeight(elevatorHeight);
@@ -500,8 +500,18 @@ void Gripper::SetGripperWheelsVoltage(units::voltage::volt_t voltage)
     m_gripperVoltage = voltage;
 
     // Set the voltage of the Gripper wheels
-    m_gripperMotorRight.SetVoltage(voltage);
-    m_gripperMotorLeft.SetVoltage(voltage);
+    m_gripperMotorRight.SetVoltage(m_gripperVoltage);
+    m_gripperMotorLeft.SetVoltage(m_gripperVoltage);
+}
+#pragma endregion
+
+#pragma region SetGripperWheelsVoltage
+/// @brief Method to set the Gripper wheels voltage.
+/// @param voltage The setpoint for the Gripper wheels voltage.
+void Gripper::SetGripperWheelsVoltage(std::function<units::volt_t()> getVoltage)
+{
+    // Set the voltage of the Gripper wheels
+    SetGripperWheelsVoltage(getVoltage());
 }
 #pragma endregion
 
