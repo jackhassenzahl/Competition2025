@@ -33,7 +33,7 @@ class Gripper : public frc2::SubsystemBase
 {
     public:
 
-        Gripper();
+        explicit               Gripper();
 
         void                   SetPose(GripperPoseEnum pose);
 

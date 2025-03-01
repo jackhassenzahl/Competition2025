@@ -12,9 +12,9 @@ class Climb : public frc2::SubsystemBase
 {
     public:
 
-        Climb();
+        explicit Climb();
 
-        void SetVoltage(units::volt_t voltage);
+        void     SetVoltage(units::volt_t voltage);
 
     private:
 

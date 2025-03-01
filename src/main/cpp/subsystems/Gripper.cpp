@@ -347,7 +347,7 @@ void Gripper::SetPose(GripperPoseEnum pose)
     SetWristAngle(wristAngle);
 
     // Set the gripper wheels voltage
-    SetGripperWheelsVoltage(gripperVoltage);
+    //SetGripperWheelsVoltage(gripperVoltage);
 }
 #pragma endregion
 

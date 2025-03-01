@@ -87,6 +87,13 @@ void Robot::TeleopInit()
         m_autonomousCommand->Cancel();
         m_autonomousCommand = nullptr;
     }
+
+    // Ensure the arm angle is past the elevator
+    if (m_robotContainer->GetGripper()->GetArmAngle() < ArmConstants::PastElevatorPosition)
+    {
+        // Set the arm to the past elevator position
+        m_robotContainer->GetGripper()->SetArmAngle(ArmConstants::PastElevatorPosition);
+    }
 }
 #pragma endregion
 

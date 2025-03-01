@@ -33,11 +33,11 @@ class GripperActivate : public frc2::CommandHelper<frc2::Command, GripperActivat
 {
     public:
 
-        GripperActivate(Gripper *gripper);
+        explicit GripperActivate(Gripper *gripper);
 
-        void Initialize() override;
-        void Execute()    override;
-        bool IsFinished() override;
+        void     Initialize() override;
+        void     Execute()    override;
+        bool     IsFinished() override;
 
     private:
 

@@ -11,10 +11,10 @@ class AprilTagGet : public frc2::CommandHelper<frc2::Command, AprilTagGet>
 {
     public:
 
-        AprilTagGet(double aprilTagId, AprilTags *aprilTags);
+        explicit AprilTagGet(double aprilTagId, AprilTags *aprilTags);
 
-        void Execute()    override;
-        bool IsFinished() override;
+        void     Execute()    override;
+        bool     IsFinished() override;
 
     private:
 

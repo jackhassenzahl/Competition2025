@@ -144,7 +144,8 @@ namespace ArmConstants
 
     constexpr auto AngleMaxAmperage                = 20;
 
-    constexpr auto MinimumPosition                 =   0_deg;          // Note: Need to calibrate angle to motor rotations
+    constexpr auto MinimumPosition                 =   0_deg;
+    constexpr auto PastElevatorPosition            =  10_deg;
     constexpr auto MaximumPosition                 = 120_deg;
 
     constexpr auto AngleOffset                     = 5_deg;
@@ -446,8 +447,8 @@ namespace ActivateConstants
 #pragma region CoralPoseConstants
 namespace CoralPoseConstants
 {
-    constexpr auto GroundElevator         = 0.0_m;
-    constexpr auto GroundArmAngle         = 0.0_deg;
+    constexpr auto GroundElevator         = 0.1_m;
+    constexpr auto GroundArmAngle         = 100.0_deg;
     constexpr auto GroundWristAngle       = 0.0_deg;
     constexpr auto GroundGripperVoltage   = 0.0_V;
 
@@ -457,22 +458,22 @@ namespace CoralPoseConstants
     constexpr auto StationGripperVoltage  = 0.0_V;
 
     constexpr auto L1Elevator             = 0.5_m;
-    constexpr auto L1ArmAngle             = 45.0_deg;
-    constexpr auto L1WristAngle           = 90.0_deg;
+    constexpr auto L1ArmAngle             = 80.0_deg;
+    constexpr auto L1WristAngle           = 0.0_deg;
     constexpr auto L1GripperVoltage       = 0.0_V;
 
-    constexpr auto L2Elevator             = 1.0_m;
-    constexpr auto L2ArmAngle             = 50.0_deg;
+    constexpr auto L2Elevator             = 0.8_m;
+    constexpr auto L2ArmAngle             = 45.0_deg;
     constexpr auto L2WristAngle           = 90.0_deg;
     constexpr auto L2GripperVoltage       = 0.0_V;
 
-    constexpr auto L3Elevator             = 1.5_m;
-    constexpr auto L3ArmAngle             = 55.0_deg;
+    constexpr auto L3Elevator             = 1.22_m;
+    constexpr auto L3ArmAngle             = 45.0_deg;
     constexpr auto L3WristAngle           = 90.0_deg;
     constexpr auto L3GripperVoltage       = 1.0_V;
 
-    constexpr auto L4Elevator             = 1.5_m;
-    constexpr auto L4ArmAngle             = 60.0_deg;
+    constexpr auto L4Elevator             = 1.6_m;
+    constexpr auto L4ArmAngle             = 45.0_deg;
     constexpr auto L4WristAngle           = 90.0_deg;
     constexpr auto L4GripperVoltage       = -1.0_V;
 }
@@ -481,33 +482,33 @@ namespace CoralPoseConstants
 #pragma region AlgaePoseConstants
 namespace AlgaePoseConstants
 {
-    constexpr auto GroundElevator          = 0.0_m;
-    constexpr auto GroundArmAngle          = 0.0_deg;
+    constexpr auto GroundElevator          = 0.1_m;
+    constexpr auto GroundArmAngle          = 100.0_deg;
     constexpr auto GroundWristAngle        = 0.0_deg;
     constexpr auto GroundGripperVoltage    = 0.0_V;
 
-    constexpr auto OnCoralElevator         = 0.0_m;
-    constexpr auto OnCoralArmAngle         = 0.0_deg;
+    constexpr auto OnCoralElevator         = 0.3_m;
+    constexpr auto OnCoralArmAngle         = 90.0_deg;
     constexpr auto OnCoralWristAngle       = 0.0_deg;
     constexpr auto OnCoralGripperVoltage   = 0.0_V;
 
-    constexpr auto LoElevator              = 0.0_m;
-    constexpr auto LoArmAngle              = 0.0_deg;
+    constexpr auto LoElevator              = 0.8_m;
+    constexpr auto LoArmAngle              = 90.0_deg;
     constexpr auto LoWristAngle            = 0.0_deg;
     constexpr auto LoGripperVoltage        = 0.0_V;
 
-    constexpr auto HighElevator            = 0.0_m;
-    constexpr auto HighArmAngle            = 0.0_deg;
+    constexpr auto HighElevator            = 1.22_m;
+    constexpr auto HighArmAngle            = 90.0_deg;
     constexpr auto HighWristAngle          = 0.0_deg;
     constexpr auto HighGripperVoltage      = 0.0_V;
 
-    constexpr auto ProcessorElevator       = 0.0_m;
-    constexpr auto ProcessorArmAngle       = 0.0_deg;
+    constexpr auto ProcessorElevator       = 0.2_m;
+    constexpr auto ProcessorArmAngle       = 100.0_deg;
     constexpr auto ProcessorWristAngle     = 0.0_deg;
     constexpr auto ProcessorGripperVoltage = 0.0_V;
 
-    constexpr auto BargeElevator           = 0.0_m;
-    constexpr auto BargeArmAngle           = 0.0_deg;
+    constexpr auto BargeElevator           = 1.6_m;
+    constexpr auto BargeArmAngle           = 45.0_deg;
     constexpr auto BargeWristAngle         = 0.0_deg;
     constexpr auto BargeGripperVoltage     = 0.0_V;
 }

@@ -16,9 +16,9 @@ class ChassisDriveSerpentine : public frc2::CommandHelper<frc2::Command, Chassis
 {
     public:
 
-        ChassisDriveSerpentine(units::velocity::meters_per_second_t speed,
-                               units::time::second_t                timeoutTime,
-                               Drivetrain                          *drivetrain);
+        explicit ChassisDriveSerpentine(units::velocity::meters_per_second_t speed,
+                                        units::time::second_t                timeoutTime,
+                                        Drivetrain                          *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;

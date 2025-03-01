@@ -9,10 +9,10 @@ class ChassisSetSwerveWheelAnglesToZero : public frc2::CommandHelper<frc2::Comma
 {
     public:
 
-        ChassisSetSwerveWheelAnglesToZero(Drivetrain *drivetrain);
+        explicit ChassisSetSwerveWheelAnglesToZero(Drivetrain *drivetrain);
 
-        void Execute()    override;
-        bool IsFinished() override;
+        void     Execute()    override;
+        bool     IsFinished() override;
 
     private:
 

@@ -25,34 +25,34 @@ class Drivetrain : public frc2::SubsystemBase
 {
     public:
 
-        explicit                      Drivetrain();
+        explicit        Drivetrain();
 
-        void                          Periodic() override;
+        void            Periodic() override;
 
-        void                          Drive(units::meters_per_second_t  xSpeed,
-                                            units::meters_per_second_t  ySpeed,
-                                            units::radians_per_second_t rotation);
+        void            Drive(units::meters_per_second_t  xSpeed,
+                              units::meters_per_second_t  ySpeed,
+                              units::radians_per_second_t rotation);
 
-        void                          SetX();                                 // Sets the wheels into an X formation to prevent movement
+        void            SetX();                                 // Sets the wheels into an X formation to prevent movement
 
-        void                          ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0
+        void            ResetDriveEncoders();                   // Resets the drive encoders to currently read a position of 0
 
-        void                          SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
+        void            SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
 
-        units::degree_t               GetHeading();                           // Returns the heading of the robot
+        units::degree_t GetHeading();                           // Returns the heading of the robot
 
-        void                          ZeroHeading();                          // Zeroes the heading of the robot
+        void            ZeroHeading();                          // Zeroes the heading of the robot
 
-        frc::Pose2d                   GetPose();                              // Returns the currently-estimated pose of the robot
+        frc::Pose2d     GetPose();                              // Returns the currently-estimated pose of the robot
 
-        void                          ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose
+        void            ResetOdometry(frc::Pose2d pose);        // Resets the odometry to the specified pose
 
-        void                          SetFieldCentricity(bool fieldCentric);  // Sets the field centricity
-        bool                          GetFieldCentricity();                   // Reads the field centricity
+        void            SetFieldCentricity(bool fieldCentric);  // Sets the field centricity
+        bool            GetFieldCentricity();                   // Reads the field centricity
 
-        void                          SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
+        void            SetWheelAnglesToZero();                 // Sets the wheels to forward based on the absolute encoder
 
-        units::inch_t                 GetDistance();
+        units::inch_t   GetDistance();
 
         // Swerve module order for kinematics calculations
         //

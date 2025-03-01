@@ -17,8 +17,8 @@ class AprilTagGrabAlgae : public frc2::CommandHelper<frc2::SequentialCommandGrou
 {
     public:
 
-        explicit AprilTagGrabAlgae(GripperPoseEnum               gripperPose,
-                                    AprilTags                    *aprilTags,
-                                    Gripper                      *gripper,
-                                    Drivetrain                   *drivetrain);
+        explicit AprilTagGrabAlgae(GripperPoseEnum  gripperPose,
+                                   AprilTags       *aprilTags,
+                                   Gripper         *gripper,
+                                   Drivetrain      *drivetrain);
 };

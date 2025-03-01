@@ -9,10 +9,10 @@ class GripperSetIntake : public frc2::CommandHelper<frc2::Command, GripperSetInt
 {
     public:
 
-        GripperSetIntake(units::angle::degree_t angle, units::voltage::volt_t voltage, Gripper *gripper);
+        explicit GripperSetIntake(units::angle::degree_t angle, units::voltage::volt_t voltage, Gripper *gripper);
 
-        void Execute()    override;
-        bool IsFinished() override;
+        void     Execute()    override;
+        bool     IsFinished() override;
 
     private:
 
