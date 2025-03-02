@@ -21,6 +21,38 @@
 
 #include "Constants.h"
 
+#pragma region DrivetrainConstants
+namespace DrivetrainConstants
+{
+    // Chassis configuration
+    constexpr auto TrackWidth               = 0.6731_m;  // Distance between centers of right and left wheels on robot
+    constexpr auto WheelBase                = 0.6731_m;  // Distance between centers of front and back wheels on robot
+
+    constexpr auto MaxSpeed                 = 4.8_mps;
+    constexpr auto MaxAngularSpeed          = std::numbers::pi * 2_rad_per_s;
+
+    constexpr auto UltraSonicPort           =  0;
+    constexpr auto UltraSonicSlope          =  0.2125;
+    constexpr auto UltraSonicIntercept      = -2.1873;
+}
+#pragma endregion
+
+#pragma region ChassisPoseConstants
+namespace ChassisPoseConstants
+{
+    constexpr auto   MaxSpeed               = 2_mps;
+    constexpr auto   MaxAcceleration        = 2_mps_sq;
+    constexpr auto   MaxAngularSpeed        = 3.142_rad_per_s;
+    constexpr auto   MaxAngularAcceleration = 3.142_rad_per_s_sq;
+
+    constexpr double PXController           = 4.0;
+    constexpr double PYController           = 4.0;
+    constexpr double PProfileController     = 5.0;
+
+    extern const frc::TrapezoidProfile<units::radians>::Constraints ThetaControllerConstraints;
+}
+#pragma endregion
+
 class Drivetrain : public frc2::SubsystemBase
 {
     public:

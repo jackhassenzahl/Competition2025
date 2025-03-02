@@ -84,7 +84,7 @@ RobotContainer::RobotContainer()
                                                 &m_drivetrain));
 
     // Set the default command for the gripper wheels
-    m_gripper.SetDefaultCommand(frc2::InstantCommand([this] { m_gripper
+    m_gripper.SetDefaultCommand(frc2::RunCommand([this] { m_gripper
         .SetGripperWheelsVoltage([this] { return PotentiometerWheelVoltage(); }); }, {&m_gripper}));
 
     // Set the LED default command
@@ -111,6 +111,10 @@ void RobotContainer::ConfigureButtonBindings()
     // Scores/Intakes Algae/Coral
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::Activate)
         .OnTrue(GripperActivate(&m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
+
+    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorUp)
+        .WhileTrue(new frc2::RunCommand([this] { frc::SmartDashboard::PutString("Debug:", "Yes ElevatorUp"); }, {&m_climb}))
+        .OnFalse(new frc2::InstantCommand([this] { frc::SmartDashboard::PutString("Debug:", "No ElevatorUp"); }));
 }
 #pragma endregion
 
@@ -119,12 +123,12 @@ void RobotContainer::ConfigureButtonBindings()
 void RobotContainer::ConfigureDriverControls()
 {
     // Drive to position using the AprilTag
-    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleTrigger)
-        .OnTrue(new ChassisDriveToAprilTag([this] { return GetChassisDriveToAprilTagParameters(); }));
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleSide)
+        .WhileTrue(new ChassisDriveToAprilTag([this] { return GetChassisDriveToAprilTagParameters(); }));
 
     // Use the trigger to activate the operation
     frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleTrigger)
-        .OnTrue(new GripperActivate(&m_gripper));
+        .WhileTrue(new GripperActivate(&m_gripper));
 
     // Reset the gyro angle
     frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleUpperLeft)
@@ -339,7 +343,7 @@ units::radians_per_second_t RobotContainer::Angle()
     previousAngleInput   = smoothedAngle; // Store for next cycle
 
     // Return the rotation speed with rate limiter applied
-    return units::radians_per_second_t(-m_rotLimiter.Calculate(smoothedAngle) * DrivetrainConstants::MaxAngularSpeed);
+    return units::radians_per_second_t(-m_rotLimiter.Calculate(smoothedAngle) * DrivetrainConstants::MaxAngularSpeed * 0.5);
 }
 #pragma endregion
 
@@ -366,13 +370,25 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 #pragma region PotentiometerWheelVoltage
 /// @brief Method to get the potentiometer wheel voltage.
 /// @return The potentiometer wheel voltage.
-units::voltage::volt_t RobotContainer::PotentiometerWheelVoltage()
+GripperWheelState RobotContainer::PotentiometerWheelVoltage()
 {
-   // Read the wheel voltage potentiometer
-    auto potentiometer = m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput;
+    // Read the wheel voltage potentiometer
+    auto potentiometer = (m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput);
+    frc::SmartDashboard::PutNumber("Potentiometer", potentiometer);
+
+    // if (absf(potentiometer) < GripperConstants::GripperWheelDeadZone);
+    //     potentiometer = 0;
 
     // Convert to a voltage
-    return units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
+    auto voltage = units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
+
+    bool bothWheels = !m_operatorController.GetRawButton(ControlPanelConstants::Toggle);
+
+    GripperWheelState gripperWheelState;
+    gripperWheelState.bothWheels = bothWheels;
+    gripperWheelState.voltage = voltage;
+
+    return gripperWheelState;
 }
 #pragma endregion
 

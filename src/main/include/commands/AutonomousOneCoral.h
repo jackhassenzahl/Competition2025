@@ -13,6 +13,7 @@
 #include "commands/GripperActivate.h"
 
 #include "Constants.h"
+#include "ConstantsPose.h"
 
 class AutonomousOneCoral : public frc2::CommandHelper<frc2::SequentialCommandGroup, AutonomousOneCoral>
 {

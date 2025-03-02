@@ -18,6 +18,29 @@
 
 #include "Constants.h"
 
+#pragma region ApriltagConstants
+namespace ApriltagConstants
+{
+    // Magic camera values:
+    // Source: https://www.chiefdelphi.com/t/wpilib-apriltagdetector-sample-code/421411/21
+    constexpr auto CameraWidthInPixels     = 699.3778103158814;
+    constexpr auto CameraHeightInPixels    = 677.7161226393544;
+    constexpr auto CameraCenterXInPixels   = 345.6059345433618;
+    constexpr auto CameraCenterYInPixels   = 207.12741326228522;
+
+    constexpr auto CameraResolutionWidth   = 640;
+    constexpr auto CameraResolutionHeight  = 480;
+
+    constexpr auto AprilTagLineWitdh       =   2;
+    constexpr auto NumberOfAprilTagCorners =   4;
+    constexpr auto NumberOfBitsCorrected   =   1;
+
+    constexpr auto LengthOfTagsInches      = 6.5;
+
+    constexpr auto RobotCameraOffset       = -0.305_m;
+}
+#pragma endregion
+
 struct AprilTagInformation
 {
     bool   Found;

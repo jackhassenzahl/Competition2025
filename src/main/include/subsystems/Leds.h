@@ -9,6 +9,23 @@
 
 #include "Constants.h"
 
+#pragma region LedConstants
+namespace LedConstants
+{
+    constexpr auto PwmPort     =   9;
+
+    constexpr auto Length      = 400;  // The length of the LED string
+    constexpr auto Brightness  = 0.5;
+
+    constexpr auto Red         = 255;
+    constexpr auto Green       = 255;
+    constexpr auto Blue        = 255;
+
+    constexpr auto StrobeDelay =  20;  // The delay between strobe flashes
+    constexpr auto HvaDelay    =  20;  // The delay between HVA color changes
+}
+#pragma endregion
+
 /// @brief modes for the LED string.
 enum LedMode
 {

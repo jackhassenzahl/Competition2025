@@ -48,8 +48,8 @@ void Climb::ConfigureClimbMotor(int motorCanId)
 void Climb::SetVoltage(units::volt_t voltage)
 {
     // Determine the motor diretion (up or down)
-    if ((voltage > 0_V && m_climbLimit.Get()   == 0) ||
-        (voltage < 0_V && m_captureLimit.Get() == 0))
+    if ((voltage > 0_V && m_climbLimit.Get()   == 1) ||
+        (voltage < 0_V && m_captureLimit.Get() == 1))
     {
         // Stop the motor
         m_climbMotor->SetVoltage(0_V);

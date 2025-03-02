@@ -8,6 +8,16 @@
 
 #include "Constants.h"
 
+#pragma region ClimbConstants
+namespace ClimbConstants
+{
+    constexpr auto ClimbVoltage       = 12_V;
+
+    constexpr auto ClimbLimitSwtich   = 0;
+    constexpr auto CaptureLimitSwitch = 1;
+}
+#pragma endregion
+
 class Climb : public frc2::SubsystemBase
 {
     public:

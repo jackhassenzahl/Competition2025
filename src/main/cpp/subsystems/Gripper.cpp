@@ -6,8 +6,8 @@ Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::Spa
                      m_wristEncoder(m_wristMotor.GetEncoder()),
                      m_wristTurnClosedLoopController(m_wristMotor.GetClosedLoopController()),
 
-                     m_gripperMotorRight(CanConstants::GripperMotorCanIdRight, rev::spark::SparkMax::MotorType::kBrushless),
-                     m_gripperMotorLeft(CanConstants::GripperMotorCanIdLeft,   rev::spark::SparkMax::MotorType::kBrushless)
+                     m_gripperMotorFixed(CanConstants::GripperMotorCanIdFixed, rev::spark::SparkMax::MotorType::kBrushless),
+                     m_gripperMotorFree(CanConstants::GripperMotorCanIdFree,   rev::spark::SparkMax::MotorType::kBrushless)
 {
     // Configure the elevator motor
     ConfigureElevatorMotor(CanConstants::ElevatorMotorCanId);
@@ -23,7 +23,7 @@ Gripper::Gripper() : m_wristMotor(CanConstants::WristMotorCanId, rev::spark::Spa
     ConfigureGripperMotorLeft();
 
     // Set the gripper wheels voltage
-    SetGripperWheelsVoltage(0_V);
+    SetGripperWheelsVoltage(0_V, 0_V);
 }
 #pragma endregion
 
@@ -174,17 +174,9 @@ void Gripper::ConfigureGripperMotorRight()
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(GripperConstants::MaximumAmperage);
-    // sparkMaxConfig.encoder
-    //     .PositionConversionFactor(2.0 * std::numbers::pi)
-    //     .VelocityConversionFactor(1);
-    // sparkMaxConfig.closedLoop
-    //     .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-    //     .Pid(GripperConstants::P, GripperConstants::I, GripperConstants::D)
-    //     .PositionWrappingEnabled(true)
-    //     .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
     // Write the configuration to the motor controller
-    m_gripperMotorRight.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+    m_gripperMotorFixed.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 #pragma endregion
 
@@ -198,17 +190,9 @@ void Gripper::ConfigureGripperMotorLeft()
     sparkMaxConfig
         .SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(GripperConstants::MaximumAmperage);
-    // sparkMaxConfig.encoder
-    //     .PositionConversionFactor(2.0 * std::numbers::pi)
-    //     .VelocityConversionFactor(1);
-    // sparkMaxConfig.closedLoop
-    //     .SetFeedbackSensor(rev::spark::ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-    //     .Pid(GripperConstants::P, GripperConstants::I, GripperConstants::D)
-    //     .PositionWrappingEnabled(true)
-    //     .PositionWrappingInputRange(0, 2 * std::numbers::pi);
 
     // Write the configuration to the motor controller
-    m_gripperMotorLeft.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
+    m_gripperMotorFree.Configure(sparkMaxConfig, rev::spark::SparkMax::ResetMode::kResetSafeParameters, rev::spark::SparkMax::PersistMode::kPersistParameters);
 }
 #pragma endregion
 
@@ -299,10 +283,10 @@ void Gripper::SetPose(GripperPoseEnum pose)
 
         case GripperPoseEnum::AlgaeLow:
         {
-            elevatorHeight  = AlgaePoseConstants::LoElevator;
-            armAngle        = AlgaePoseConstants::LoArmAngle;
-            wristAngle      = AlgaePoseConstants::LoWristAngle;
-            gripperVoltage  = AlgaePoseConstants::LoGripperVoltage;
+            elevatorHeight  = AlgaePoseConstants::LowElevator;
+            armAngle        = AlgaePoseConstants::LowArmAngle;
+            wristAngle      = AlgaePoseConstants::LowWristAngle;
+            gripperVoltage  = AlgaePoseConstants::LowGripperVoltage;
             break;
         }
 
@@ -401,15 +385,15 @@ units::length::meter_t Gripper::GetElevatorHeight()
 /// @param position The setpoint for the arm angle. Takes -180 -> 180
 void Gripper::SetArmAngle(units::angle::degree_t angle)
 {
-    // Show the target arm angle
-    frc::SmartDashboard::PutNumber("Arm Target", angle.value());
-
     // Making sure that the climb doesn't try to go through the robot
     if (angle < ArmConstants::MinimumPosition)
        angle = ArmConstants::MinimumPosition;
 
     if (angle > ArmConstants::MaximumPosition)
         angle = ArmConstants::MaximumPosition;
+
+    // Show the target arm angle
+    frc::SmartDashboard::PutNumber("Arm Target", angle.value());
 
     // Compute the number of turns based on the specficied angle
     units::angle::turn_t position = (units::angle::turn_t) (angle.value() / ArmConstants::AngleToTurnsConversionFactor.value());
@@ -447,15 +431,15 @@ units::angle::degree_t Gripper::GetArmAngle()
 /// @param position The setpoint for the Wrist angle.
 void Gripper::SetWristAngle(units::angle::degree_t angle)
 {
-    // Show the target wrist angle
-    frc::SmartDashboard::PutNumber("Wrist Target", angle.value());
-
     // Making sure that the climb doesn't try to go through the robot
     if (angle < WristConstants::MinimumPosition)
        angle = WristConstants::MinimumPosition;
 
     if (angle > WristConstants::MaximumPosition)
         angle = WristConstants::MaximumPosition;
+
+    // Show the target wrist angle
+    frc::SmartDashboard::PutNumber("Wrist Target", angle.value());
 	
     // Converting angle to motor rotations
     double position = angle.value() / WristConstants::AngleToTurnsConversionFactor.value();
@@ -491,27 +475,32 @@ units::angle::degree_t Gripper::GetWristAngle()
 #pragma region SetGripperWheelsVoltage
 /// @brief Method to set the Gripper wheels voltage.
 /// @param voltage The setpoint for the Gripper wheels voltage.
-void Gripper::SetGripperWheelsVoltage(units::voltage::volt_t voltage)
+void Gripper::SetGripperWheelsVoltage(units::voltage::volt_t voltageFixed,
+                                      units::voltage::volt_t voltageFree)
 {
     // Show the target gripper wheels voltage
-    frc::SmartDashboard::PutNumber("Wheels Target", voltage.value());
-
-    // Remember the gripper wheel voltage
-    m_gripperVoltage = voltage;
+    frc::SmartDashboard::PutNumber("Wheels Target", voltageFixed.value());
 
     // Set the voltage of the Gripper wheels
-    m_gripperMotorRight.SetVoltage(m_gripperVoltage);
-    m_gripperMotorLeft.SetVoltage(m_gripperVoltage);
+    m_gripperMotorFixed.SetVoltage(voltageFixed);
+    m_gripperMotorFree.SetVoltage(voltageFree);
 }
 #pragma endregion
 
 #pragma region SetGripperWheelsVoltage
 /// @brief Method to set the Gripper wheels voltage.
 /// @param voltage The setpoint for the Gripper wheels voltage.
-void Gripper::SetGripperWheelsVoltage(std::function<units::volt_t()> getVoltage)
+void Gripper::SetGripperWheelsVoltage(std::function<GripperWheelState()> gripperWheelState)
 {
+    auto gripperWheels = gripperWheelState();
     // Set the voltage of the Gripper wheels
-    SetGripperWheelsVoltage(getVoltage());
+    if (gripperWheels.bothWheels)
+    {
+        SetGripperWheelsVoltage(gripperWheels.voltage, gripperWheels.voltage);
+    } else
+    {
+        SetGripperWheelsVoltage(gripperWheels.voltage, 0_V);
+    }
 }
 #pragma endregion
 

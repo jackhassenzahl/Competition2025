@@ -132,7 +132,7 @@ void GripperActivate::Execute()
             if (frc::GetTime() > m_stateData.Wait2)
             {
                 m_state = GripperWheelsMove;
-                m_gripper->SetGripperWheelsVoltage(m_stateData.GripperVoltage);
+                m_gripper->SetGripperWheelsVoltage(m_stateData.GripperVoltage, m_stateData.GripperVoltage);
                 m_state = Finish;
             }
             break;
@@ -143,7 +143,7 @@ void GripperActivate::Execute()
             if (frc::GetTime() > m_stateData.Wait3)
             {
                 m_state = Finish;
-                m_gripper->SetGripperWheelsVoltage(0_V);
+                m_gripper->SetGripperWheelsVoltage(0_V, 0_V);
                 m_gripper->SetArmAngleOffset(-m_stateData.ArmOffset);
                 m_gripper->SetElevatorOffset(-m_stateData.ElevatorOffset);
                 m_state      = Complete;

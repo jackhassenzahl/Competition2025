@@ -10,6 +10,93 @@
 #include <rev/config/SparkMaxConfig.h>
 
 #include "Constants.h"
+#include "ConstantsPose.h"
+
+#pragma region ElevatorConstants
+namespace ElevatorConstants
+{
+    constexpr auto P                               = 2.00;             // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 0.00;             // Integral:        No output for integrated error
+    constexpr auto D                               = 0.10;             // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 0.25;             // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.12;             // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.01;             // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+
+    constexpr auto MotionMagicCruiseVelocity       = 40_tps;           // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 80_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 800_tr_per_s_cu;  // Jerk
+
+    constexpr auto PositionToTurnsConversionFactor = 64.0 / (0.06378 * 3.0 * std::numbers::pi); // The number of motor rotations per meter
+
+    constexpr auto MinimumPosition                 = 0_m;
+    constexpr auto MaximumPosition                 = 1.7_m;  // TODO: Determine the maximum height
+
+    constexpr auto HeightOffset                    = 0.025_m;
+}
+#pragma endregion
+
+#pragma region ArmConstants
+namespace ArmConstants
+{
+    constexpr auto P                               = 1.0;              // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                               = 0.0;              // Integral:        No output for integrated error
+    constexpr auto D                               = 0.1;              // Differential     A velocity error of 1 rps results in 0.5 V output
+    constexpr auto S                               = 0.0;              // Static Friction: Add [voltage] output to overcome static friction
+    constexpr auto V                               = 0.0;              // Velocity:        A velocity target of 1 rps results in [voltage] output
+    constexpr auto A                               = 0.0;              // Acceleration:    An acceleration of 1 rps/s requires 0.01 V output
+
+    constexpr auto MotionMagicCruiseVelocity       = 110_tps;          // Rotations per second cruise
+    constexpr auto MotionMagicAcceleration         = 500_tr_per_s_sq;  // Acceleration
+    constexpr auto MotionMagicJerk                 = 500_tr_per_s_cu;  // Jerk
+
+    constexpr auto AngleToTurnsConversionFactor    = 360_deg / 36;      // 36 to 1 gear box
+
+    constexpr auto AngleMaxAmperage                = 20;
+
+    constexpr auto MinimumPosition                 =   0_deg;
+    constexpr auto PastElevatorPosition            =  25_deg;
+    constexpr auto MaximumPosition                 = 180_deg;
+
+    constexpr auto AngleOffset                     = 5_deg;
+}
+#pragma endregion
+
+#pragma region WristConstants
+namespace WristConstants
+{
+    constexpr auto P                             = 0.8;              // Proportional
+    constexpr auto I                             = 0.0;              // Integral
+    constexpr auto D                             = 1.0;              // Differential
+
+    constexpr auto MaximumVelocity               = 4000.0;            // Rotations per minute (RPM)
+    constexpr auto MaximumAcceleration           = 2000.0;            // Acceleration
+    constexpr auto AllowedError                  = 0.04;             // Allowed error for the pid controller (smaller values are more accurate)
+
+    constexpr auto MaxAmperage                   =  60;
+    constexpr auto AngleToTurnsConversionFactor  = 360_deg / 20;     // 20 to 1 gear box
+
+    constexpr auto MinimumPosition               = -10_deg;          // Note: Need to calibrate angle to motor rotations
+    constexpr auto MaximumPosition               = 200_deg;
+
+    constexpr auto AngleOffset                   =   1.5_deg;
+}
+#pragma endregion
+
+#pragma region GripperConstants
+namespace GripperConstants
+{
+    constexpr auto P                    = 1.0;  // Proportional:    A position error of 0.2 rotations results in 12 V output
+    constexpr auto I                    = 0.0;  // Integral:        No output for integrated error
+    constexpr auto D                    = 0.1;  // Differential     A velocity error of 1 rps results in 0.5 V output
+
+    constexpr auto MaximumAmperage      =  60;
+
+    constexpr auto MeanAnalogInput      = 0.11811 / 2.0;
+
+    constexpr auto GripperWheelDeadZone = 0.0;
+    constexpr auto AnalogConversion     = 75.0;
+}
+#pragma endregion
 
 /// @brief modes for the LED string.
 enum GripperPoseEnum
@@ -27,6 +114,12 @@ enum GripperPoseEnum
     AlgaeHigh,
     AlgaeProcessor,
     AlgaeBarge
+};
+
+struct GripperWheelState
+{
+    bool bothWheels = true;
+    units::voltage::volt_t voltage;
 };
 
 class Gripper : public frc2::SubsystemBase
@@ -49,8 +142,9 @@ class Gripper : public frc2::SubsystemBase
         void                   SetWristAngleOffset(units::angle::degree_t angle);
         units::angle::degree_t GetWristAngle();
 
-        void                   SetGripperWheelsVoltage(units::voltage::volt_t voltage);
-        void                   SetGripperWheelsVoltage(std::function<units::volt_t()> getVoltage);
+        void                   SetGripperWheelsVoltage(units::voltage::volt_t voltageFixed,
+                                                       units::voltage::volt_t voltageFree);
+        void                   SetGripperWheelsVoltage(std::function<GripperWheelState()> gripperWheelState);
         units::voltage::volt_t GetGripperWheelsVoltage();
 
         GripperPoseEnum        GetPose() { return m_gripperPose; }  // Get the Gripper Pose
@@ -73,8 +167,8 @@ class Gripper : public frc2::SubsystemBase
         rev::spark::SparkClosedLoopController        m_wristTurnClosedLoopController;
         rev::spark::SparkRelativeEncoder             m_wristEncoder;
 
-        rev::spark::SparkMax                         m_gripperMotorRight;
-        rev::spark::SparkMax                         m_gripperMotorLeft;
+        rev::spark::SparkMax                         m_gripperMotorFixed;
+        rev::spark::SparkMax                         m_gripperMotorFree;
 
         GripperPoseEnum                              m_gripperPose;
 
