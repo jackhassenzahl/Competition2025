@@ -15,6 +15,15 @@
 
 #include "Constants.h"
 
+struct ChassDrivePoseParameters
+{
+    units::meters_per_second_t Speed;
+    units::meter_t             DistanceX;
+    units::meter_t             DistanceY;
+    units::degree_t            Angle;
+    units::time::second_t      TimeoutTime;
+};
+
 class ChassisDrivePose : public frc2::CommandHelper<frc2::Command, ChassisDrivePose>
 {
     public:
@@ -26,12 +35,16 @@ class ChassisDrivePose : public frc2::CommandHelper<frc2::Command, ChassisDriveP
                                   units::time::second_t                timeoutTime,
                                   Drivetrain                          *drivetrain);
 
+        explicit ChassisDrivePose(std::function<ChassDrivePoseParameters()> getParameters, Drivetrain *drivetrain);
+
         void     Initialize()          override;
         void     Execute()             override;
         bool     IsFinished()          override;
         void     End(bool interrupted) override;
 
     private:
+
+        bool                              m_readParameters;           // Indicates the parameters should be read from the lambda function
 
         units::meters_per_second_t        m_speed;                    // The speed that the chassis will drive
         units::meter_t                    m_distanceX;                // The distance that the chassis will drive in the X direction
@@ -41,5 +54,8 @@ class ChassisDrivePose : public frc2::CommandHelper<frc2::Command, ChassisDriveP
         Drivetrain                       *m_drivetrain;               // The drivetrain subsystem
 
         units::second_t                   m_startTime;                // The start of the drive time
+        bool                              m_finished;                 // Indicates the command is finished
         frc2::SwerveControllerCommand<4> *m_swerveControllerCommand;  // The swerve controller command
+
+        std::function<ChassDrivePoseParameters()> m_getParameters;    // The lambda function to get the parameters
 };

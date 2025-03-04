@@ -27,13 +27,13 @@ RobotContainer::RobotContainer()
     // Bind the joystick controls to the robot commands
     ConfigureButtonBindings();
 
-    frc::SmartDashboard::PutData("Chassis: Time ",           new ChassisDriveTime(2_s, 0.5_mps,                                           &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: OneMeter",        new ChassisDrivePose(2.0_mps, 1_m,  0_m,  90_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: TwoMeters",       new ChassisDrivePose(2.0_mps, 2_m,  2_m,   0_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Turn ",           new ChassisDrivePose(2.0_mps, 0_m,  0_m,  45_deg,        10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: AprilTag ",       new ChassisDriveToAprilTag(1.0_mps, 0.0_m, 0.0_m, 0_deg, 10_s, &m_aprilTags, &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Serpentine ",     new ChassisDriveSerpentine(1.0_mps,                      10_s,               &m_drivetrain));
-    frc::SmartDashboard::PutData("Chassis: Drive to Wall ",  new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,               &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Time ",           new ChassisDriveTime(2_s, 0.5_mps,                                                                 &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: OneMeter",        new ChassisDrivePose(2.0_mps, 1_m,  0_m,  90_deg,        10_s,                                     &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: TwoMeters",       new ChassisDrivePose(2.0_mps, 2_m,  2_m,   0_deg,        10_s,                                     &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Turn ",           new ChassisDrivePose(2.0_mps, 0_m,  0_m,  45_deg,        10_s,                                     &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: AprilTag ",       new ChassisDriveToAprilTag([this] { return GetChassisDriveToAprilTagParameters(); }, &m_aprilTags, &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Serpentine ",     new ChassisDriveSerpentine(1.0_mps,                      10_s,                                     &m_drivetrain));
+    frc::SmartDashboard::PutData("Chassis: Drive to Wall ",  new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,                                     &m_drivetrain));
 
     frc::SmartDashboard::PutData("Elevator Jog Up",          new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset( ElevatorConstants::HeightOffset); }));
     frc::SmartDashboard::PutData("Elevator Jog Down",        new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset); }));
@@ -44,29 +44,29 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Wrist Jog Positive",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset( WristConstants::AngleOffset);}));
     frc::SmartDashboard::PutData("Wrist Jog Negative",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset(-WristConstants::AngleOffset);}));
 
-    frc::SmartDashboard::PutData("Coral: Ground",            new GripperPose(GripperPoseEnum::CoralGround,    &m_gripper));
-    frc::SmartDashboard::PutData("Coral: Station",           new GripperPose(GripperPoseEnum::CoralStation,   &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L1",                new GripperPose(GripperPoseEnum::CoralL1,        &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L2",                new GripperPose(GripperPoseEnum::CoralL2,        &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L3",                new GripperPose(GripperPoseEnum::CoralL3,        &m_gripper));
-    frc::SmartDashboard::PutData("Coral: L4",                new GripperPose(GripperPoseEnum::CoralL4,        &m_gripper));
+    // frc::SmartDashboard::PutData("Coral: Ground",            new GripperPose(GripperPoseEnum::CoralGround,    &m_gripper));
+    // frc::SmartDashboard::PutData("Coral: Station",           new GripperPose(GripperPoseEnum::CoralStation,   &m_gripper));
+    // frc::SmartDashboard::PutData("Coral: L1",                new GripperPose(GripperPoseEnum::CoralL1,        &m_gripper));
+    // frc::SmartDashboard::PutData("Coral: L2",                new GripperPose(GripperPoseEnum::CoralL2,        &m_gripper));
+    // frc::SmartDashboard::PutData("Coral: L3",                new GripperPose(GripperPoseEnum::CoralL3,        &m_gripper));
+    // frc::SmartDashboard::PutData("Coral: L4",                new GripperPose(GripperPoseEnum::CoralL4,        &m_gripper));
 
-    frc::SmartDashboard::PutData("Algae: Ground",            new GripperPose(GripperPoseEnum::AlgaeGround,    &m_gripper));
-    frc::SmartDashboard::PutData("Algae: Coral",             new GripperPose(GripperPoseEnum::AlgaeOnCoral,   &m_gripper));
-    frc::SmartDashboard::PutData("Algae: Low",               new GripperPose(GripperPoseEnum::AlgaeLow,       &m_gripper));
-    frc::SmartDashboard::PutData("Algae: High",              new GripperPose(GripperPoseEnum::AlgaeHigh,      &m_gripper));
-    frc::SmartDashboard::PutData("Algae: Processor",         new GripperPose(GripperPoseEnum::AlgaeProcessor, &m_gripper));
-    frc::SmartDashboard::PutData("Algae: Barge",             new GripperPose(GripperPoseEnum::AlgaeBarge,     &m_gripper));
+    // frc::SmartDashboard::PutData("Algae: Ground",            new GripperPose(GripperPoseEnum::AlgaeGround,    &m_gripper));
+    // frc::SmartDashboard::PutData("Algae: Coral",             new GripperPose(GripperPoseEnum::AlgaeOnCoral,   &m_gripper));
+    // frc::SmartDashboard::PutData("Algae: Low",               new GripperPose(GripperPoseEnum::AlgaeLow,       &m_gripper));
+    // frc::SmartDashboard::PutData("Algae: High",              new GripperPose(GripperPoseEnum::AlgaeHigh,      &m_gripper));
+    // frc::SmartDashboard::PutData("Algae: Processor",         new GripperPose(GripperPoseEnum::AlgaeProcessor, &m_gripper));
+    // frc::SmartDashboard::PutData("Algae: Barge",             new GripperPose(GripperPoseEnum::AlgaeBarge,     &m_gripper));
 
-    frc::SmartDashboard::PutData("Gripper: Activate",        new GripperActivate(&m_gripper));
+    //frc::SmartDashboard::PutData("Gripper: Activate",        new GripperActivate(&m_gripper));
 
     // Configure the autonomous command chooser
     m_autonomousChooser.SetDefaultOption("Do Nothing",       new AutonomousDoNothing());
-    m_autonomousChooser.AddOption("Drive Forward OneMeter",  new ChassisDrivePose(1.0_mps, 1_m, 0_m, 0_deg, 10_s, &m_drivetrain));
-    m_autonomousChooser.AddOption("Drive Forward TwoMeters", new ChassisDrivePose(1.0_mps, 2_m, 0_m, 0_deg, 10_s, &m_drivetrain));
-    m_autonomousChooser.AddOption("Led Autonomous",          new AutonomousLed(&m_leds));
-    m_autonomousChooser.AddOption("Parallel Test",           new AutonomousParallel(&m_leds, &m_drivetrain));
-    m_autonomousChooser.AddOption("Complex Test",            new AutonomousComplex(&m_leds,  &m_drivetrain));
+    m_autonomousChooser.AddOption("Drive Forward",           new ChassisDrivePose(1.0_mps, 1_m, 0_m, 0_deg, 10_s, &m_drivetrain));
+    m_autonomousChooser.AddOption("Place Coral L1",          new AutonomousOneCoral(GripperPoseEnum::CoralL1,  [this] { return GetAutonomousOneCoralParameters(); }, &m_drivetrain, &m_gripper, &m_aprilTags));
+    m_autonomousChooser.AddOption("Place Coral L2",          new AutonomousOneCoral(GripperPoseEnum::CoralL2,  [this] { return GetAutonomousOneCoralParameters(); }, &m_drivetrain, &m_gripper, &m_aprilTags));
+    m_autonomousChooser.AddOption("Place Coral L3",          new AutonomousOneCoral(GripperPoseEnum::CoralL3,  [this] { return GetAutonomousOneCoralParameters(); }, &m_drivetrain, &m_gripper, &m_aprilTags));
+    m_autonomousChooser.AddOption("Place Coral L4",          new AutonomousOneCoral(GripperPoseEnum::CoralL4,  [this] { return GetAutonomousOneCoralParameters(); }, &m_drivetrain, &m_gripper, &m_aprilTags));
 
     // Send the autonomous mode chooser to the SmartDashboard
     frc::SmartDashboard::PutData("Autonomous Mode", &m_autonomousChooser);
@@ -111,10 +111,6 @@ void RobotContainer::ConfigureButtonBindings()
     // Scores/Intakes Algae/Coral
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::Activate)
         .OnTrue(GripperActivate(&m_gripper).WithInterruptBehavior(frc2::Command::InterruptionBehavior::kCancelSelf));
-
-    frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorUp)
-        .WhileTrue(new frc2::RunCommand([this] { frc::SmartDashboard::PutString("Debug:", "Yes ElevatorUp"); }, {&m_climb}))
-        .OnFalse(new frc2::InstantCommand([this] { frc::SmartDashboard::PutString("Debug:", "No ElevatorUp"); }));
 }
 #pragma endregion
 
@@ -124,7 +120,7 @@ void RobotContainer::ConfigureDriverControls()
 {
     // Drive to position using the AprilTag
     frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleSide)
-        .WhileTrue(new ChassisDriveToAprilTag([this] { return GetChassisDriveToAprilTagParameters(); }));
+        .WhileTrue(new ChassisDriveToAprilTag([this] { return GetChassisDriveToAprilTagParameters(); }, &m_aprilTags, &m_drivetrain));
 
     // Use the trigger to activate the operation
     frc2::JoystickButton (&m_driverController, Extreme3DConstants::HandleTrigger)
@@ -214,11 +210,11 @@ void RobotContainer::ConfigureGripperControls()
 {
     // Manually offsets elevator upwards
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorUp)
-        .OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
+        .OnTrue(new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
 
     // Manually offsets elevator downwards
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorDown)
-        .OnTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
+        .OnTrue(new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
 }
 #pragma endregion
 
@@ -265,16 +261,6 @@ frc2::Command *RobotContainer::GetAutonomousCommand()
 {
     // The selected command will be run in autonomous
     return m_autonomousChooser.GetSelected();
-}
-#pragma endregion
-
-#pragma region GetStartPosition
-/// @brief Method to get the starting position for the robot.
-/// @return String representing the starting position.
-std::string RobotContainer::GetStartPosition()
-{
-    // Return the selected starting position
-    return m_startingPositionChooser.GetSelected();
 }
 #pragma endregion
 
@@ -402,6 +388,77 @@ frc::Pose2d RobotContainer::GetChassisPose()
 }
 #pragma endregion
 
+#pragma region GetGripper
+/// @brief Method to return a pointer to the gripper subsystem.
+/// @return Pointer to the gripper subsystem.
+Gripper *RobotContainer::GetGripper()
+{
+    // Return the pointer to the gripper
+    return &m_gripper;
+}
+#pragma endregion
+
+#pragma region GetStartPosition
+/// @brief Method to get the starting position for the robot.
+/// @return String representing the starting position.
+std::string RobotContainer::GetStartPosition()
+{
+    // Return the selected starting position
+    return m_startingPositionChooser.GetSelected();;
+}
+#pragma endregion
+
+#pragma region GetAutonomousOneCoralParameters
+/// @brief Method to get the autonomous one coral parameters.
+/// @return The autonomous one coral parameters.
+ChassDrivePoseParameters RobotContainer::GetAutonomousOneCoralParameters()
+{
+    ChassDrivePoseParameters parameters;
+
+    std::string startPosition = "Unknown";
+
+    // Get the starting position
+    startPosition = GetStartPosition();
+
+    // Determine the starting position based on the selected string position ("L", "M", "R")
+    if (startPosition.compare("L") == 0)
+    {
+        // Set the left coral position
+        startPosition        = "L";
+        parameters.DistanceX = AutonomousConstants::OneCoralLeftXDistance;
+        parameters.DistanceY = AutonomousConstants::OneCoralLeftYDistance;
+        parameters.Angle     = AutonomousConstants::OneCoralLeftAngleChange;
+
+    }
+    else if (startPosition.compare("M") == 0)
+    {
+        // Set the middle coral position
+        startPosition         = "M";
+        parameters.DistanceX  = AutonomousConstants::OneCoralCenterXDistance;
+        parameters.DistanceY  = AutonomousConstants::OneCoralCenterYDistance;
+        parameters.Angle      = AutonomousConstants::OneCoralAngleChange;
+    }
+    else if (startPosition.compare("R") == 0)
+    {
+        // Set the right coral position
+        startPosition        = "R";
+        parameters.DistanceX = AutonomousConstants::OneCoralRightXDistance;
+        parameters.DistanceY = AutonomousConstants::OneCoralRightYDistance;
+        parameters.Angle     = AutonomousConstants::OneCoralRightAngleChange;
+    }
+
+    frc::SmartDashboard::PutString("Coral Start Position", startPosition);
+    frc::SmartDashboard::PutNumber("Coral X Distance",     parameters.DistanceX.to<double>());
+    frc::SmartDashboard::PutNumber("Coral Y Distance",     parameters.DistanceY.to<double>());
+    frc::SmartDashboard::PutNumber("Coral Angle Change",   parameters.Angle.to<double>());
+
+    // Return the parameters
+    return parameters;
+}
+#pragma endregion
+
+//ChassDrivePoseParameters#define READ_FROM_SMARTDASHBOARD
+
 #pragma region GetChassisDriveToAprilTagParameters
 /// @brief  Method to return the parameters for the ChassisDriveToAprilTag command.
 /// @return The parameters for the ChassisDriveToAprilTag command.
@@ -413,8 +470,6 @@ frc::Pose2d RobotContainer::GetChassisPose()
 ///     units::meter_t             DistanceOffsetY;
 ///     units::degree_t            AngleOffset;
 ///     units::time::second_t      TimeoutTime;
-///     AprilTags                 *aprilTags;
-///     Drivetrain                *drivetrain;
 ChassDriveAprilTagParameters RobotContainer::GetChassisDriveToAprilTagParameters()
 {
     ChassDriveAprilTagParameters parameters;
@@ -422,23 +477,27 @@ ChassDriveAprilTagParameters RobotContainer::GetChassisDriveToAprilTagParameters
     // Assume the pose is valid
     parameters.ValidPose  = true;
 
-    // Determine the side of the reef
-    m_operatorController.GetRawButton(ControlPanelConstants::CoralSideSelect) ?
-                                      parameters.ReefRightSide = true : parameters.ReefRightSide = false;
-
     // Set the remaining parameters that are not set in the case statement
-    parameters.Speed           = AprilTagToPoseConstants::ChassisSpeed;        // Speed of the chassis
-    parameters.TimeoutTime     = AprilTagToPoseConstants::TimeoutTime;           // Time-out time for the command
-    parameters.aprilTags       = &m_aprilTags;   // AprilTag subsystem
-    parameters.drivetrain      = &m_drivetrain;  // Drivetrain subsystem
+    parameters.PoseParameters.Speed       = AprilTagToPoseConstants::ChassisSpeed;        // Speed of the chassis
+    parameters.PoseParameters.TimeoutTime = AprilTagToPoseConstants::TimeoutTime;         // Time-out time for the command
+
+    // Determine the side of the reef
+    m_operatorController.GetRawButton(ControlPanelConstants::CoralSideSelect) ? parameters.ReefRightSide = true : parameters.ReefRightSide = false;
+
+#ifdef READ_FROM_SMARTDASHBOARD
+    parameters.PoseParameters.DistanceX = units::meter_t  {frc::SmartDashboard::GetNumber ("AprilTag: DistanceOffsetX", parameters.PoseParameters.DistanceX.to<double>())};
+    parameters.PoseParameters.DistanceY = units::meter_t  {frc::SmartDashboard::GetNumber ("AprilTag: DistanceOffsetY", parameters.PoseParameters.DistanceY.to<double>())};
+    parameters.PoseParameters.Angle     = units::degree_t {frc::SmartDashboard::GetNumber ("AprilTag: AngleOffset",     parameters.PoseParameters.Angle.to<double>())};
+#else
+    frc::SmartDashboard::PutNumber("AprilTag Pose", m_gripper.GetPose());
 
     switch (m_gripper.GetPose())
     {
         case GripperPoseEnum::CoralStation:  // Drive to the coral station
         {
-            parameters.DistanceOffsetX = AprilTagToPoseConstants::CoralStationDistanceOffsetX;
-            parameters.DistanceOffsetY = AprilTagToPoseConstants::CoralStationDistanceOffsetY;
-            parameters.AngleOffset     = AprilTagToPoseConstants::CoralStationAngleOffset;
+            parameters.PoseParameters.DistanceX = AprilTagToPoseConstants::CoralStationDistanceOffsetX;
+            parameters.PoseParameters.DistanceY = AprilTagToPoseConstants::CoralStationDistanceOffsetY;
+            parameters.PoseParameters.Angle     = AprilTagToPoseConstants::CoralStationAngleOffset;
             break;
         }
 
@@ -448,56 +507,55 @@ ChassDriveAprilTagParameters RobotContainer::GetChassisDriveToAprilTagParameters
         case GripperPoseEnum::CoralL4:
         {
             // Drive to the coral reef
-            parameters.DistanceOffsetX = AprilTagToPoseConstants::CoralReefDistanceOffsetX;
-            parameters.DistanceOffsetY = AprilTagToPoseConstants::CoralReefDistanceOffsetY;
-            parameters.AngleOffset     = AprilTagToPoseConstants::CoralReefAngleOffset;
+            parameters.PoseParameters.DistanceX = AprilTagToPoseConstants::CoralReefDistanceOffsetX;
+            parameters.PoseParameters.DistanceY = AprilTagToPoseConstants::CoralReefDistanceOffsetY;
+            parameters.PoseParameters.Angle     = AprilTagToPoseConstants::CoralReefAngleOffset;
             break;
         }
 
         case GripperPoseEnum::AlgaeLow:
         case GripperPoseEnum::AlgaeHigh:
         {
-            parameters.DistanceOffsetX = AprilTagToPoseConstants::AlgaeReefDistanceOffsetX;
-            parameters.DistanceOffsetY = AprilTagToPoseConstants::AlgaeReefDistanceOffsetY;
-            parameters.AngleOffset     = AprilTagToPoseConstants::AlgaeReefAngleOffset;
+            parameters.PoseParameters.DistanceX = AprilTagToPoseConstants::AlgaeReefDistanceOffsetX;
+            parameters.PoseParameters.DistanceY = AprilTagToPoseConstants::AlgaeReefDistanceOffsetY;
+            parameters.PoseParameters.Angle     = AprilTagToPoseConstants::AlgaeReefAngleOffset;
             break;
         }
 
         case GripperPoseEnum::AlgaeProcessor:
         {
-            parameters.DistanceOffsetX = AprilTagToPoseConstants::AlgaeProcessorDistanceOffsetX;
-            parameters.DistanceOffsetY = AprilTagToPoseConstants::AlgaeProcessorDistanceOffsetY;
-            parameters.AngleOffset     = AprilTagToPoseConstants::AlgaeProcessorAngleOffset;
+            parameters.PoseParameters.DistanceX = AprilTagToPoseConstants::AlgaeProcessorDistanceOffsetX;
+            parameters.PoseParameters.DistanceY = AprilTagToPoseConstants::AlgaeProcessorDistanceOffsetY;
+            parameters.PoseParameters.Angle     = AprilTagToPoseConstants::AlgaeProcessorAngleOffset;
             break;
         }
 
         case GripperPoseEnum::AlgaeBarge:
         {
-            parameters.DistanceOffsetX = AprilTagToPoseConstants::AlgaelBargeDistanceOffsetX;
-            parameters.DistanceOffsetY = AprilTagToPoseConstants::AlgaelBargeDistanceOffsetY;
-            parameters.AngleOffset     = AprilTagToPoseConstants::AlgaelBargeAngleOffset;
+            parameters.PoseParameters.DistanceX = AprilTagToPoseConstants::AlgaelBargeDistanceOffsetX;
+            parameters.PoseParameters.DistanceY = AprilTagToPoseConstants::AlgaelBargeDistanceOffsetY;
+            parameters.PoseParameters.Angle     = AprilTagToPoseConstants::AlgaelBargeAngleOffset;
             break;
         }
 
         default:  // Not a valid pose to drive to an april tag
         {
-            parameters.ValidPose       = true;
+            parameters.ValidPose = false;
             break;
         }
     }
 
+    frc::SmartDashboard::PutNumber("AprilTag: ValidPose",       parameters.ValidPose);
+    frc::SmartDashboard::PutNumber("AprilTag: ReefRightSide",   parameters.ReefRightSide);
+    frc::SmartDashboard::PutNumber("AprilTag: Speed",           parameters.PoseParameters.Speed.to<double>());
+    frc::SmartDashboard::PutNumber("AprilTag: DistanceOffsetX", parameters.PoseParameters.DistanceX.to<double>());
+    frc::SmartDashboard::PutNumber("AprilTag: DistanceOffsetY", parameters.PoseParameters.DistanceY.to<double>());
+    frc::SmartDashboard::PutNumber("AprilTag: AngleOffset",     parameters.PoseParameters.Angle.to<double>());
+    frc::SmartDashboard::PutNumber("AprilTag: TimeoutTime",     parameters.PoseParameters.TimeoutTime.to<double>());
+#endif
+
     // Return the parameters
     return parameters;
-}
-#pragma endregion
-
-#pragma region GetGripper
-/// @brief Method to return a pointer to the gripper subsystem.
-/// @return Pointer to the gripper subsystem.
-Gripper *RobotContainer::GetGripper()
-{
-    // Return the pointer to the gripper
-    return &m_gripper;
 }
 #pragma endregion
 

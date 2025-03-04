@@ -62,8 +62,6 @@ class RobotContainer
         // Method to get a pointer to the selected autonomous command
         frc2::Command               *GetAutonomousCommand();
 
-        std::string                  GetStartPosition();
-
         // Method to set the swerve wheels to starting position based on the absolute encoder
         void                         SetSwerveWheelAnglesToZero();
 
@@ -91,15 +89,19 @@ class RobotContainer
         RobotContainer();
 
         // Method to bind the joystick controls to the robot commands
-        void   ConfigureButtonBindings();
+        void                     ConfigureButtonBindings();
 
-        void   ConfigureDriverControls();
-        void   ConfigureCoralPoseControls();
-        void   ConfigureAlgaePoseControls();
-        void   ConfigureGripperControls();
-        void   ConfigureClimberControls();
+        void                     ConfigureDriverControls();
+        void                     ConfigureCoralPoseControls();
+        void                     ConfigureAlgaePoseControls();
+        void                     ConfigureGripperControls();
+        void                     ConfigureClimberControls();
 
-        double GetExponentialValue(double joystickValue, double exponent);
+        double                   GetExponentialValue(double joystickValue, double exponent);
+
+        std::string              GetStartPosition();
+
+        ChassDrivePoseParameters GetAutonomousOneCoralParameters();
 
         // Singleton reference to the class (returned by the GetInstance Method)
         static RobotContainer                *m_robotContainer;

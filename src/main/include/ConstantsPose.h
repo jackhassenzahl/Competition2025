@@ -24,17 +24,30 @@
 #pragma region AutonomousConstants
 namespace AutonomousConstants
 {
-    constexpr auto OneCoralSpeed            = 1_mps;
-    constexpr auto OneCoralXDistance        = 1_m;
-    constexpr auto OneCoralYDistance        = 1_m;
-    constexpr auto OneCoralAngleChange      = 0_deg;
-    constexpr auto OneCoralTimeOut          = 10_s;
+    constexpr auto OneCoralSpeed            =  2_mps;
+
+    // Center starting position for one coral placement
+    constexpr auto OneCoralCenterXDistance  =  0.25_m;
+    constexpr auto OneCoralCenterYDistance  =  0_m;
+    constexpr auto OneCoralAngleChange      =  0_deg;
+
+    // Left starting position for one coral placement
+    constexpr auto OneCoralLeftXDistance    =  1.0_m;
+    constexpr auto OneCoralLeftYDistance    = -0.5_m;
+    constexpr auto OneCoralLeftAngleChange  = -60_deg;
+
+    // Right starting position for one coral placement
+    constexpr auto OneCoralRightXDistance   = 1.0_m;
+    constexpr auto OneCoralRightYDistance   = 0.5_m;
+    constexpr auto OneCoralRightAngleChange = 60_deg;
+
+    constexpr auto OneCoralTimeOut          = 15_s;
 
     constexpr auto AlgaeAndCoralSpeed       = 1_mps;
     constexpr auto AlgaeAndCoralXDistance   = -1_m;
     constexpr auto AlgaeAndCoralYDistance   = 0_m;
     constexpr auto AlgaeAndCoralAngleChange = 180_deg;
-    constexpr auto AlgaeAndCoralTimeOut     = 10_s;
+    constexpr auto AlgaeAndCoralTimeOut     = 15_s;
 };
 #pragma endregion
 

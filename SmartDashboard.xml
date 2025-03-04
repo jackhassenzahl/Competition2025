@@ -1,5 +1,44 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Coral Angle Change" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="844" y="607"/>
+	</widget>
+	<widget field="Coral Y Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="860" y="584"/>
+	</widget>
+	<widget field="Coral X Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="862" y="558"/>
+	</widget>
+	<widget field="Coral Start Position" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="848" y="532"/>
+	</widget>
+	<widget field="AprilTag: TimeoutTime" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1058" y="608"/>
+	</widget>
+	<widget field="AprilTag: AngleOffset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1059" y="582"/>
+	</widget>
+	<widget field="AprilTag: DistanceOffsetY" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1040" y="557"/>
+	</widget>
+	<widget field="AprilTag: DistanceOffsetX" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1041" y="531"/>
+	</widget>
+	<widget field="AprilTag: Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1089" y="506"/>
+	</widget>
+	<widget field="AprilTag: ReefRightSide" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1049" y="481"/>
+	</widget>
+	<widget field="AprilTag: ValidPose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1071" y="456"/>
+	</widget>
+	<widget field="AprilTag Pose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1098" y="430"/>
+	</widget>
+	<widget field="Potentiometer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="214" y="328"/>
+	</widget>
 	<widget field="Wheels Input" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="220" y="304"/>
 	</widget>
@@ -19,46 +58,7 @@
 		<location x="677" y="529"/>
 	</widget>
 	<widget field="Gripper Pose" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="514" y="559"/>
-	</widget>
-	<widget field="Gripper: Activate" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="484" y="524"/>
-	</widget>
-	<widget field="Algae: Low" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1222" y="488"/>
-	</widget>
-	<widget field="Algae: Barge" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1213" y="574"/>
-	</widget>
-	<widget field="Algae: Processor" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1195" y="546"/>
-	</widget>
-	<widget field="Algae: High" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1219" y="516"/>
-	</widget>
-	<widget field="Algae: Coral" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1215" y="459"/>
-	</widget>
-	<widget field="Algae: Ground" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1206" y="430"/>
-	</widget>
-	<widget field="Coral: Station" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1044" y="457"/>
-	</widget>
-	<widget field="Coral: L4" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1064" y="567"/>
-	</widget>
-	<widget field="Coral: L3" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1065" y="539"/>
-	</widget>
-	<widget field="Coral: L2" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1065" y="512"/>
-	</widget>
-	<widget field="Coral: L1" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1066" y="484"/>
-	</widget>
-	<widget field="Coral: Ground" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="1043" y="430"/>
+		<location x="444" y="528"/>
 	</widget>
 	<widget field="Wheels Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="683" y="190"/>
@@ -284,7 +284,18 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Wrist position"/>
-	<hidden field="Analog"/>
-	<hidden field="Algae: Lo"/>
+	<hidden field="Algae: Processor"/>
+	<hidden field="GetStartPosition:: Starting Position"/>
+	<hidden field="Algae: Ground"/>
+	<hidden field="Algae: High"/>
+	<hidden field="Coral: Ground"/>
+	<hidden field="Gripper: Activate"/>
+	<hidden field="Algae: Barge"/>
+	<hidden field="Coral: L1"/>
+	<hidden field="Coral: L2"/>
+	<hidden field="Coral: L3"/>
+	<hidden field="Algae: Low"/>
+	<hidden field="Coral: Station"/>
+	<hidden field="Coral: L4"/>
+	<hidden field="Algae: Coral"/>
 </xml>

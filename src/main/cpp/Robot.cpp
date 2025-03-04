@@ -50,9 +50,6 @@ void Robot::AutonomousInit()
     // Set the swerve wheels to zero
     m_robotContainer->SetSwerveWheelAnglesToZero();
 
-    auto startingPosition = m_robotContainer->GetStartPosition();
-    frc::SmartDashboard::PutString("Starting Position", startingPosition);
-
     // Get the selected autonomous command
     m_autonomousCommand = m_robotContainer->GetAutonomousCommand();
 

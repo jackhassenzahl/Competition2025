@@ -11,17 +11,13 @@
 #include "subsystems/AprilTags.h"
 #include "subsystems/Drivetrain.h"
 
+#include "commands/ChassisDrivePose.h"
+
 struct ChassDriveAprilTagParameters
 {
-    bool                       ValidPose;
-    bool                       ReefRightSide;
-    units::meters_per_second_t Speed;
-    units::meter_t             DistanceOffsetX;
-    units::meter_t             DistanceOffsetY;
-    units::degree_t            AngleOffset;
-    units::time::second_t      TimeoutTime;
-    AprilTags                 *aprilTags;
-    Drivetrain                *drivetrain;
+    bool                      ValidPose;
+    bool                      ReefRightSide;
+    ChassDrivePoseParameters  PoseParameters;
 };
 
 class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, ChassisDriveToAprilTag>
@@ -36,7 +32,7 @@ class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, Chassis
                                         AprilTags                 *aprilTags,
                                         Drivetrain                *drivetrain);
 
-        explicit ChassisDriveToAprilTag(std::function<ChassDriveAprilTagParameters()> getParameters);
+        explicit ChassisDriveToAprilTag(std::function<ChassDriveAprilTagParameters()> getParameters, AprilTags *aprilTags, Drivetrain *drivetrain);
 
         void     Initialize()          override;
         void     Execute()             override;
@@ -45,14 +41,19 @@ class ChassisDriveToAprilTag : public frc2::CommandHelper<frc2::Command, Chassis
 
     private:
 
-        units::meters_per_second_t        m_speed;                    // The speed of the chassis
-        units::time::second_t             m_timeoutTime;              // The command time-out time
-        units::meter_t                    m_distanceOffsetX;          // The distance offset in the X direction
-        units::meter_t                    m_distanceOffsetY;          // The distance offset in the Y direction
-        units::degree_t                   m_angleOffset;              // The angle offset
-        AprilTags                        *m_aprilTags;                // The AprilTag subsystem
-        Drivetrain                       *m_drivetrain;               // The drivetrain subsystem
+        bool                              m_readParameters;             // Indicates the parameters should be read from the lambda function
 
-        units::second_t                   m_startTime;                // The start of the drive time
-        frc2::SwerveControllerCommand<4> *m_swerveControllerCommand;  // The swerve controller command
+        units::meters_per_second_t        m_speed;                      // The speed of the chassis
+        units::time::second_t             m_timeoutTime;                // The command time-out time
+        units::meter_t                    m_distanceOffsetX;            // The distance offset in the X direction
+        units::meter_t                    m_distanceOffsetY;            // The distance offset in the Y direction
+        units::degree_t                   m_angleOffset;                // The angle offset
+        AprilTags                        *m_aprilTags;                  // The AprilTag subsystem
+        Drivetrain                       *m_drivetrain;                 // The drivetrain subsystem
+
+        units::second_t                   m_startTime;                  // The start of the drive time
+        bool                              m_finished;                   // Indicates the command is finished
+        frc2::SwerveControllerCommand<4> *m_swerveControllerCommand;    // The swerve controller command
+
+        std::function<ChassDriveAprilTagParameters()> m_getParameters;  // The lambda function to get the parameters
 };

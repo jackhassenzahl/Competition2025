@@ -24,31 +24,26 @@ ChassisDriveToAprilTag::ChassisDriveToAprilTag(units::meters_per_second_t speed,
     // Declare subsystem dependencies
     AddRequirements(m_drivetrain);
 
-    // Ensure the SwerveControllerCommand is set to nullptr
-    m_swerveControllerCommand = nullptr;
+    // Indicate that the parameters should not be read from the lambda function
+    m_readParameters = false;
 }
 #pragma endregion
 
 #pragma region ChassisDriveToAprilTag
 /// @brief Construct a ChassisDriveToAprilTag command using a lambda function to get the parameters.
 /// @param getParmeters The lambda function to get the parameters.
-ChassisDriveToAprilTag::ChassisDriveToAprilTag(std::function<ChassDriveAprilTagParameters()> getParmeters)
+ChassisDriveToAprilTag::ChassisDriveToAprilTag(std::function<ChassDriveAprilTagParameters()> getParameters, AprilTags *aprilTags, Drivetrain *drivetrain) :
+                                               m_aprilTags(aprilTags), m_drivetrain(drivetrain)
 {
-    // Get the drive to april tag parameters
-    auto pramemters = getParmeters();
+    // Set the command name
+    SetName("ChassisDriveToAprilTag");
 
-    // Determine if the pose is valid
-    if (pramemters.ValidPose == true)
-    {
-        // Call the main constructor
-        ChassisDriveToAprilTag(pramemters.Speed, pramemters.DistanceOffsetX, pramemters.DistanceOffsetY, pramemters.AngleOffset,
-                               pramemters.TimeoutTime, pramemters.aprilTags, pramemters.drivetrain);
-    }
-    else
-    {
-        // End the command
-        End(true);
-    }
+    // Declare subsystem dependencies
+    AddRequirements(m_drivetrain);
+
+    // Indicate that the parameters should be read from the lambda function
+    m_readParameters = true;
+    m_getParameters  = getParameters;
 }
 #pragma endregion
 
@@ -78,6 +73,39 @@ ChassisDriveToAprilTag::ChassisDriveToAprilTag(std::function<ChassDriveAprilTagP
 
 void ChassisDriveToAprilTag::Initialize()
 {
+    // Ensure the SwerveControllerCommand is set to nullptr
+    m_swerveControllerCommand = nullptr;
+
+    // Assume the pose command will run
+    m_finished = false;
+
+    // Determine if the parameters should be read from the lambda function
+    if (m_readParameters)
+    {
+        // Get the drive to april tag parameters
+        auto parameters = m_getParameters();
+
+        // Determine if the pose is valid
+        if (parameters.ValidPose == true)
+        {
+            // Initialize the member variables using an initialization list
+            m_speed           = parameters.PoseParameters.Speed;
+            m_distanceOffsetX = parameters.PoseParameters.DistanceX;
+            m_distanceOffsetY = parameters.PoseParameters.DistanceY;
+            m_angleOffset     = parameters.PoseParameters.Angle;
+            m_timeoutTime     = parameters.PoseParameters.TimeoutTime;
+        }
+        else
+        {
+            // End the command
+            m_finished = true;
+        }
+
+        // Determine if the pose is not valid (do not continue)
+        if (m_finished)
+            return;
+    }
+
     try
     {
         auto aprilTagInformation = m_aprilTags->GetClosestTag();
@@ -95,7 +123,8 @@ void ChassisDriveToAprilTag::Initialize()
         else  // If no AprilTag is found, end the command
         {
             // End the command
-            End(true);
+            m_finished = true;
+            return;
         }
 
         // Set up config for trajectory
@@ -168,6 +197,13 @@ void ChassisDriveToAprilTag::Initialize()
     catch(const std::exception& exception)
     {
         frc::SmartDashboard::PutString("Debug", exception.what());
+
+        // Ensure the SwerveControllerCommand is set to nullptr
+        m_swerveControllerCommand = nullptr;
+
+        // Determine if the command was not able to start (do not continue)
+        if (m_finished)
+            return;
     }
 }
 #pragma endregion
@@ -178,7 +214,9 @@ void ChassisDriveToAprilTag::Execute()
 {
     // Execute the swerve controller command
     if (m_swerveControllerCommand)
-        m_swerveControllerCommand->Execute();
+       m_swerveControllerCommand->Execute();
+    else
+	   m_finished = true;
 }
 #pragma endregion
 
@@ -187,6 +225,10 @@ void ChassisDriveToAprilTag::Execute()
 /// @return True is the command has completed.
 bool ChassisDriveToAprilTag::IsFinished()
 {
+    // Determine if the command is finished
+    if (m_finished)
+        return true;
+
     // Determine if the time-out time has expired
     if (frc::GetTime() - m_startTime > m_timeoutTime)
         return true;

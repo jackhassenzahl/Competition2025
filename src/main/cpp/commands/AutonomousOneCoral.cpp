@@ -7,10 +7,11 @@ using namespace AutonomousConstants;
 /// @param drivetrain The drivetrain subsystem.
 /// @param gripper The gripper subsystem.
 /// @param aprilTags The AprilTags subsystem.
-AutonomousOneCoral::AutonomousOneCoral(Drivetrain *drivetrain, Gripper *gripper, AprilTags *aprilTags)
+AutonomousOneCoral::AutonomousOneCoral(GripperPoseEnum gripperPoseEnum, std::function<ChassDrivePoseParameters ()> getParameters, Drivetrain *drivetrain, Gripper *gripper, AprilTags *aprilTags)
 {
-    AddCommands(ChassisDrivePose(OneCoralSpeed, OneCoralXDistance, OneCoralYDistance, OneCoralAngleChange, OneCoralTimeOut, drivetrain),
-                AprilTagScoreCoral(GripperPoseEnum::CoralL4, []() { return true; }, aprilTags, gripper, drivetrain),
+    // Run the command sequence
+    AddCommands(ChassisDrivePose(getParameters, drivetrain),
+                AprilTagScoreCoral(gripperPoseEnum, []() { return true; }, aprilTags, gripper, drivetrain),
                 GripperActivate(gripper));
 }
 #pragma endregion

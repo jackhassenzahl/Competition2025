@@ -17,9 +17,27 @@ ChassisDrivePose::ChassisDrivePose(units::velocity::meters_per_second_t speed, u
 
     // Declare subsystem dependencies
     AddRequirements(m_drivetrain);
+}
+#pragma endregion
 
-    // Ensure the SwerveControllerCommand is set to nullptr
-    m_swerveControllerCommand = nullptr;
+#pragma region ChassisDrivePose
+/// @brief  Command to drive the chassis to a specific pose.
+/// @param speed The speed to move the chassis.
+/// @param distanceX The distance to move the chassis in the X direction.
+/// @param distanceY The distance to move the chassis in the Y direction.
+/// @param angle The angle to move the chassis.
+/// @param drivetrain The Drivetrain subsystem.
+ChassisDrivePose::ChassisDrivePose(std::function<ChassDrivePoseParameters()> getParameters, Drivetrain *drivetrain) : m_drivetrain(drivetrain)
+{
+    // Set the command name
+    SetName("ChassisDrivePose");
+
+    // Declare subsystem dependencies
+    AddRequirements(m_drivetrain);
+
+    // Indicate that the parameters should be read from the lambda function
+    m_readParameters = true;
+    m_getParameters  = getParameters;
 }
 #pragma endregion
 
@@ -27,6 +45,33 @@ ChassisDrivePose::ChassisDrivePose(units::velocity::meters_per_second_t speed, u
 /// @brief Called just before this Command runs.
 void ChassisDrivePose::Initialize()
 {
+    // Ensure the SwerveControllerCommand is set to nullptr
+    m_swerveControllerCommand = nullptr;
+
+    // Assume the pose command will run
+    m_finished = false;
+
+    // Assume the pose command will run
+    m_finished = false;
+
+    // Determine if the parameters should be read from the lambda function
+    if (m_readParameters)
+    {
+        // Get the drive to april tag parameters
+        auto parameters = m_getParameters();
+
+        // Set the drive parameters
+        m_speed       = parameters.Speed;
+        m_distanceX   = parameters.DistanceX;
+        m_distanceY   = parameters.DistanceY;
+        m_angle       = parameters.Angle;
+        m_timeoutTime = parameters.TimeoutTime;
+
+        // Determine if the pose is not valid (do not continue)
+        if (m_finished)
+            return;
+    }
+
     try
     {
         // Set up config for trajectory
@@ -94,6 +139,13 @@ void ChassisDrivePose::Initialize()
     catch(const std::exception& exception)
     {
         frc::SmartDashboard::PutString("Debug", exception.what());
+
+        // Ensure the SwerveControllerCommand is set to nullptr
+        m_swerveControllerCommand = nullptr;
+
+        // Determine if the command was not able to start (do not continue)
+        if (m_finished)
+            return;
     }
 }
 #pragma endregion
@@ -105,6 +157,11 @@ void ChassisDrivePose::Execute()
     // Execute the swerve controller command
     if (m_swerveControllerCommand)
         m_swerveControllerCommand->Execute();
+    else
+    {
+        // Stop the move
+        m_finished = true;
+    }
 }
 #pragma endregion
 
@@ -113,6 +170,10 @@ void ChassisDrivePose::Execute()
 /// @return True is the command has completed.
 bool ChassisDrivePose::IsFinished()
 {
+    // Determine if the command is finished
+    if (m_finished)
+        return true;
+
     // Determine if the time-out time has expired
     if (frc::GetTime() - m_startTime > m_timeoutTime)
         return true;
