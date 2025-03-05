@@ -15,8 +15,14 @@
 #include <constants/ControlPanelConstants.h>
 #include <constants/CanConstants.h>
 
+#include <constantspose/ActivateConstants.h>
+#include <constantspose/AprilTagToPoseConstants.h>
+#include <constantspose/CoralPoseConstants.h>
+#include <constantspose/AutonomousConstants.h>
+#include <constantspose/AlgaePoseConstants.h>
+
 // #include "Constants.h"
-#include "ConstantsPose.h"
+// #include "ConstantsPose.h"
 
 #pragma region ElevatorConstants
 namespace ElevatorConstants
