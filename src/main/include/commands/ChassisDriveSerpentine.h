@@ -10,7 +10,13 @@
 
 #include "subsystems/Drivetrain.h"
 
-#include "Constants.h"
+#include <constants/xBoxConstants.h>
+#include <constants/Extreme3DConstants.h>
+#include <constants/ControllerConstants.h>
+#include <constants/ControlPanelConstants.h>
+#include <constants/CanConstants.h>
+
+// #include "Constants.h"
 
 class ChassisDriveSerpentine : public frc2::CommandHelper<frc2::Command, ChassisDriveSerpentine>
 {
