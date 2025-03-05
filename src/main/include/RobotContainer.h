@@ -2,8 +2,6 @@
 
 #pragma region Includes
 #include <utility>
-#include <cmath>
-#include <algorithm>
 
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/Joystick.h>

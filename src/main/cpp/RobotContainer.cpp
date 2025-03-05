@@ -35,14 +35,14 @@ RobotContainer::RobotContainer()
     frc::SmartDashboard::PutData("Chassis: Serpentine ",     new ChassisDriveSerpentine(1.0_mps,                      10_s,                                     &m_drivetrain));
     frc::SmartDashboard::PutData("Chassis: Drive to Wall ",  new ChassisDriveToWall(1.0_mps,     1_m,                 10_s,                                     &m_drivetrain));
 
-    frc::SmartDashboard::PutData("Elevator Jog Up",          new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset( ElevatorConstants::HeightOffset); }));
-    frc::SmartDashboard::PutData("Elevator Jog Down",        new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset); }));
+    // frc::SmartDashboard::PutData("Elevator Jog Up",          new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset( ElevatorConstants::HeightOffset); }));
+    // frc::SmartDashboard::PutData("Elevator Jog Down",        new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset); }));
 
-    frc::SmartDashboard::PutData("Arm Jog Positive",         new frc2::InstantCommand([this] { m_gripper.SetArmAngleOffset( ArmConstants::AngleOffset);}));
-    frc::SmartDashboard::PutData("Arm Jog Negative",         new frc2::InstantCommand([this] { m_gripper.SetArmAngleOffset(-ArmConstants::AngleOffset);}));
+    // frc::SmartDashboard::PutData("Arm Jog Positive",         new frc2::InstantCommand([this] { m_gripper.SetArmAngleOffset( ArmConstants::AngleOffset);}));
+    // frc::SmartDashboard::PutData("Arm Jog Negative",         new frc2::InstantCommand([this] { m_gripper.SetArmAngleOffset(-ArmConstants::AngleOffset);}));
 
-    frc::SmartDashboard::PutData("Wrist Jog Positive",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset( WristConstants::AngleOffset);}));
-    frc::SmartDashboard::PutData("Wrist Jog Negative",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset(-WristConstants::AngleOffset);}));
+    // frc::SmartDashboard::PutData("Wrist Jog Positive",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset( WristConstants::AngleOffset);}));
+    // frc::SmartDashboard::PutData("Wrist Jog Negative",       new frc2::InstantCommand([this] { m_gripper.SetWristAngleOffset(-WristConstants::AngleOffset);}));
 
     // frc::SmartDashboard::PutData("Coral: Ground",            new GripperPose(GripperPoseEnum::CoralGround,    &m_gripper));
     // frc::SmartDashboard::PutData("Coral: Station",           new GripperPose(GripperPoseEnum::CoralStation,   &m_gripper));
@@ -141,6 +141,24 @@ void RobotContainer::ConfigureDriverControls()
     // Toggle X mode
     frc2::JoystickButton (&m_driverController, frc::XboxController::Button::kX)
         .WhileTrue(new frc2::RunCommand([this] { m_drivetrain.SetX(); }, {&m_drivetrain}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle12)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle11)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle10)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetArmAngleOffset(-ArmConstants::AngleOffset);}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle9)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetArmAngleOffset(ArmConstants::AngleOffset);}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle8)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetWristAngleOffset(WristConstants::AngleOffset);}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle7)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetWristAngleOffset(-WristConstants::AngleOffset);}));
 }
 #pragma endregion
 
@@ -210,35 +228,11 @@ void RobotContainer::ConfigureGripperControls()
 {
     // Manually offsets elevator upwards
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorUp)
-        .OnTrue(new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(ElevatorConstants::HeightOffset);}));
 
     // Manually offsets elevator downwards
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorDown)
-        .OnTrue(new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
-
-    
-    // Drive Controller Gripper Controls:
-    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle11)
-        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetArmAngleOffset(0.1_deg);}));
-
-    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle11)
-        .WhileTrue(new frc2::RunCommand([this] {frc::SmartDashboard::PutString("Debuging Controller", "Working");}))
-        .WhileFalse(new frc2::RunCommand([this] {frc::SmartDashboard::PutString("Debuging Controller", "No Working");}));
-        
-    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle12)
-        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetArmAngleOffset(-0.1_deg);}));
-        
-    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle10)
-    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(0.025_m);}));
-        
-    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle9)
-    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-0.025_m);}));
-        
-    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle8)
-    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetWristAngleOffset(0.1_deg);}));
-
-    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle7)
-    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetWristAngleOffset(-0.1_deg);}));
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
 }
 #pragma endregion
 
@@ -382,28 +376,27 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 /// @return The potentiometer wheel voltage.
 GripperWheelState RobotContainer::PotentiometerWheelVoltage()
 {
-
     // Read the wheel voltage potentiometer
-    auto potentiometer = (m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput);
-    potentiometer = potentiometer * -1.0;
-    frc::SmartDashboard::PutString("So much Debuging", "Potentiometer up and running");
-    if (potentiometer < GripperConstants::GripperWheelDeadZone && potentiometer > -GripperConstants::GripperWheelDeadZone)
-    {
-        frc::SmartDashboard::PutString("So much Debuging", "Potentiometer no running");
-        potentiometer = 0.0;
-    }
-    frc::SmartDashboard::PutNumber("Potentiometer", potentiometer);
+    auto potentiometer = -(m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput);
 
+    // Apply a deadband to the potentiometer
+    if (potentiometer < GripperConstants::GripperWheelDeadZone && potentiometer > -GripperConstants::GripperWheelDeadZone)
+        potentiometer = 0.0;
+
+    frc::SmartDashboard::PutNumber("Potentiometer", potentiometer);
 
     // Convert to a voltage
     auto voltage = units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
 
+    // Determine if both wheels are active
     bool bothWheels = !m_operatorController.GetRawButton(ControlPanelConstants::Toggle);
 
+    // Return the gripper wheel state
     GripperWheelState gripperWheelState;
     gripperWheelState.bothWheels = bothWheels;
-    gripperWheelState.voltage = voltage;
+    gripperWheelState.voltage    = voltage;
 
+    // Return the gripper wheel state
     return gripperWheelState;
 }
 #pragma endregion

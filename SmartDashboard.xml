@@ -37,10 +37,10 @@
 		<location x="1098" y="430"/>
 	</widget>
 	<widget field="Potentiometer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="214" y="328"/>
+		<location x="214" y="329"/>
 	</widget>
 	<widget field="Wheels Input" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="220" y="304"/>
+		<location x="217" y="305"/>
 	</widget>
 	<widget field="ArmFinish" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="699" y="632"/>
@@ -61,46 +61,28 @@
 		<location x="444" y="528"/>
 	</widget>
 	<widget field="Wheels Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="683" y="190"/>
+		<location x="496" y="108"/>
 	</widget>
 	<widget field="Wrist Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="695" y="138"/>
+		<location x="506" y="82"/>
 	</widget>
 	<widget field="Arm Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="701" y="86"/>
+		<location x="512" y="57"/>
 	</widget>
 	<widget field="Elevator Target" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="679" y="60"/>
+		<location x="492" y="32"/>
 	</widget>
 	<widget field="Wheels" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="717" y="215"/>
+		<location x="684" y="109"/>
 	</widget>
 	<widget field="Wrist" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="729" y="165"/>
+		<location x="696" y="85"/>
 	</widget>
 	<widget field="Arm" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="737" y="111"/>
+		<location x="704" y="60"/>
 	</widget>
 	<widget field="Elevator" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="714" y="35"/>
-	</widget>
-	<widget field="Wrist Jog Negative" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="496" y="162"/>
-	</widget>
-	<widget field="Wrist Jog Positive" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="502" y="134"/>
-	</widget>
-	<widget field="Arm Jog Negative" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="502" y="106"/>
-	</widget>
-	<widget field="Arm Jog Positive" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="509" y="79"/>
-	</widget>
-	<widget field="Elevator Jog Down" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="498" y="52"/>
-	</widget>
-	<widget field="Elevator Jog Up" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="513" y="24"/>
+		<location x="681" y="35"/>
 	</widget>
 	<widget field="Start Position" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="214" y="57"/>
@@ -284,18 +266,11 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Algae: Processor"/>
-	<hidden field="GetStartPosition:: Starting Position"/>
-	<hidden field="Algae: Ground"/>
-	<hidden field="Algae: High"/>
-	<hidden field="Coral: Ground"/>
-	<hidden field="Gripper: Activate"/>
-	<hidden field="Algae: Barge"/>
-	<hidden field="Coral: L1"/>
-	<hidden field="Coral: L2"/>
-	<hidden field="Coral: L3"/>
-	<hidden field="Algae: Low"/>
-	<hidden field="Coral: Station"/>
-	<hidden field="Coral: L4"/>
-	<hidden field="Algae: Coral"/>
+	<hidden field="Wrist Jog Positive"/>
+	<hidden field="Arm Jog Positive"/>
+	<hidden field="Elevator Jog Up"/>
+	<hidden field="Wrist Jog Negative"/>
+	<hidden field="So much Debuging"/>
+	<hidden field="Arm Jog Negative"/>
+	<hidden field="Elevator Jog Down"/>
 </xml>
