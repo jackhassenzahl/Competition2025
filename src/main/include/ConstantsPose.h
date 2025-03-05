@@ -79,7 +79,7 @@ namespace ActivateConstants
     constexpr auto Coral123Wait1                = 1.0_s;
     constexpr auto Coral123ArmOffset            = 10.0_deg;
     constexpr auto Coral123Wait2                = 0.1_s;
-    constexpr auto Coral123GripperVoltage       =-5.0_V;
+    constexpr auto Coral123GripperVoltage       =-3.0_V;
     constexpr auto Coral123Wait3                = 1.0_s;
     constexpr auto Coral123ElevatorFinish       = 0.2_m;
     constexpr auto Coral123ArmFinish            = 10.0_deg;
@@ -159,7 +159,7 @@ namespace ActivateConstants
 #pragma region CoralPoseConstants
 namespace CoralPoseConstants
 {
-    constexpr auto GroundElevator         = 0.12829_m;
+    constexpr auto GroundElevator         = 0.103289_m;
     constexpr auto GroundArmAngle         = 138.765_deg;
     constexpr auto GroundWristAngle       = 180.0_deg;
     constexpr auto GroundGripperVoltage   = 0.0_V;

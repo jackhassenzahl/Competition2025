@@ -215,6 +215,30 @@ void RobotContainer::ConfigureGripperControls()
     // Manually offsets elevator downwards
     frc2::JoystickButton (&m_operatorController, ControlPanelConstants::ElevatorDown)
         .OnTrue(new frc2::InstantCommand([this] { m_gripper.SetElevatorOffset(-ElevatorConstants::HeightOffset);}));
+
+    
+    // Drive Controller Gripper Controls:
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle11)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetArmAngleOffset(0.1_deg);}));
+
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle11)
+        .WhileTrue(new frc2::RunCommand([this] {frc::SmartDashboard::PutString("Debuging Controller", "Working");}))
+        .WhileFalse(new frc2::RunCommand([this] {frc::SmartDashboard::PutString("Debuging Controller", "No Working");}));
+        
+    frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle12)
+        .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetArmAngleOffset(-0.1_deg);}));
+        
+    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle10)
+    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(0.025_m);}));
+        
+    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle9)
+    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetElevatorOffset(-0.025_m);}));
+        
+    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle8)
+    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetWristAngleOffset(0.1_deg);}));
+
+    // frc2::JoystickButton (&m_driverController, Extreme3DConstants::Handle7)
+    //     .WhileTrue(new frc2::RunCommand([this] { m_gripper.SetWristAngleOffset(-0.1_deg);}));
 }
 #pragma endregion
 
@@ -358,12 +382,18 @@ double RobotContainer::GetExponentialValue(double joystickValue, double exponent
 /// @return The potentiometer wheel voltage.
 GripperWheelState RobotContainer::PotentiometerWheelVoltage()
 {
+
     // Read the wheel voltage potentiometer
     auto potentiometer = (m_operatorController.GetRawAxis(ControlPanelConstants::GripperMotor) - GripperConstants::MeanAnalogInput);
+    potentiometer = potentiometer * -1.0;
+    frc::SmartDashboard::PutString("So much Debuging", "Potentiometer up and running");
+    if (potentiometer < GripperConstants::GripperWheelDeadZone && potentiometer > -GripperConstants::GripperWheelDeadZone)
+    {
+        frc::SmartDashboard::PutString("So much Debuging", "Potentiometer no running");
+        potentiometer = 0.0;
+    }
     frc::SmartDashboard::PutNumber("Potentiometer", potentiometer);
 
-    // if (absf(potentiometer) < GripperConstants::GripperWheelDeadZone);
-    //     potentiometer = 0;
 
     // Convert to a voltage
     auto voltage = units::voltage::volt_t{potentiometer * GripperConstants::AnalogConversion};
@@ -457,7 +487,7 @@ ChassDrivePoseParameters RobotContainer::GetAutonomousOneCoralParameters()
 }
 #pragma endregion
 
-//ChassDrivePoseParameters#define READ_FROM_SMARTDASHBOARD
+#define READ_FROM_SMARTDASHBOARD
 
 #pragma region GetChassisDriveToAprilTagParameters
 /// @brief  Method to return the parameters for the ChassisDriveToAprilTag command.

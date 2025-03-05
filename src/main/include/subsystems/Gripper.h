@@ -93,7 +93,7 @@ namespace GripperConstants
 
     constexpr auto MeanAnalogInput      = 0.11811 / 2.0;
 
-    constexpr auto GripperWheelDeadZone = 0.0;
+    constexpr auto GripperWheelDeadZone = 0.01;
     constexpr auto AnalogConversion     = 75.0;
 }
 #pragma endregion

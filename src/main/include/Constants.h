@@ -81,6 +81,12 @@ namespace Extreme3DConstants
     constexpr auto HandleLowerLeft  = 3;
     constexpr auto HandleLowerRight = 4;
     constexpr auto HandleUpperLeft  = 5;
+    constexpr auto Handle7          = 7;
+    constexpr auto Handle8          = 8;
+    constexpr auto Handle9          = 9;
+    constexpr auto Handle10         = 10;
+    constexpr auto Handle11         = 11;
+    constexpr auto Handle12         = 12;
     }
 #pragma endregion
 
