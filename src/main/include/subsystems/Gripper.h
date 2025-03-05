@@ -57,7 +57,7 @@ namespace ArmConstants
     constexpr auto PastElevatorPosition            =  25_deg;
     constexpr auto MaximumPosition                 = 180_deg;
 
-    constexpr auto AngleOffset                     = 5_deg;
+    constexpr auto AngleOffset                     =   1_deg;
 }
 #pragma endregion
 
@@ -78,7 +78,7 @@ namespace WristConstants
     constexpr auto MinimumPosition               = -10_deg;          // Note: Need to calibrate angle to motor rotations
     constexpr auto MaximumPosition               = 200_deg;
 
-    constexpr auto AngleOffset                   =   1.5_deg;
+    constexpr auto AngleOffset                   = 1.0_deg;
 }
 #pragma endregion
 

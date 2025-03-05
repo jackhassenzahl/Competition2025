@@ -75,13 +75,13 @@ namespace ActivateConstants
     constexpr auto CoralStationArmFinish        = 0.0_deg;
 
     // Coral123:
-    constexpr auto Coral123ElevatorOffset       = 0.2_m;
-    constexpr auto Coral123Wait1                = 1.0_s;
-    constexpr auto Coral123ArmOffset            = 10.0_deg;
-    constexpr auto Coral123Wait2                = 0.1_s;
-    constexpr auto Coral123GripperVoltage       =-3.0_V;
-    constexpr auto Coral123Wait3                = 1.0_s;
-    constexpr auto Coral123ElevatorFinish       = 0.2_m;
+    constexpr auto Coral123ElevatorOffset       =  0.2_m;
+    constexpr auto Coral123Wait1                =  1.0_s;
+    constexpr auto Coral123ArmOffset            =  10.0_deg;
+    constexpr auto Coral123Wait2                =  0.1_s;
+    constexpr auto Coral123GripperVoltage       = -3.0_V;
+    constexpr auto Coral123Wait3                =  1.0_s;
+    constexpr auto Coral123ElevatorFinish       =  0.2_m;
     constexpr auto Coral123ArmFinish            = 10.0_deg;
 
     // Coral4:
